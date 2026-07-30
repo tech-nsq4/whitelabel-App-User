@@ -1,10 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:app_base/core/extensions/extensions.dart';
-import 'package:app_base/core/utils/app_images.dart';
-import 'package:app_base/core/widgets/app_text.dart';
+import 'package:vivacare_white_label/core/extensions/extensions.dart';
+import 'package:vivacare_white_label/core/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../app/router/routes.dart';
 import '../../../core/utils/app_colors.dart';
@@ -12,9 +10,10 @@ import '../../../core/utils/custom_text_field_phone/custom_text_field_phone_code
 import '../../../core/utils/locale_keys.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/app_text_field.dart';
-import '../../../core/widgets/primary_header.dart';
 import '../logic/auth_cubit.dart';
 import '../../profile/logic/profile_cubit.dart';
+import 'widgets/auth_header.dart';
+import 'widgets/field_label.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -71,13 +70,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const _HeaderSection(),
+                    const AuthHeader(),
                     Container(
                       padding: 16.paddingHorizontal,
                       width: double.infinity,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFF4F5F3),
-                        borderRadius: BorderRadius.only(
+                      decoration: BoxDecoration(
+                        color: AppColors.backgroundColor.themeColor,
+                        borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(30),
                           topRight: Radius.circular(30),
                         ),
@@ -88,19 +87,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           16.height,
                           AppText(
                             LocaleKeys.auth_register.tr(),
+                            isHeading: true,
                             fontSize: 24,
-                            color: const Color(0xFF17212B),
+                            color: AppColors.textPrimaryColor.themeColor,
                             fontWeight: FontWeight.w700,
                           ),
                           6.height,
                           AppText(
                             LocaleKeys.auth_registerSubtitle.tr(),
                             fontSize: 13,
-                            color: const Color(0xFF9AA19C),
+                            color: AppColors.mutedColor.themeColor,
                             fontWeight: FontWeight.w500,
                           ),
                           20.height,
-                          _FieldLabel(text: LocaleKeys.auth_name.tr()),
+                          FieldLabel(text: LocaleKeys.auth_name.tr()),
                           8.height,
                           CustomTextField(
                             hint: LocaleKeys.auth_name.tr(),
@@ -114,7 +114,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             },
                           ),
                           14.height,
-                          _FieldLabel(text: LocaleKeys.auth_email.tr()),
+                          FieldLabel(text: LocaleKeys.auth_email.tr()),
                           8.height,
                           CustomTextField(
                             hint: LocaleKeys.auth_email.tr(),
@@ -131,7 +131,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             },
                           ),
                           14.height,
-                          _FieldLabel(text: LocaleKeys.auth_phone.tr()),
+                          FieldLabel(text: LocaleKeys.auth_phone.tr()),
                           8.height,
                           CustomTextFieldPhoneCode(
                             hint: LocaleKeys.auth_phone.tr(),
@@ -149,7 +149,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             },
                           ),
                           14.height,
-                          _FieldLabel(text: LocaleKeys.auth_password.tr()),
+                          FieldLabel(text: LocaleKeys.auth_password.tr()),
                           8.height,
                           CustomTextField(
                             hint: LocaleKeys.auth_password.tr(),
@@ -179,7 +179,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 AppText(
                                   LocaleKeys.auth_alreadyHaveAccount.tr(),
                                   fontSize: 14,
-                                  color: const Color(0xFF9AA19C),
+                                  color: AppColors.mutedColor.themeColor,
                                   fontWeight: FontWeight.w500,
                                 ),
                                 4.width,
@@ -205,45 +205,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
           );
         },
-      ),
-    );
-  }
-}
-
-class _HeaderSection extends StatelessWidget {
-  const _HeaderSection();
-
-  @override
-  Widget build(BuildContext context) {
-    return PrimaryHeader(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 50.w),
-        child: Center(
-          child: Image.asset(
-            AppImages.logo4,
-            width: 220.w,
-            fit: BoxFit.contain,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _FieldLabel extends StatelessWidget {
-  const _FieldLabel({required this.text});
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: AlignmentDirectional.centerStart,
-      child: AppText(
-        text,
-        fontSize: 14,
-        color: AppColors.primaryColor.themeColor,
-        fontWeight: FontWeight.w700,
       ),
     );
   }

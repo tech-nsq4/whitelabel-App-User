@@ -1,4 +1,5 @@
-import 'package:app_base/core/utils/app_colors.dart';
+import 'package:vivacare_white_label/core/utils/app_colors.dart';
+import 'package:vivacare_white_label/core/utils/app_constants.dart';
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatefulWidget {
@@ -82,8 +83,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
       readOnly: widget.readOnly,
       onTap: widget.onTap,
       style: widget.textStyle ??
-          const TextStyle(
-            fontFamily: 'Cairo',
+          TextStyle(
+            fontFamily: AppFonts.bodyFont,
             fontWeight: FontWeight.w600,
             fontSize: 15,
             color: defaultTextColor,
@@ -92,15 +93,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
         hintText: widget.hint,
         labelText: widget.label,
         hintStyle: widget.hintStyle ??
-            const TextStyle(
-              fontFamily: 'Cairo',
+            TextStyle(
+              fontFamily: AppFonts.bodyFont,
               fontWeight: FontWeight.w500,
               fontSize: 15,
               color: defaultHintColor,
             ),
         labelStyle: widget.labelStyle ??
-            const TextStyle(
-              fontFamily: 'Cairo',
+            TextStyle(
+              fontFamily: AppFonts.bodyFont,
               fontWeight: FontWeight.w500,
               fontSize: 15,
               color: defaultHintColor,

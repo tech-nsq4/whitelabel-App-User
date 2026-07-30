@@ -27,7 +27,10 @@
   },
   "nav": {
     "home": "Home",
-    "more": "More"
+    "more": "More",
+    "medical_file": "Medical File",
+    "family": "Family",
+    "account": "Account"
   },
   "validation": {
     "required": "This field is required",
@@ -37,12 +40,49 @@
   },
   "common": {
     "cancel": "Cancel",
+    "close": "Close",
     "search": "Search",
     "retry": "Retry",
     "confirm": "Confirm"
   },
   "home": {
-    "welcome": "Welcome"
+    "welcome": "Welcome",
+    "greeting_morning": "Good morning",
+    "family_name": "Al-Otaibi Family",
+    "health_card_label": "Health Card",
+    "org_name": "Al-Shifa Medical Complex",
+    "patient_name": "Nora Al-Otaibi",
+    "patient_id": "21403",
+    "blood_type_label": "Blood Type",
+    "age_unit": "yrs",
+    "height_unit": "cm",
+    "weight_unit": "kg",
+    "add_to_wallet": "Add to Apple Wallet",
+    "ai_assistant_title": "AI Assistant",
+    "ai_assistant_badge": "New",
+    "ai_assistant_desc": "Ask about your results and get a simple explanation",
+    "upcoming_appointment": "Upcoming Appointment",
+    "doctor_name": "Dr. Khaled Al-Otaibi",
+    "clinic_branch": "General Medicine · Al-Ula Branch",
+    "services": "Services",
+    "see_all": "See all",
+    "book_appointment": "Book Appointment",
+    "book_appointment_subtitle": "Clinic or video",
+    "consultation": "Consultation",
+    "consultation_subtitle": "Remote",
+    "emergency": "Emergency",
+    "emergency_subtitle": "24/7",
+    "medical_record": "Medical Record",
+    "visits": "My Visits",
+    "visits_subtitle": "Last visit Jun 8 · 3 procedures",
+    "lab_results": "Lab Results",
+    "lab_results_subtitle": "Vitamin D - low · Yesterday",
+    "lab_results_badge": "New",
+    "xray": "X-Ray",
+    "xray_subtitle": "Right knee · Jun 5",
+    "medications": "Medications",
+    "medications_subtitle": "Next dose 2:00 PM",
+    "coming_soon": "Coming soon"
   },
   "more": {
     "title": "More",

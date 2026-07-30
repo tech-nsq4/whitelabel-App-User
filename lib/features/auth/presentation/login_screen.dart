@@ -1,9 +1,6 @@
-import 'dart:math' as math;
-
 import 'package:easy_localization/easy_localization.dart';
-import 'package:app_base/core/extensions/extensions.dart';
-import 'package:app_base/core/utils/app_images.dart';
-import 'package:app_base/core/widgets/app_text.dart';
+import 'package:vivacare_white_label/core/extensions/extensions.dart';
+import 'package:vivacare_white_label/core/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,9 +10,11 @@ import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/locale_keys.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/app_text_field.dart';
-import '../../../core/widgets/primary_header.dart';
 import '../logic/auth_cubit.dart';
 import '../../profile/logic/profile_cubit.dart';
+import 'widgets/auth_header.dart';
+import 'widgets/dashed_guest_button.dart';
+import 'widgets/field_label.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -74,13 +73,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const _HeaderSection(),
+                    const AuthHeader(),
                     Container(
                       padding: 16.paddingHorizontal,
                       width: double.infinity,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFF4F5F3),
-                        borderRadius: BorderRadius.only(
+                      decoration: BoxDecoration(
+                        color: AppColors.backgroundColor.themeColor,
+                        borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(30),
                           topRight: Radius.circular(30),
                         ),
@@ -91,12 +90,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           16.height,
                           AppText(
                             LocaleKeys.auth_login.tr(),
+                            isHeading: true,
                             fontSize: 24,
-                            color: const Color(0xFF17212B),
+                            color: AppColors.textPrimaryColor.themeColor,
                             fontWeight: FontWeight.w700,
                           ),
                           14.height,
-                          _FieldLabel(text: LocaleKeys.auth_email.tr()),
+                          FieldLabel(text: LocaleKeys.auth_email.tr()),
                           8.height,
                           CustomTextField(
                             hint: LocaleKeys.auth_email.tr(),
@@ -113,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                           ),
                           14.height,
-                          _FieldLabel(text: LocaleKeys.auth_password.tr()),
+                          FieldLabel(text: LocaleKeys.auth_password.tr()),
                           8.height,
                           CustomTextField(
                             hint: LocaleKeys.auth_password.tr(),
@@ -141,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             children: [
                               Expanded(
                                 child: Divider(
-                                  color: const Color(0xFFD4D9D3),
+                                  color: AppColors.dividerColor.themeColor,
                                   thickness: 1,
                                   endIndent: 8.w,
                                 ),
@@ -149,12 +149,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               AppText(
                                 LocaleKeys.auth_or.tr(),
                                 fontSize: 14,
-                                color: const Color(0xFF9AA19C),
+                                color: AppColors.mutedColor.themeColor,
                                 fontWeight: FontWeight.w600,
                               ),
                               Expanded(
                                 child: Divider(
-                                  color: const Color(0xFFD4D9D3),
+                                  color: AppColors.dividerColor.themeColor,
                                   thickness: 1,
                                   indent: 8.w,
                                 ),
@@ -162,7 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ],
                           ),
                           18.height,
-                          _DashedGuestButton(
+                          DashedGuestButton(
                             label: LocaleKeys.auth_continueAsGuest.tr(),
                             color: AppColors.primaryColor.themeColor,
                             onTap: _continueAsGuest,
@@ -175,7 +175,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 AppText(
                                   LocaleKeys.auth_dontHaveAccount.tr(),
                                   fontSize: 14,
-                                  color: const Color(0xFF9AA19C),
+                                  color: AppColors.mutedColor.themeColor,
                                   fontWeight: FontWeight.w500,
                                 ),
                                 4.width,
@@ -204,141 +204,5 @@ class _LoginScreenState extends State<LoginScreen> {
         },
       ),
     );
-  }
-}
-
-class _HeaderSection extends StatelessWidget {
-  const _HeaderSection();
-
-  @override
-  Widget build(BuildContext context) {
-    return PrimaryHeader(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 50.w),
-        child: Center(
-          child: Image.asset(
-            AppImages.logo4,
-            width: 220.w,
-            fit: BoxFit.contain,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _FieldLabel extends StatelessWidget {
-  const _FieldLabel({required this.text});
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: AlignmentDirectional.centerStart,
-      child: AppText(
-        text,
-        fontSize: 14,
-        color: AppColors.primaryColor.themeColor,
-        fontWeight: FontWeight.w700,
-      ),
-    );
-  }
-}
-
-class _DashedGuestButton extends StatelessWidget {
-  const _DashedGuestButton({
-    required this.label,
-    required this.color,
-    required this.onTap,
-  });
-
-  final String label;
-  final Color color;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: CustomPaint(
-          painter: _DashedRRectPainter(
-            color: color.withValues(alpha: 0.75),
-            strokeWidth: 1.3,
-            dashLength: 6,
-            gapLength: 4,
-            radius: 16,
-          ),
-          child: SizedBox(
-            height: 44.h,
-            child: Center(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  AppText(
-                    label,
-                    fontSize: 16,
-                    color: color,
-                    fontWeight: FontWeight.w700,
-                  ),
-                  8.width,
-                  Icon(Icons.person_outline, size: 19.sp, color: color),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _DashedRRectPainter extends CustomPainter {
-  const _DashedRRectPainter({
-    required this.color,
-    required this.strokeWidth,
-    required this.dashLength,
-    required this.gapLength,
-    required this.radius,
-  });
-
-  final Color color;
-  final double strokeWidth;
-  final double dashLength;
-  final double gapLength;
-  final double radius;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth;
-
-    final rect = Offset.zero & size;
-    final rRect = RRect.fromRectAndRadius(
-        rect.deflate(strokeWidth / 2), Radius.circular(radius));
-    final path = Path()..addRRect(rRect);
-
-    for (final metric in path.computeMetrics()) {
-      var distance = 0.0;
-      while (distance < metric.length) {
-        final end = math.min(distance + dashLength, metric.length);
-        canvas.drawPath(metric.extractPath(distance, end), paint);
-        distance += dashLength + gapLength;
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _DashedRRectPainter oldDelegate) {
-    return oldDelegate.color != color ||
-        oldDelegate.strokeWidth != strokeWidth ||
-        oldDelegate.dashLength != dashLength ||
-        oldDelegate.gapLength != gapLength ||
-        oldDelegate.radius != radius;
   }
 }

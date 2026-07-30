@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:app_base/core/extensions/extensions.dart';
+import 'package:vivacare_white_label/core/extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

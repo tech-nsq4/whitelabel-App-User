@@ -6,6 +6,7 @@ import 'package:gif/gif.dart';
 import '../../../app/router/routes.dart';
 import '../../../core/di/injection.dart';
 import '../../../core/storage/local_storage.dart';
+import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/app_images.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -51,7 +52,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundColor.themeColor,
       body: SizedBox.expand(
         child: Gif(
           controller: _gifController,

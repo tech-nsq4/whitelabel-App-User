@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '../../core/utils/app_colors.dart';
+import '../../core/utils/app_constants.dart';
 
 class AppTheme {
   AppTheme._();
 
-  static const String _font = 'Cairo';
-
   static ThemeData get lightTheme => ThemeData(
         brightness: Brightness.light,
-        fontFamily: _font,
+        fontFamily: AppFonts.bodyFont,
         colorScheme: ColorScheme.fromSeed(
           seedColor: AppColors.primaryColor.light,
           brightness: Brightness.light,
@@ -20,7 +19,7 @@ class AppTheme {
 
   static ThemeData get darkTheme => ThemeData(
         brightness: Brightness.dark,
-        fontFamily: _font,
+        fontFamily: AppFonts.bodyFont,
         colorScheme: ColorScheme.fromSeed(
           seedColor: AppColors.primaryColor.dark,
           brightness: Brightness.dark,

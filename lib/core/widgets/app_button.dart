@@ -1,7 +1,7 @@
-import 'package:app_base/core/extensions/extensions.dart';
-import 'package:app_base/core/utils/app_colors.dart';
-import 'package:app_base/core/widgets/app_text.dart';
-import 'package:app_base/core/widgets/custom_loading_widget.dart';
+import 'package:vivacare_white_label/core/extensions/extensions.dart';
+import 'package:vivacare_white_label/core/utils/app_colors.dart';
+import 'package:vivacare_white_label/core/widgets/app_text.dart';
+import 'package:vivacare_white_label/core/widgets/custom_loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -72,7 +72,7 @@ class CustomButton extends StatelessWidget {
         child: MaterialButton(
           color: _isOutlined
               ? Colors.transparent
-              : (_color ?? AppColors.primaryColor.darkColor),
+              : (_color ?? AppColors.primaryColor.themeColor),
           highlightElevation: 0,
           onPressed: _loading ? () {} : _onTap,
           padding: !_widerPadding
@@ -99,6 +99,7 @@ class CustomButton extends StatelessWidget {
                       padding: 2.paddingBottom,
                       child: AppText(
                         _title,
+                        isHeading: true,
                         fontSize: _fontSize ?? 15,
                         fontWeight: FontWeight.bold,
                         color: _textColor ??

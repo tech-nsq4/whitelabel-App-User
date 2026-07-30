@@ -1,4 +1,4 @@
-import 'package:app_base/app/router/navigation_services.dart';
+import 'package:vivacare_white_label/app/router/navigation_services.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,7 +41,11 @@ class MyApp extends StatelessWidget {
               theme: AppTheme.lightTheme,
               darkTheme: AppTheme.darkTheme,
               themeMode: ThemeMode.light,
-              initialRoute: Routes.splashScreen,
+              initialRoute: Routes.layoutScreen,
+              onGenerateInitialRoutes: (initialRouteName) => [
+                RouteGenerator.generateRoute(
+                    RouteSettings(name: initialRouteName)),
+              ],
               navigatorKey: NavigationService.navigationKey,
               onGenerateRoute: RouteGenerator.generateRoute,
               localizationsDelegates: context.localizationDelegates,

@@ -22,6 +22,7 @@ abstract class LocaleKeys {
 
   // ─── Common ───────────────────────────────────────────────────────────────
   static const String common_cancel = 'common.cancel';
+  static const String common_close = 'common.close';
   static const String common_search = 'common.search';
   static const String common_retry = 'common.retry';
   static const String common_confirm = 'common.confirm';
@@ -46,9 +47,50 @@ abstract class LocaleKeys {
   // ─── Navigation ───────────────────────────────────────────────────────────
   static const String nav_home = 'nav.home';
   static const String nav_more = 'nav.more';
+  static const String nav_medicalFile = 'nav.medical_file';
+  static const String nav_family = 'nav.family';
+  static const String nav_account = 'nav.account';
 
   // ─── Home ─────────────────────────────────────────────────────────────────
   static const String home_welcome = 'home.welcome';
+  static const String home_greetingMorning = 'home.greeting_morning';
+  static const String home_familyName = 'home.family_name';
+  static const String home_healthCardLabel = 'home.health_card_label';
+  static const String home_orgName = 'home.org_name';
+  static const String home_patientName = 'home.patient_name';
+  static const String home_patientId = 'home.patient_id';
+  static const String home_bloodTypeLabel = 'home.blood_type_label';
+  static const String home_ageUnit = 'home.age_unit';
+  static const String home_heightUnit = 'home.height_unit';
+  static const String home_weightUnit = 'home.weight_unit';
+  static const String home_addToWallet = 'home.add_to_wallet';
+  static const String home_aiAssistantTitle = 'home.ai_assistant_title';
+  static const String home_aiAssistantBadge = 'home.ai_assistant_badge';
+  static const String home_aiAssistantDesc = 'home.ai_assistant_desc';
+  static const String home_upcomingAppointment = 'home.upcoming_appointment';
+  static const String home_doctorName = 'home.doctor_name';
+  static const String home_clinicBranch = 'home.clinic_branch';
+  static const String home_services = 'home.services';
+  static const String home_seeAll = 'home.see_all';
+  static const String home_bookAppointment = 'home.book_appointment';
+  static const String home_bookAppointmentSubtitle =
+      'home.book_appointment_subtitle';
+  static const String home_consultation = 'home.consultation';
+  static const String home_consultationSubtitle =
+      'home.consultation_subtitle';
+  static const String home_emergency = 'home.emergency';
+  static const String home_emergencySubtitle = 'home.emergency_subtitle';
+  static const String home_medicalRecord = 'home.medical_record';
+  static const String home_visits = 'home.visits';
+  static const String home_visitsSubtitle = 'home.visits_subtitle';
+  static const String home_labResults = 'home.lab_results';
+  static const String home_labResultsSubtitle = 'home.lab_results_subtitle';
+  static const String home_labResultsBadge = 'home.lab_results_badge';
+  static const String home_xray = 'home.xray';
+  static const String home_xraySubtitle = 'home.xray_subtitle';
+  static const String home_medications = 'home.medications';
+  static const String home_medicationsSubtitle = 'home.medications_subtitle';
+  static const String home_comingSoon = 'home.coming_soon';
 
   // ─── More ─────────────────────────────────────────────────────────────────
   static const String more_title = 'more.title';

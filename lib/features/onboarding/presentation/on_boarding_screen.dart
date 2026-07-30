@@ -1,5 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:app_base/core/extensions/extensions.dart';
+import 'package:vivacare_white_label/core/extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -151,16 +151,16 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                                 children: [
                                   AppText(
                                     currentSlide.title,
-                                    color: Colors.black,
+                                    isHeading: true,
+                                    color: AppColors.textPrimaryColor.themeColor,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18.sp,
                                     textAlign: TextAlign.center,
-                                    // height: 1.0,
                                   ),
                                   SizedBox(height: 16.h),
                                   AppText(
                                     currentSlide.subtitle,
-                                    color: Colors.black.withValues(alpha: 0.9),
+                                    color: AppColors.textSecondaryColor.themeColor,
                                     height: 1.5,
                                     fontSize: 16.sp,
                                     maxLines: 20,
@@ -200,7 +200,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   onPressed: _finish,
                   child: AppText(
                     LocaleKeys.onboarding_skip.tr(),
-                    color: Colors.black.withValues(alpha: 0.70),
+                    color: AppColors.mutedColor.themeColor,
                   ),
                 ),
               ),

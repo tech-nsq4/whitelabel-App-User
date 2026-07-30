@@ -1,4 +1,4 @@
-import 'package:app_base/app/router/navigation_services.dart';
+import 'package:vivacare_white_label/app/router/navigation_services.dart';
 import 'package:flutter/material.dart';
 
 class ColorModel {
@@ -25,9 +25,20 @@ extension ColorTheme on ColorModel {
 class AppColors {
   AppColors._();
 
+  // ─── Brand (deep emerald) ───────────────────────────────────────────────
   static const ColorModel primaryColor = ColorModel(
-    lightColor: Color(0xff0a3320),
-    darkColor: Color(0xff0a3320),
+    lightColor: Color(0xFF0F6B5C),
+    darkColor: Color(0xFF1A8B77),
+  );
+
+  static const ColorModel primaryLightColor = ColorModel(
+    lightColor: Color(0xFF1A8B77),
+    darkColor: Color(0xFF1A8B77),
+  );
+
+  static const ColorModel primaryDarkColor = ColorModel(
+    lightColor: Color(0xFF0A4F44),
+    darkColor: Color(0xFF0A4F44),
   );
 
   static const ColorModel secondaryColor = ColorModel(
@@ -35,54 +46,68 @@ class AppColors {
     darkColor: Color(0xff1B5583),
   );
 
+  // ─── Surfaces ────────────────────────────────────────────────────────────
   static const ColorModel backgroundColor = ColorModel(
-    lightColor: Color(0xffFFFFFF),
+    lightColor: Color(0xFFF6F4EF),
     darkColor: Color(0xff121212),
   );
 
   static const ColorModel surfaceColor = ColorModel(
-    lightColor: Color(0xffF5F5F5),
+    lightColor: Color(0xFFEFEBE1),
     darkColor: Color(0xff1E1E1E),
   );
 
+  static const ColorModel cardColor = ColorModel(
+    lightColor: Color(0xFFFFFFFF),
+    darkColor: Color(0xff2C2C2C),
+  );
+
+  static const ColorModel dividerColor = ColorModel(
+    lightColor: Color(0xFFE7E3DA),
+    darkColor: Color(0xff424242),
+  );
+
+  // ─── Text ────────────────────────────────────────────────────────────────
   static const ColorModel textPrimaryColor = ColorModel(
-    lightColor: Color(0xff1A1A1A),
+    lightColor: Color(0xFF0A1F1B),
     darkColor: Color(0xffFFFFFF),
   );
 
   static const ColorModel textSecondaryColor = ColorModel(
-    lightColor: Color(0xff757575),
+    lightColor: Color(0xFF41544F),
     darkColor: Color(0xffB0B0B0),
   );
 
-  static const ColorModel errorColor = ColorModel(
-    lightColor: Color(0xffD32F2F),
-    darkColor: Color(0xffEF5350),
-  );
-
-  static const ColorModel successColor = ColorModel(
-    lightColor: Color(0xff388E3C),
-    darkColor: Color(0xff66BB6A),
-  );
-
-  static const ColorModel dividerColor = ColorModel(
-    lightColor: Color(0xffE0E0E0),
-    darkColor: Color(0xff424242),
+  /// Muted text — captions, placeholders, disabled labels.
+  static const ColorModel mutedColor = ColorModel(
+    lightColor: Color(0xFF7C8B87),
+    darkColor: Color(0xFF8A9490),
   );
 
   static const ColorModel hintColor = ColorModel(
-    lightColor: Color(0xffBDBDBD),
+    lightColor: Color(0xFFB4BFBC),
     darkColor: Color(0xff616161),
   );
 
-  static const ColorModel cardColor = ColorModel(
-    lightColor: Color(0xffFFFFFF),
-    darkColor: Color(0xff2C2C2C),
+  // ─── Status ──────────────────────────────────────────────────────────────
+  static const ColorModel errorColor = ColorModel(
+    lightColor: Color(0xFFB3402F),
+    darkColor: Color(0xFFEF5350),
   );
 
-  /// Golden accent — used for the final onboarding CTA button.
+  static const ColorModel successColor = ColorModel(
+    lightColor: Color(0xFF0F6B5C),
+    darkColor: Color(0xFF1A8B77),
+  );
+
+  static const ColorModel warningColor = ColorModel(
+    lightColor: Color(0xFFA97612),
+    darkColor: Color(0xFFA97612),
+  );
+
+  /// Golden accent — CTA highlights, ratings, decorative details.
   static const ColorModel accentGold = ColorModel(
-    lightColor: Color(0xFFD4A843),
-    darkColor: Color(0xFFD4A843),
+    lightColor: Color(0xFFC9A227),
+    darkColor: Color(0xFFC9A227),
   );
 }

@@ -27,7 +27,10 @@
   },
   "nav": {
     "home": "الرئيسية",
-    "more": "المزيد"
+    "more": "المزيد",
+    "medical_file": "سجلي الطبي",
+    "family": "العائلة",
+    "account": "حسابي"
   },
   "validation": {
     "required": "هذا الحقل مطلوب",
@@ -37,12 +40,49 @@
   },
   "common": {
     "cancel": "إلغاء",
+    "close": "إغلاق",
     "search": "بحث",
     "retry": "إعادة المحاولة",
     "confirm": "تأكيد"
   },
   "home": {
-    "welcome": "أهلاً وسهلاً"
+    "welcome": "أهلاً وسهلاً",
+    "greeting_morning": "صباح الخير",
+    "family_name": "أسرة العتيبي",
+    "health_card_label": "البطاقة الصحية",
+    "org_name": "مجمع الشفاء الطبي",
+    "patient_name": "نورة العتيبي",
+    "patient_id": "21403",
+    "blood_type_label": "الفصيلة",
+    "age_unit": "سنة",
+    "height_unit": "سم",
+    "weight_unit": "كجم",
+    "add_to_wallet": "إضافة إلى Apple Wallet",
+    "ai_assistant_title": "المساعد الذكي",
+    "ai_assistant_badge": "جديد",
+    "ai_assistant_desc": "اسأل عن نتائجك واحصل على شرح مبسط",
+    "upcoming_appointment": "موعدي القادم",
+    "doctor_name": "د. خالد العتيبي",
+    "clinic_branch": "باطنة عامة · فرع العلا",
+    "services": "الخدمات",
+    "see_all": "الكل",
+    "book_appointment": "حجز موعد",
+    "book_appointment_subtitle": "عيادة أو فيديو",
+    "consultation": "استشارة",
+    "consultation_subtitle": "عن بعد",
+    "emergency": "طوارئ",
+    "emergency_subtitle": "24/7",
+    "medical_record": "سجلي الطبي",
+    "visits": "زياراتي",
+    "visits_subtitle": "آخر زيارة 8 يونيو · 3 إجراءات",
+    "lab_results": "نتائج المختبر",
+    "lab_results_subtitle": "فيتامين د - منخفض · أمس",
+    "lab_results_badge": "جديد",
+    "xray": "الأشعة",
+    "xray_subtitle": "ركبة اليمنى · 5 يونيو",
+    "medications": "الأدوية",
+    "medications_subtitle": "جرعتك القادمة 2:00 م",
+    "coming_soon": "قيد التطوير"
   },
   "more": {
     "title": "المزيد",

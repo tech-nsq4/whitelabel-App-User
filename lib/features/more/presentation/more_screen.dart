@@ -1,9 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:app_base/core/extensions/extensions.dart';
-import 'package:app_base/core/widgets/app_button.dart';
-import 'package:app_base/core/widgets/app_text.dart';
-import 'package:app_base/core/widgets/custom_tap_effect.dart';
-import 'package:app_base/core/widgets/image/custom_image.dart';
+import 'package:vivacare_white_label/core/extensions/extensions.dart';
+import 'package:vivacare_white_label/core/widgets/app_button.dart';
+import 'package:vivacare_white_label/core/widgets/app_text.dart';
+import 'package:vivacare_white_label/core/widgets/custom_tap_effect.dart';
+import 'package:vivacare_white_label/core/widgets/image/custom_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
