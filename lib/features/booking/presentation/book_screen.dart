@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -5,6 +6,7 @@ import '../../../app/router/routes.dart';
 import '../../../core/extensions/extensions.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/app_svg_icons.dart';
+import '../../../core/utils/locale_keys.dart';
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/app_svg_icon.dart';
 import '../../../core/widgets/app_text.dart';
@@ -62,11 +64,17 @@ class _BookScreenState extends State<BookScreen> {
                     onTap: () => Navigator.pushNamed(context, Routes.specs),
                   ),
                   ListRowTile(
+                    icon: AppSvgIcons.account,
+                    title: LocaleKeys.booking_byDoctor.tr(),
+                    subtitle: LocaleKeys.booking_byDoctorSubtitle.tr(),
+                    onTap: () => Navigator.pushNamed(context, Routes.doctorSearch),
+                  ),
+                  ListRowTile(
                     icon: AppSvgIcons.mapPin,
                     title: 'حسب الفرع',
-                    subtitle: 'العلا · المرجس · الماسين',
                     showDivider: false,
-                    onTap: () => Navigator.pushNamed(context, Routes.specs),
+                    subtitle: 'العلا · المرجس · الماسين',
+                    onTap: () => Navigator.pushNamed(context, Routes.branches),
                   ),
                 ],
               ),

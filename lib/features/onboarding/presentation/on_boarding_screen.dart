@@ -12,7 +12,9 @@ import '../../../core/utils/app_images.dart';
 import '../../../core/utils/locale_keys.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/app_text.dart';
-import '../../../core/widgets/image/custom_image.dart';
+import 'widgets/onboarding_dots_indicator.dart';
+import 'widgets/onboarding_illustration.dart';
+import 'widgets/onboarding_slide_data.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});
@@ -24,24 +26,29 @@ class OnBoardingScreen extends StatefulWidget {
 class _OnBoardingScreenState extends State<OnBoardingScreen> {
   final _pageController = PageController();
   int _currentPage = 0;
-  List<_OnboardingSlide> _slides = [];
+  List<OnboardingSlideData> _slides = [];
 
-  List<_OnboardingSlide> _buildSlides() {
+  List<OnboardingSlideData> _buildSlides() {
     return [
-      _OnboardingSlide(
-        imageUrl: AppImages.onboarding1,
+      OnboardingSlideData(
+        illustration: OnboardingIllustrationType.welcome,
         title: LocaleKeys.onboarding_slide1_title.tr(),
         subtitle: LocaleKeys.onboarding_slide1_subtitle.tr(),
       ),
-      _OnboardingSlide(
-        imageUrl: AppImages.onboarding2,
+      OnboardingSlideData(
+        illustration: OnboardingIllustrationType.telemed,
         title: LocaleKeys.onboarding_slide2_title.tr(),
         subtitle: LocaleKeys.onboarding_slide2_subtitle.tr(),
       ),
-      _OnboardingSlide(
-        imageUrl: AppImages.onboarding3,
+      OnboardingSlideData(
+        illustration: OnboardingIllustrationType.pharmacy,
         title: LocaleKeys.onboarding_slide3_title.tr(),
         subtitle: LocaleKeys.onboarding_slide3_subtitle.tr(),
+      ),
+      OnboardingSlideData(
+        illustration: OnboardingIllustrationType.family,
+        title: LocaleKeys.onboarding_slide4_title.tr(),
+        subtitle: LocaleKeys.onboarding_slide4_subtitle.tr(),
       ),
     ];
   }
@@ -79,7 +86,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     final slides = _slides;
     final currentSlide = slides[_currentPage];
 
-    final primaryColor = AppColors.primaryColor.themeColor;
     final accentGold = AppColors.accentGold.themeColor;
 
     return Scaffold(
@@ -95,86 +101,59 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   AppImages.logo3,
                   height: 80,
                   fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => const SizedBox.shrink(),
                 ),
               ),
 
-              // ── Image card (PageView) ────────────────────────────────────
+              // ── Illustration card (PageView) ─────────────────────────────
               Expanded(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(30),
-                  child: PageView.builder(
-                    controller: _pageController,
-                    itemCount: slides.length,
-                    onPageChanged: (i) => setState(() => _currentPage = i),
-                    itemBuilder: (_, i) => SingleChildScrollView(
-                      padding: 10.paddingBottom,
-                      child: Column(
-                        children: [
-                          if (slides[i].imageUrl.isNotEmpty)
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(30),
-                              child: CustomImage(
-                                image: slides[i].imageUrl,
-                                fit: BoxFit.contain,
-                                width: double.infinity,
-                              ),
-                            ),
-                          16.height,
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: List.generate(
-                              slides.length,
-                              (j) => AnimatedContainer(
-                                duration: AppConstants.shortAnimationDuration,
-                                margin:
-                                    const EdgeInsets.symmetric(horizontal: 4),
-                                width: _currentPage == j ? 24 : 8,
-                                height: 8,
-                                decoration: BoxDecoration(
-                                  color: _currentPage == j
-                                      ? primaryColor
-                                      : primaryColor.withValues(alpha: 0.35),
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                              ),
-                            ),
-                          ),
-                          20.height,
-                          AnimatedOpacity(
-                            opacity: currentSlide.hasText ? 1.0 : 0.0,
-                            duration: AppConstants.defaultAnimationDuration,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: AppConstants.defaultPadding),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  AppText(
-                                    currentSlide.title,
-                                    isHeading: true,
-                                    color: AppColors.textPrimaryColor.themeColor,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18.sp,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  SizedBox(height: 16.h),
-                                  AppText(
-                                    currentSlide.subtitle,
-                                    color: AppColors.textSecondaryColor.themeColor,
-                                    height: 1.5,
-                                    fontSize: 16.sp,
-                                    maxLines: 20,
-                                    fontWeight: FontWeight.w400,
-                                    textAlign: TextAlign.center,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
+                child: PageView.builder(
+                  controller: _pageController,
+                  itemCount: slides.length,
+                  onPageChanged: (i) => setState(() => _currentPage = i),
+                  itemBuilder: (_, i) => Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      OnboardingIllustration(illustration: slides[i].illustration),
+                      32.height,
+                      OnboardingDotsIndicator(
+                        count: slides.length,
+                        currentIndex: _currentPage,
                       ),
-                    ),
+                      24.height,
+                      AnimatedOpacity(
+                        opacity: currentSlide.hasText ? 1.0 : 0.0,
+                        duration: AppConstants.defaultAnimationDuration,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: AppConstants.defaultPadding),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              AppText(
+                                currentSlide.title,
+                                isHeading: true,
+                                color: AppColors.textPrimaryColor.themeColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.sp,
+                                textAlign: TextAlign.center,
+                              ),
+                              SizedBox(height: 12.h),
+                              AppText(
+                                currentSlide.subtitle,
+                                color: AppColors.textSecondaryColor.themeColor,
+                                height: 1.5,
+                                fontSize: 15.sp,
+                                maxLines: 4,
+                                fontWeight: FontWeight.w400,
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -190,7 +169,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   onTap: _nextPage,
                   color: _isLast ? accentGold : null,
                   borderColor: _isLast ? accentGold : null,
-                  textColor: _isLast ? AppColors.primaryColor.themeColor : null,
                 ),
               ),
 
@@ -210,20 +188,4 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       ),
     );
   }
-}
-
-// ── Data model ───────────────────────────────────────────────────────────────
-
-class _OnboardingSlide {
-  const _OnboardingSlide({
-    required this.imageUrl,
-    required this.title,
-    required this.subtitle,
-  });
-
-  final String imageUrl;
-  final String title;
-  final String subtitle;
-
-  bool get hasText => title.isNotEmpty;
 }

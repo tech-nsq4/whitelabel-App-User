@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../features/account/presentation/branches_screen.dart';
 import '../../features/account/presentation/contact_screen.dart';
 import '../../features/account/presentation/feedback_screen.dart';
 import '../../features/account/presentation/privacy_screen.dart';
@@ -10,9 +9,14 @@ import '../../features/ai_assistant/presentation/ai_assistant_screen.dart';
 import '../../features/ai_assistant/presentation/ai_plan_screen.dart';
 import '../../features/ask_doctor/presentation/ask_doctor_screen.dart';
 import '../../features/auth/presentation/login_screen.dart';
+import '../../features/auth/presentation/otp_screen.dart';
 import '../../features/auth/presentation/register_screen.dart';
+import '../../features/profile/presentation/complete_profile_screen.dart';
+import '../../features/booking/presentation/appointment_detail_screen.dart';
 import '../../features/booking/presentation/book_screen.dart';
+import '../../features/booking/presentation/branches_screen.dart';
 import '../../features/booking/presentation/doctor_screen.dart';
+import '../../features/booking/presentation/doctor_search_screen.dart';
 import '../../features/booking/presentation/specs_screen.dart';
 import '../../features/booking/presentation/symptom_checker_screen.dart';
 import '../../features/emergency/presentation/em_ambulance_screen.dart';
@@ -20,6 +24,8 @@ import '../../features/emergency/presentation/em_checkin_screen.dart';
 import '../../features/emergency/presentation/em_nearest_screen.dart';
 import '../../features/emergency/presentation/em_rapid_screen.dart';
 import '../../features/emergency/presentation/emergency_screen.dart';
+import '../../features/family/data/models/family_member_model.dart';
+import '../../features/family/logic/family_cubit.dart';
 import '../../features/family/presentation/member_screen.dart';
 import '../../features/homecare/presentation/homecare_screen.dart';
 import '../../features/immunity/presentation/immunity_screen.dart';
@@ -62,6 +68,15 @@ class RouteGenerator {
 
       case Routes.registerScreen:
         return _pageRoute(const RegisterScreen());
+
+      case Routes.otpScreen:
+        return _pageRoute(OtpScreen(
+          phone: arguments?['phone'] as String,
+          isNewUser: arguments?['isNewUser'] as bool? ?? false,
+        ));
+
+      case Routes.completeProfileScreen:
+        return _pageRoute(const CompleteProfileScreen());
 
       case Routes.layoutScreen:
         return _pageRoute(LayoutScreen(
@@ -156,14 +171,26 @@ class RouteGenerator {
       case Routes.specs:
         return _pageRoute(SpecsScreen(initialSpecialty: arguments?['initialSpecialty'] as String?));
 
+      case Routes.doctorSearch:
+        return _pageRoute(DoctorSearchScreen(
+          clinicId: arguments?['clinicId'] as int?,
+          title: arguments?['title'] as String?,
+        ));
+
       case Routes.doctor:
-        return _pageRoute(DoctorScreen(doctorId: arguments?['id'] as String));
+        return _pageRoute(DoctorScreen(doctorId: arguments?['id'] as int));
+
+      case Routes.appointmentDetail:
+        return _pageRoute(AppointmentDetailScreen(appointmentId: arguments?['id'] as int));
 
       case Routes.symptomChecker:
         return _pageRoute(const SymptomCheckerScreen());
 
       case Routes.member:
-        return _pageRoute(MemberScreen(memberId: arguments?['id'] as String));
+        return _pageRoute(MemberScreen(
+          member: arguments?['member'] as FamilyMemberModel,
+          cubit: arguments?['cubit'] as FamilyCubit,
+        ));
 
       case Routes.profile:
         return _pageRoute(const ProfileScreen());

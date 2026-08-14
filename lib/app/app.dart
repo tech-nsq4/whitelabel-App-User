@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../core/di/injection.dart';
-import '../core/storage/local_storage.dart';
 import '../core/utils/app_constants.dart';
 import '../features/auth/logic/auth_cubit.dart';
 import '../features/profile/logic/profile_cubit.dart';
@@ -20,16 +19,10 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthCubit>(create: (_) => getIt<AuthCubit>()),
-        BlocProvider<ProfileCubit>(
-          create: (_) {
-            final cubit = getIt<ProfileCubit>();
-            // Avoid unauthenticated profile request when app is in guest mode.
-            if (getIt<LocalStorage>().isLoggedIn) {
-              cubit.getProfile();
-            }
-            return cubit;
-          },
-        ),
+        // The splash screen itself awaits `getProfile()` (when logged in)
+        // before deciding whether to route to the layout or to the
+        // complete-profile step, so it isn't kicked off here too.
+        BlocProvider<ProfileCubit>(create: (_) => getIt<ProfileCubit>()),
       ],
       child: ScreenUtilInit(
           designSize: const Size(375, 812),
@@ -41,7 +34,7 @@ class MyApp extends StatelessWidget {
               theme: AppTheme.lightTheme,
               darkTheme: AppTheme.darkTheme,
               themeMode: ThemeMode.light,
-              initialRoute: Routes.layoutScreen,
+              initialRoute: Routes.splashScreen,
               onGenerateInitialRoutes: (initialRouteName) => [
                 RouteGenerator.generateRoute(
                     RouteSettings(name: initialRouteName)),

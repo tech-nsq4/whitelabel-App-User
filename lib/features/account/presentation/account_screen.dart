@@ -13,13 +13,13 @@ import '../../../core/widgets/list_row_tile.dart';
 import '../../auth/logic/auth_cubit.dart';
 import '../../home/presentation/widgets/health_card_modal.dart';
 import '../../profile/logic/profile_cubit.dart';
+import 'widgets/account_profile_header.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final primary = AppColors.primaryColor.themeColor;
     final isGuest = kIsGuest;
 
     return Scaffold(
@@ -27,53 +27,7 @@ class AccountScreen extends StatelessWidget {
         child: ListView(
           padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 110.h),
           children: [
-            Row(
-              children: [
-                Container(
-                  width: 58.r,
-                  height: 58.r,
-                  decoration: BoxDecoration(color: primary, borderRadius: BorderRadius.circular(19.r)),
-                  alignment: Alignment.center,
-                  child: Text(isGuest ? '؟' : 'أ',
-                      style: TextStyle(
-                          fontFamily: AppFonts.headingFont,
-                          fontSize: 22.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white)),
-                ),
-                14.width,
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AppText(isGuest ? 'زائر' : 'أسرة العتيبي',
-                          isHeading: true,
-                          fontSize: 17,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.textPrimaryColor.themeColor),
-                      2.height,
-                      AppText(isGuest ? 'سجّل الدخول لحفظ بياناتك' : 'رقم الملف 30412',
-                          fontSize: 11, color: AppColors.mutedColor.themeColor),
-                    ],
-                  ),
-                ),
-                if (!isGuest)
-                  Container(
-                    width: 36.r,
-                    height: 36.r,
-                    decoration: BoxDecoration(
-                      color: AppColors.cardColor.themeColor,
-                      borderRadius: BorderRadius.circular(13.r),
-                      border: Border.all(color: AppColors.dividerColor.themeColor),
-                    ),
-                    child: IconButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: () => Navigator.pushNamed(context, Routes.profile),
-                      icon: Icon(Icons.edit_outlined, size: 16.sp, color: AppColors.mutedColor.themeColor),
-                    ),
-                  ),
-              ],
-            ),
+            const AccountProfileHeader(),
             22.height,
             AppCard(
               padding: EdgeInsets.symmetric(horizontal: 16.w),

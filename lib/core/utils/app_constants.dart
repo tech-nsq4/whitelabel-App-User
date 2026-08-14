@@ -5,7 +5,7 @@ class AppConstants {
   AppConstants._();
 
   // ─── App ──────────────────────────────────────────────────────────────────
-  static const String appName = 'App Base';
+  static const String appName = 'Vivacare';
 
   // ─── Pagination ───────────────────────────────────────────────────────────
   static const int pageSize = 15;

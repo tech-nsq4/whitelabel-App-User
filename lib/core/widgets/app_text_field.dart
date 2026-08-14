@@ -1,6 +1,7 @@
 import 'package:vivacare_white_label/core/utils/app_colors.dart';
 import 'package:vivacare_white_label/core/utils/app_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CustomTextField extends StatefulWidget {
   const CustomTextField({
@@ -27,6 +28,11 @@ class CustomTextField extends StatefulWidget {
     this.textStyle,
     this.hintStyle,
     this.labelStyle,
+    this.focusNode,
+    this.textAlign,
+    this.inputFormatters,
+    this.maxLength,
+    this.autofocus = false,
   });
 
   final String hint;
@@ -51,6 +57,16 @@ class CustomTextField extends StatefulWidget {
   final TextStyle? textStyle;
   final TextStyle? hintStyle;
   final TextStyle? labelStyle;
+
+  /// Own focus node — e.g. to chain focus across a row of single-digit OTP
+  /// boxes.
+  final FocusNode? focusNode;
+  final TextAlign? textAlign;
+  final List<TextInputFormatter>? inputFormatters;
+
+  /// Caps the input length and hides the built-in character counter.
+  final int? maxLength;
+  final bool autofocus;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -82,6 +98,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
       enabled: widget.enabled,
       readOnly: widget.readOnly,
       onTap: widget.onTap,
+      focusNode: widget.focusNode,
+      textAlign: widget.textAlign ?? TextAlign.start,
+      inputFormatters: widget.inputFormatters,
+      maxLength: widget.maxLength,
+      autofocus: widget.autofocus,
       style: widget.textStyle ??
           TextStyle(
             fontFamily: AppFonts.bodyFont,
@@ -139,6 +160,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         ),
         contentPadding: widget.contentPadding ??
             const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+        counterText: widget.maxLength != null ? '' : null,
       ),
     );
   }

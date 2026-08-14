@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../app/router/routes.dart';
+import '../../../core/di/injection.dart';
+import '../../../core/storage/local_storage.dart';
+import '../../../core/utils/app_constants.dart';
 import '../../../core/utils/app_svg_icons.dart';
 import '../../../core/utils/locale_keys.dart';
 import '../../account/presentation/account_screen.dart';
 import '../../family/presentation/family_screen.dart';
 import '../../home/presentation/home_screen.dart';
 import '../../medical_file/presentation/medical_file_screen.dart';
+import '../../profile/logic/profile_cubit.dart';
 import 'widgets/custom_nav_bar.dart';
 
 class LayoutScreen extends StatefulWidget {
@@ -40,6 +45,25 @@ class _LayoutScreenState extends State<LayoutScreen> {
   void initState() {
     super.initState();
     _currentIndex = widget.currentPage;
+    _syncDeviceOnLogin();
+  }
+
+  /// Fires the two device-housekeeping calls once, right when the
+  /// authenticated user lands on the main app shell: registering the
+  /// push-notification token and syncing the active UI language with the
+  /// backend. Both are best-effort/fire-and-forget (see [ProfileCubit]) and
+  /// skipped entirely for a guest session.
+  void _syncDeviceOnLogin() {
+    if (kIsGuest) return;
+    final profileCubit = context.read<ProfileCubit>();
+
+    // TODO(fcm): wire up `firebase_messaging` (add the package + platform
+    // config) and pass the real device token here — left as a no-op until
+    // then so this call doesn't fire with a bogus value.
+    const fcmToken = '';
+    if (fcmToken.isNotEmpty) profileCubit.registerFcmToken(fcmToken);
+
+    profileCubit.syncAppLang(getIt<LocalStorage>().getLang());
   }
 
   @override

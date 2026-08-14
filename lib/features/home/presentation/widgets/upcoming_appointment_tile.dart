@@ -1,11 +1,9 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/extensions/extensions.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_constants.dart';
-import '../../../../core/utils/locale_keys.dart';
 import '../../../../core/widgets/app_text.dart';
 import '../../../../core/widgets/custom_tap_effect.dart';
 
@@ -17,6 +15,8 @@ class UpcomingAppointmentTile extends StatelessWidget {
     required this.month,
     required this.time,
     required this.period,
+    required this.doctorName,
+    required this.clinicBranch,
     this.onTap,
   });
 
@@ -24,6 +24,8 @@ class UpcomingAppointmentTile extends StatelessWidget {
   final String month;
   final String time;
   final String period;
+  final String doctorName;
+  final String clinicBranch;
   final VoidCallback? onTap;
 
   @override
@@ -83,14 +85,14 @@ class UpcomingAppointmentTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AppText(
-                    LocaleKeys.home_doctorName.tr(),
+                    doctorName,
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                     color: AppColors.textPrimaryColor.themeColor,
                   ),
                   3.height,
                   AppText(
-                    LocaleKeys.home_clinicBranch.tr(),
+                    clinicBranch,
                     fontSize: 11,
                     color: AppColors.mutedColor.themeColor,
                   ),

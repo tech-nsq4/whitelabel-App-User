@@ -1,6 +1,7 @@
 {
-  "app_name": "App Base",
+  "app_name": "Vivacare",
   "auth": {
+    "tagline": "صحتك بين إيدك، بكل بساطة.",
     "login": "تسجيل الدخول",
     "register": "إنشاء حساب",
     "email": "البريد الإلكتروني",
@@ -12,18 +13,76 @@
     "phone": "رقم الهاتف",
     "name": "الاسم الكامل",
     "register_subtitle": "أنشئ حسابك للبدء",
-    "sign_in": "تسجيل الدخول"
+    "login_subtitle": "أدخل رقم هاتفك لتسجيل الدخول.",
+    "sign_in": "تسجيل الدخول",
+    "otp_title": "تأكيد رقم الهاتف",
+    "otp_subtitle": "أدخل كود التفعيل المكوّن من 4 أرقام اللي بعتناه على {phone}",
+    "otp_confirm": "تأكيد ومتابعة",
+    "otp_resend": "إعادة إرسال الكود",
+    "otp_resend_in": "إعادة الإرسال خلال {time}",
+    "otp_change_number": "تغيير رقم الهاتف"
+  },
+  "booking": {
+    "choose_specialty": "اختر التخصص",
+    "sub_specialties_count": "{count} تخصص فرعي",
+    "doctors_count": "{count} أطباء",
+    "experience_years": "{years} سنة خبرة",
+    "doctor_profile_title": "ملف الطبيب",
+    "available_appointments": "المواعيد المتاحة",
+    "about": "نبذة",
+    "clinic_info": "معلومات العيادة",
+    "search_doctor_hint": "ابحث عن طبيب",
+    "filter_consultant": "استشاري",
+    "filter_top_rated": "الأعلى تقييمًا",
+    "filter_nearest": "الأقرب موعدًا",
+    "location_unavailable": "تعذر الوصول لموقعك الحالي — تأكد إن خدمة الموقع مفعّلة والصلاحية متاحة",
+    "by_doctor": "حسب الطبيب",
+    "by_doctor_subtitle": "ابحث باسم الطبيب",
+    "branches_title": "فروعنا",
+    "branches_count": "{count} فروع",
+    "view_doctors": "عرض الأطباء",
+    "directions": "الاتجاهات",
+    "choose_date_time": "اختر اليوم والوقت",
+    "calendar_legend": "الرقم الصغير = عدد المواعيد المتاحة في اليوم",
+    "available_slots_count": "{count} مواعيد متاحة",
+    "no_slots_for_day": "لا توجد مواعيد متاحة في هذا اليوم",
+    "continue_to_payment": "متابعة للدفع",
+    "doctor_label": "الطبيب",
+    "appointment_label": "الموعد",
+    "branch_label": "الفرع",
+    "price_label": "الكشف",
+    "no_appointments_title": "لا توجد مواعيد متاحة حاليًا",
+    "no_appointments_description": "الطبيب مش فاتح مواعيد جديدة دلوقتي — جرّب تاني لاحقًا أو تواصل مع العيادة",
+    "book_for_label": "احجز لـ",
+    "book_for_self": "نفسي",
+    "patient_label": "المريض",
+    "appointment_details_title": "تفاصيل الموعد",
+    "status_pending": "قيد الانتظار",
+    "status_confirmed": "مؤكد",
+    "status_completed": "مكتمل",
+    "status_cancelled": "ملغي"
+  },
+  "calendar": {
+    "sat": "سبت",
+    "sun": "أحد",
+    "mon": "اثنين",
+    "tue": "ثلاثاء",
+    "wed": "أربعاء",
+    "thu": "خميس",
+    "fri": "جمعة"
   },
   "onboarding": {
     "skip": "تخطي",
     "next": "التالي",
-    "get_started": "ابدأ",
-    "slide1_title": "",
-    "slide1_subtitle": "",
-    "slide2_title": "استكشف التطبيق",
-    "slide2_subtitle": "كل ما تحتاجه، منظم في مكان واحد.",
-    "slide3_title": "ابدأ الآن",
-    "slide3_subtitle": "أنشئ حساباً وابدأ استخدام التطبيق."
+    "get_started": "ابدأ الآن",
+    "slide1_title": "أهلاً بك في Vivacare",
+    "slide1_subtitle": "رفيقك الصحي الشامل؛ أطباء، أدوية، وسجلك الطبي في مكان واحد.",
+    "slide2_title": "استشر طبيبك في أي وقت",
+    "slide2_subtitle": "احجز استشارة فيديو أو محادثة فورية مع أطباء موثوقين أينما كنت.",
+    "slide3_title": "أدويتك توصلك لباب البيت",
+    "slide3_subtitle": "اطلب أدويتك من الصيدلية واستلمها أينما كنت.",
+    "slide4_title": "سجل صحي آمن لك ولعائلتك",
+    "slide4_subtitle": "احفظ تاريخك الطبي وتاريخ عائلتك؛ المواعيد والروشتات والتقارير، منظمة وآمنة."
   },
   "nav": {
     "home": "الرئيسية",
@@ -36,14 +95,37 @@
     "required": "هذا الحقل مطلوب",
     "invalid_email": "أدخل بريداً إلكترونياً صحيحاً",
     "short_password": "كلمة المرور يجب أن تكون 6 أحرف على الأقل",
-    "invalid_phone": "أدخل رقم هاتف صحيحاً"
+    "invalid_phone": "أدخل رقم هاتف صحيحاً",
+    "invalid_otp": "من فضلك أدخل الكود المكوّن من 4 أرقام كاملاً",
+    "invalid_number": "أدخل رقمًا صحيحًا"
   },
   "common": {
     "cancel": "إلغاء",
     "close": "إغلاق",
     "search": "بحث",
     "retry": "إعادة المحاولة",
-    "confirm": "تأكيد"
+    "confirm": "تأكيد",
+    "currency": "ريال"
+  },
+  "family": {
+    "title": "العائلة",
+    "members_count": "{count} أفراد",
+    "add_member": "إضافة فرد",
+    "add_member_sheet_title": "إضافة فرد للعائلة",
+    "add_member_sheet_subtitle": "أضف بيانات فرد العائلة وأرفق ملفاته الطبية",
+    "id_number": "رقم الهوية",
+    "medical_files": "الملفات الطبية",
+    "add_photo": "إضافة صورة",
+    "add_success": "تمت إضافة الفرد بنجاح",
+    "age_label": "العمر",
+    "medical_files_count": "{count} ملف طبي",
+    "edit_member_sheet_title": "تعديل بيانات الفرد",
+    "edit_member_sheet_subtitle": "عدّل بيانات الفرد أو أضف ملفات طبية جديدة",
+    "update_success": "تم حفظ بيانات الفرد",
+    "existing_files": "الملفات الحالية",
+    "edit_member": "تعديل البيانات",
+    "guest_title": "سجّل الدخول لعرض عائلتك",
+    "guest_description": "أضف بيانات أفراد عائلتك وتابع ملفاتهم الطبية بعد تسجيل الدخول"
   },
   "home": {
     "welcome": "أهلاً وسهلاً",
@@ -62,8 +144,7 @@
     "ai_assistant_badge": "جديد",
     "ai_assistant_desc": "اسأل عن نتائجك واحصل على شرح مبسط",
     "upcoming_appointment": "موعدي القادم",
-    "doctor_name": "د. خالد العتيبي",
-    "clinic_branch": "باطنة عامة · فرع العلا",
+    "no_upcoming_appointment": "مفيش عندك مواعيد قادمة",
     "services": "الخدمات",
     "see_all": "الكل",
     "book_appointment": "حجز موعد",
@@ -90,7 +171,17 @@
   },
   "profile": {
     "title": "ملفي الشخصي",
-    "login_now": "تسجيل الدخول الآن"
+    "login_now": "تسجيل الدخول الآن",
+    "complete_title": "أكمل بياناتك",
+    "complete_subtitle": "شوية تفاصيل بسيطة عشان نظبطلك تجربتك الصحية.",
+    "date_of_birth": "تاريخ الميلاد",
+    "height": "الطول (سم)",
+    "weight": "الوزن (كجم)",
+    "save_continue": "حفظ ومتابعة",
+    "guest_name": "زائر",
+    "guest_subtitle": "سجّل الدخول لحفظ بياناتك",
+    "save_changes": "حفظ التعديلات",
+    "update_success": "تم حفظ بياناتك بنجاح"
   },
   "settings": {
     "change_language": "تغيير اللغة",
@@ -105,6 +196,7 @@
   },
   "error": {
     "unauthorized": "انتهت الجلسة، يرجى تسجيل الدخول مجدداً",
-    "not_found": "المورد غير موجود"
+    "not_found": "المورد غير موجود",
+    "generic": "حدث خطأ ما، حاول مرة أخرى"
   }
 }

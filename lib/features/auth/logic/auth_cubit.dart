@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/network/network_exceptions.dart';
 import '../../../core/utils/app_overlay.dart';
 import '../data/auth_repo.dart';
+import '../data/models/otp_sent_result.dart';
 import '../data/models/user_model.dart';
 
 part 'auth_state.dart';
@@ -13,21 +14,13 @@ class AuthCubit extends Cubit<AuthState> {
 
   final AuthRepo _repo;
 
-  Future<void> login({
-    String? email,
-    String? phone,
-    String? countryCode,
-    required String password,
-  }) async {
+  /// Requests an OTP for [phone] — starts both the login and the register
+  /// flow, and is also what the OTP screen's resend button calls.
+  Future<void> sendOtp(String phone) async {
     emit(const AuthLoading());
     try {
-      final user = await _repo.login(
-        email: email,
-        phone: phone,
-        countryCode: countryCode,
-        password: password,
-      );
-      emit(AuthSuccess(user));
+      final result = await _repo.sendOtp(phone: phone);
+      emit(OtpSent(result));
     } catch (e) {
       final msg = e is NetworkException ? e.message : e.toString();
       AppOverlay.showError(msg);
@@ -35,22 +28,12 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> register({
-    required String name,
-    required String email,
-    required String phone,
-    required String password,
-    required String countryCode,
-  }) async {
+  /// Verifies [otp] for [phone] — logs the user in either way (new account
+  /// or returning one) and persists the session.
+  Future<void> verifyOtp({required String phone, required String otp}) async {
     emit(const AuthLoading());
     try {
-      final user = await _repo.register(
-        name: name,
-        email: email,
-        phone: phone,
-        password: password,
-        countryCode: countryCode,
-      );
+      final user = await _repo.verifyOtp(phone: phone, otp: otp);
       emit(AuthSuccess(user));
     } catch (e) {
       final msg = e is NetworkException ? e.message : e.toString();
@@ -60,7 +43,6 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> logout() async {
-    // emit(const AuthLoading());
     try {
       await _repo.logout();
       emit(const AuthInitial());

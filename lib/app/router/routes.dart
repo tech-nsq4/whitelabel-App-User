@@ -5,6 +5,8 @@ class Routes {
   static const String onBoardingScreen = '/onboarding';
   static const String loginScreen = '/login';
   static const String registerScreen = '/register';
+  static const String otpScreen = '/otp';
+  static const String completeProfileScreen = '/complete-profile';
   static const String layoutScreen = '/layout';
 
   static const String notifications = '/notifications';
@@ -44,7 +46,9 @@ class Routes {
   static const String book = '/book';
   static const String symptomChecker = '/symptom-checker';
   static const String specs = '/specs';
+  static const String doctorSearch = '/doctor-search';
   static const String doctor = '/doctor';
+  static const String appointmentDetail = '/appointment-detail';
 
   static const String family = '/family';
   static const String member = '/member';

@@ -138,12 +138,14 @@ class _ProfileCard extends StatelessWidget {
 
         if (state is ProfileSuccess) {
           final user = state.user;
-          final displayName = user.name.trim().isNotEmpty ? user.name : title;
+          final displayName = (user.name?.trim().isNotEmpty ?? false)
+              ? user.name!
+              : title;
           return _ProfileCardShell(
             leading: _ProfileLeadingAvatar(
               primary: primary,
-              imageUrl: user.avatar,
-              name: user.name,
+              imageUrl: null,
+              name: displayName,
             ),
             title: AppText(
               displayName,

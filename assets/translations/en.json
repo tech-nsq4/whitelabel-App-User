@@ -1,6 +1,7 @@
 {
-  "app_name": "App Base",
+  "app_name": "Vivacare",
   "auth": {
+    "tagline": "Your health, simplified.",
     "login": "Login",
     "register": "Register",
     "email": "Email",
@@ -12,18 +13,76 @@
     "phone": "Phone Number",
     "name": "Full Name",
     "register_subtitle": "Create your account to get started",
-    "sign_in": "Sign In"
+    "login_subtitle": "Enter your phone number to sign in.",
+    "sign_in": "Sign In",
+    "otp_title": "Verify Your Number",
+    "otp_subtitle": "Enter the 4-digit code we sent to {phone}",
+    "otp_confirm": "Verify & Continue",
+    "otp_resend": "Resend Code",
+    "otp_resend_in": "Resend code in {time}",
+    "otp_change_number": "Change phone number"
+  },
+  "booking": {
+    "choose_specialty": "Choose Specialty",
+    "sub_specialties_count": "{count} sub-specialties",
+    "doctors_count": "{count} doctors",
+    "experience_years": "{years} years experience",
+    "doctor_profile_title": "Doctor Profile",
+    "available_appointments": "Available Appointments",
+    "about": "About",
+    "clinic_info": "Clinic Information",
+    "search_doctor_hint": "Search for a doctor",
+    "filter_consultant": "Consultant",
+    "filter_top_rated": "Top Rated",
+    "filter_nearest": "Nearest",
+    "location_unavailable": "Couldn't access your current location — make sure location services and permission are enabled",
+    "by_doctor": "By Doctor",
+    "by_doctor_subtitle": "Search by doctor's name",
+    "branches_title": "Our Branches",
+    "branches_count": "{count} branches",
+    "view_doctors": "View Doctors",
+    "directions": "Directions",
+    "choose_date_time": "Choose Day & Time",
+    "calendar_legend": "The small number = appointments available that day",
+    "available_slots_count": "{count} available slots",
+    "no_slots_for_day": "No available slots for this day",
+    "continue_to_payment": "Continue to Payment",
+    "doctor_label": "Doctor",
+    "appointment_label": "Appointment",
+    "branch_label": "Branch",
+    "price_label": "Consultation Fee",
+    "no_appointments_title": "No appointments available right now",
+    "no_appointments_description": "This doctor isn't taking new appointments at the moment — check back later or contact the clinic",
+    "book_for_label": "Book for",
+    "book_for_self": "Myself",
+    "patient_label": "Patient",
+    "appointment_details_title": "Appointment Details",
+    "status_pending": "Pending",
+    "status_confirmed": "Confirmed",
+    "status_completed": "Completed",
+    "status_cancelled": "Cancelled"
+  },
+  "calendar": {
+    "sat": "Sat",
+    "sun": "Sun",
+    "mon": "Mon",
+    "tue": "Tue",
+    "wed": "Wed",
+    "thu": "Thu",
+    "fri": "Fri"
   },
   "onboarding": {
     "skip": "Skip",
     "next": "Next",
-    "get_started": "Start",
-    "slide1_title": "",
-    "slide1_subtitle": "",
-    "slide2_title": "Explore the App",
-    "slide2_subtitle": "Everything you need, organized in one place.",
-    "slide3_title": "Get Started",
-    "slide3_subtitle": "Create an account and start using the app."
+    "get_started": "Get Started",
+    "slide1_title": "Welcome to Vivacare",
+    "slide1_subtitle": "Your complete healthcare companion — doctors, medicine and your medical records, all in one place.",
+    "slide2_title": "Talk to a Doctor Anytime",
+    "slide2_subtitle": "Book instant video or chat consultations with trusted doctors, wherever you are.",
+    "slide3_title": "Medicine, Delivered",
+    "slide3_subtitle": "Order your medications from the pharmacy and get them delivered straight to your door.",
+    "slide4_title": "One Safe Record for the Family",
+    "slide4_subtitle": "Keep your medical history and your family's — appointments, prescriptions and reports — organized and secure."
   },
   "nav": {
     "home": "Home",
@@ -36,14 +95,37 @@
     "required": "This field is required",
     "invalid_email": "Enter a valid email address",
     "short_password": "Password must be at least 6 characters",
-    "invalid_phone": "Enter a valid phone number"
+    "invalid_phone": "Enter a valid phone number",
+    "invalid_otp": "Please enter the full 4-digit code",
+    "invalid_number": "Enter a valid number"
   },
   "common": {
     "cancel": "Cancel",
     "close": "Close",
     "search": "Search",
     "retry": "Retry",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "currency": "SAR"
+  },
+  "family": {
+    "title": "Family",
+    "members_count": "{count} members",
+    "add_member": "Add Member",
+    "add_member_sheet_title": "Add a Family Member",
+    "add_member_sheet_subtitle": "Add the member's details and attach their medical files",
+    "id_number": "ID Number",
+    "medical_files": "Medical Files",
+    "add_photo": "Add Photo",
+    "add_success": "Member added successfully",
+    "age_label": "Age",
+    "medical_files_count": "{count} medical files",
+    "edit_member_sheet_title": "Edit Member Details",
+    "edit_member_sheet_subtitle": "Edit the member's details or add new medical files",
+    "update_success": "Member details updated",
+    "existing_files": "Existing Files",
+    "edit_member": "Edit Details",
+    "guest_title": "Sign in to view your family",
+    "guest_description": "Add your family members' details and track their medical files after signing in"
   },
   "home": {
     "welcome": "Welcome",
@@ -62,8 +144,7 @@
     "ai_assistant_badge": "New",
     "ai_assistant_desc": "Ask about your results and get a simple explanation",
     "upcoming_appointment": "Upcoming Appointment",
-    "doctor_name": "Dr. Khaled Al-Otaibi",
-    "clinic_branch": "General Medicine · Al-Ula Branch",
+    "no_upcoming_appointment": "You have no upcoming appointments",
     "services": "Services",
     "see_all": "See all",
     "book_appointment": "Book Appointment",
@@ -90,7 +171,17 @@
   },
   "profile": {
     "title": "My Profile",
-    "login_now": "Sign In Now"
+    "login_now": "Sign In Now",
+    "complete_title": "Complete Your Profile",
+    "complete_subtitle": "A few details so we can tailor your healthcare experience.",
+    "date_of_birth": "Date of Birth",
+    "height": "Height (cm)",
+    "weight": "Weight (kg)",
+    "save_continue": "Save & Continue",
+    "guest_name": "Guest",
+    "guest_subtitle": "Sign in to save your data",
+    "save_changes": "Save Changes",
+    "update_success": "Your data has been saved successfully"
   },
   "settings": {
     "change_language": "Change Language",
@@ -105,6 +196,7 @@
   },
   "error": {
     "unauthorized": "Session expired, please login again",
-    "not_found": "Resource not found"
+    "not_found": "Resource not found",
+    "generic": "Something went wrong, please try again"
   }
 }
