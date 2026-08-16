@@ -4,7 +4,7 @@ import 'package:get_storage/get_storage.dart';
 
 import 'app/app.dart';
 import 'core/di/injection.dart';
-//test
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
