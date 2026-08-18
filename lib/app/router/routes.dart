@@ -49,6 +49,7 @@ class Routes {
   static const String doctorSearch = '/doctor-search';
   static const String doctor = '/doctor';
   static const String appointmentDetail = '/appointment-detail';
+  static const String myBookings = '/my-bookings';
 
   static const String family = '/family';
   static const String member = '/member';

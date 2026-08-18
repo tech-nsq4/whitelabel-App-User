@@ -15,6 +15,8 @@ import 'booking_slots_sheet.dart' show formatBookingDayLabel;
 import 'booking_summary_card.dart';
 import 'doctor_clinic_card.dart';
 import 'doctor_profile_header.dart';
+import 'prescription_card.dart';
+import 'test_results_card.dart';
 
 /// Scrollable content for `AppointmentDetailScreen`, once
 /// `GET /appointments/{id}` has loaded. Reuses the same doctor/clinic
@@ -52,6 +54,7 @@ class AppointmentDetailBody extends StatelessWidget {
         14.height,
         if (doctor != null) DoctorProfileHeader(doctor: doctor),
         BookingSummaryCard(
+          orderId: appointment.id,
           doctorName: doctor?.name ?? '',
           patientName: appointment.familyMember?.name,
           whenLabel: whenLabel,
@@ -75,6 +78,30 @@ class AppointmentDetailBody extends StatelessWidget {
               isOutlined: true,
               onTap: () => _openDirections(clinic),
             ),
+        ],
+        if (appointment.status == 'completed') ...[
+          if (appointment.prescriptionImage != null || appointment.prescriptions.isNotEmpty) ...[
+            14.height,
+            Text(LocaleKeys.booking_prescriptionTitle.tr(),
+                style: TextStyle(
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1.2,
+                    color: AppColors.mutedColor.themeColor)),
+            10.height,
+            PrescriptionCard(appointment: appointment),
+          ],
+          if (appointment.testRequests.isNotEmpty) ...[
+            14.height,
+            Text(LocaleKeys.booking_testResultsTitle.tr(),
+                style: TextStyle(
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1.2,
+                    color: AppColors.mutedColor.themeColor)),
+            10.height,
+            TestResultsCard(requests: appointment.testRequests),
+          ],
         ],
       ],
     );

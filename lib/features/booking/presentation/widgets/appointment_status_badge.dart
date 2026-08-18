@@ -6,9 +6,9 @@ import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/locale_keys.dart';
 
 /// Small colored pill for an [AppointmentModel.status] value ("pending",
-/// "confirmed", "completed", "cancelled", ...) on `AppointmentDetailScreen`.
-/// Falls back to the raw status string for any value the backend adds
-/// later that isn't one of the known ones yet.
+/// "confirmed", "in_progress", "completed", "cancelled", ...) on
+/// `AppointmentDetailScreen`. Falls back to the raw status string for any
+/// value the backend adds later that isn't one of the known ones yet.
 class AppointmentStatusBadge extends StatelessWidget {
   const AppointmentStatusBadge({super.key, required this.status});
 
@@ -17,6 +17,7 @@ class AppointmentStatusBadge extends StatelessWidget {
   static const _labelKeys = {
     'pending': LocaleKeys.booking_statusPending,
     'confirmed': LocaleKeys.booking_statusConfirmed,
+    'in_progress': LocaleKeys.booking_statusInProgress,
     'completed': LocaleKeys.booking_statusCompleted,
     'cancelled': LocaleKeys.booking_statusCancelled,
   };
@@ -26,6 +27,8 @@ class AppointmentStatusBadge extends StatelessWidget {
       case 'confirmed':
       case 'completed':
         return AppColors.successColor.themeColor;
+      case 'in_progress':
+        return AppColors.secondaryColor.themeColor;
       case 'cancelled':
         return AppColors.errorColor.themeColor;
       default:

@@ -60,7 +60,22 @@
     "status_pending": "Pending",
     "status_confirmed": "Confirmed",
     "status_completed": "Completed",
-    "status_cancelled": "Cancelled"
+    "status_cancelled": "Cancelled",
+    "status_in_progress": "In Progress",
+    "status_all": "All",
+    "order_id_label": "Order ID",
+    "my_bookings_title": "My Bookings",
+    "no_bookings_title": "No bookings yet",
+    "no_bookings_description": "You haven't booked any appointments yet — book one now to see it here",
+    "prescription_title": "Prescription",
+    "attached_prescription": "Attached Prescription",
+    "dosage_label": "Dosage",
+    "duration_label": "Duration",
+    "test_results_title": "Test Results",
+    "result_pending": "Awaiting Result",
+    "result_ready": "Result Ready",
+    "result_normal": "Normal",
+    "result_not_normal": "Not Normal"
   },
   "calendar": {
     "sat": "Sat",

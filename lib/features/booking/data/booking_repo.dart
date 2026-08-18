@@ -119,10 +119,17 @@ class BookingRepo {
   }
 
   /// The account's booked appointments — powers the home screen's
-  /// "upcoming appointment" card.
-  Future<List<AppointmentModel>> getAppointments() async {
+  /// "upcoming appointment" card and `MyBookingsScreen`'s status tabs.
+  /// [status] is one of the API's filter values ("pending" | "confirmed" |
+  /// "completed" | "cancelled") — `null`/empty fetches every appointment.
+  Future<List<AppointmentModel>> getAppointments({String? status}) async {
     try {
-      final response = await _dio.get(ApiEndpoints.appointments);
+      final response = await _dio.get(
+        ApiEndpoints.appointments,
+        queryParameters: {
+          if (status != null && status.isNotEmpty) 'status': status,
+        },
+      );
       final data = response.data['data'] as List<dynamic>;
       return data.map((e) => AppointmentModel.fromJson(e as Map<String, dynamic>)).toList();
     } on DioException catch (e) {

@@ -15,6 +15,7 @@ class BookingSummaryCard extends StatelessWidget {
     required this.clinicName,
     required this.priceLabel,
     this.patientName,
+    this.orderId,
   });
 
   final String doctorName;
@@ -25,6 +26,10 @@ class BookingSummaryCard extends StatelessWidget {
   /// The family member this appointment is for — omitted (row hidden)
   /// when booking for the account holder.
   final String? patientName;
+
+  /// The booked [AppointmentModel.id] — `null` (row hidden) on
+  /// `BookingSlotsSheet`, where there's no appointment yet.
+  final int? orderId;
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +42,7 @@ class BookingSummaryCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (orderId != null) _row(LocaleKeys.booking_orderIdLabel.tr(), '#$orderId'),
           _row(LocaleKeys.booking_doctorLabel.tr(), doctorName),
           if (patientName != null && patientName!.isNotEmpty)
             _row(LocaleKeys.booking_patientLabel.tr(), patientName!),

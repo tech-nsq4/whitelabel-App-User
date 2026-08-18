@@ -17,6 +17,7 @@ import '../../features/booking/presentation/book_screen.dart';
 import '../../features/booking/presentation/branches_screen.dart';
 import '../../features/booking/presentation/doctor_screen.dart';
 import '../../features/booking/presentation/doctor_search_screen.dart';
+import '../../features/booking/presentation/my_bookings_screen.dart';
 import '../../features/booking/presentation/specs_screen.dart';
 import '../../features/booking/presentation/symptom_checker_screen.dart';
 import '../../features/emergency/presentation/em_ambulance_screen.dart';
@@ -182,6 +183,9 @@ class RouteGenerator {
 
       case Routes.appointmentDetail:
         return _pageRoute(AppointmentDetailScreen(appointmentId: arguments?['id'] as int));
+
+      case Routes.myBookings:
+        return _pageRoute(const MyBookingsScreen());
 
       case Routes.symptomChecker:
         return _pageRoute(const SymptomCheckerScreen());

@@ -68,6 +68,22 @@ abstract class LocaleKeys {
   static const String booking_statusConfirmed = 'booking.status_confirmed';
   static const String booking_statusCompleted = 'booking.status_completed';
   static const String booking_statusCancelled = 'booking.status_cancelled';
+  static const String booking_statusInProgress = 'booking.status_in_progress';
+  static const String booking_statusAll = 'booking.status_all';
+  static const String booking_orderIdLabel = 'booking.order_id_label';
+  static const String booking_myBookingsTitle = 'booking.my_bookings_title';
+  static const String booking_noBookingsTitle = 'booking.no_bookings_title';
+  static const String booking_noBookingsDescription =
+      'booking.no_bookings_description';
+  static const String booking_prescriptionTitle = 'booking.prescription_title';
+  static const String booking_attachedPrescription = 'booking.attached_prescription';
+  static const String booking_dosageLabel = 'booking.dosage_label';
+  static const String booking_durationLabel = 'booking.duration_label';
+  static const String booking_testResultsTitle = 'booking.test_results_title';
+  static const String booking_resultPending = 'booking.result_pending';
+  static const String booking_resultReady = 'booking.result_ready';
+  static const String booking_resultNormal = 'booking.result_normal';
+  static const String booking_resultNotNormal = 'booking.result_not_normal';
 
   // ─── Calendar ─────────────────────────────────────────────────────────────
   static const String calendar_sat = 'calendar.sat';

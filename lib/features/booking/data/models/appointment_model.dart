@@ -4,6 +4,96 @@ import '../../../family/data/models/family_member_model.dart';
 import 'doctor_profile_model.dart';
 import 'doctor_time_table_model.dart';
 
+/// One drug entry inside [AppointmentModel.prescriptions] — the itemized
+/// medications a doctor prescribed during a completed appointment.
+class PrescriptionModel extends Equatable {
+  final int id;
+  final String drugName;
+  final String dosage;
+  final String duration;
+  final DateTime? date;
+
+  const PrescriptionModel({
+    required this.id,
+    required this.drugName,
+    required this.dosage,
+    required this.duration,
+    this.date,
+  });
+
+  factory PrescriptionModel.fromJson(Map<String, dynamic> json) => PrescriptionModel(
+        id: json['id'] as int,
+        drugName: json['drug_name'] as String? ?? '',
+        dosage: json['dosage'] as String? ?? '',
+        duration: json['duration'] as String? ?? '',
+        date: DateTime.tryParse(json['date'] as String? ?? ''),
+      );
+
+  @override
+  List<Object?> get props => [id, drugName, dosage, duration, date];
+}
+
+/// The lab/x-ray test a [TestRequestModel] is for.
+class TestModel extends Equatable {
+  final int id;
+  final String name;
+  final String? description;
+  final double price;
+
+  const TestModel({required this.id, required this.name, this.description, this.price = 0});
+
+  factory TestModel.fromJson(Map<String, dynamic> json) => TestModel(
+        id: json['id'] as int,
+        name: json['name'] as String? ?? '',
+        description: json['description'] as String?,
+        price: double.tryParse('${json['price']}') ?? 0,
+      );
+
+  @override
+  List<Object?> get props => [id, name, description, price];
+}
+
+/// A lab analysis or x-ray request attached to an appointment, inside
+/// [AppointmentModel.testRequests] — `has_result` flips once the clinic
+/// uploads a result via [url] (an image/PDF), optionally rated [resultRate].
+class TestRequestModel extends Equatable {
+  final int id;
+  final String type; // "analysis" | "xray"
+  final bool hasResult;
+  final String? resultRate; // e.g. "normal" | "not_normal", null until resulted
+  final String? note;
+  final String? url;
+  final DateTime? resultedAt;
+  final TestModel? test;
+
+  const TestRequestModel({
+    required this.id,
+    required this.type,
+    this.hasResult = false,
+    this.resultRate,
+    this.note,
+    this.url,
+    this.resultedAt,
+    this.test,
+  });
+
+  bool get isXray => type == 'xray';
+
+  factory TestRequestModel.fromJson(Map<String, dynamic> json) => TestRequestModel(
+        id: json['id'] as int,
+        type: json['type'] as String? ?? '',
+        hasResult: json['has_result'] as bool? ?? false,
+        resultRate: json['result_rate'] as String?,
+        note: json['note'] as String?,
+        url: json['url'] as String?,
+        resultedAt: DateTime.tryParse(json['resulted_at'] as String? ?? ''),
+        test: json['test'] == null ? null : TestModel.fromJson(json['test'] as Map<String, dynamic>),
+      );
+
+  @override
+  List<Object?> get props => [id, type, hasResult, resultRate, note, url, resultedAt, test];
+}
+
 /// A booked appointment from `POST/GET /appointments`.
 class AppointmentModel extends Equatable {
   final int id;
@@ -21,6 +111,13 @@ class AppointmentModel extends Equatable {
   final FamilyMemberModel? familyMember;
   final DateTime? createdAt;
 
+  /// Attached signed-prescription file/date — separate from the itemized
+  /// [prescriptions] list, both only populated once [status] is "completed".
+  final DateTime? prescriptionDate;
+  final String? prescriptionImage;
+  final List<PrescriptionModel> prescriptions;
+  final List<TestRequestModel> testRequests;
+
   const AppointmentModel({
     required this.id,
     required this.doctorId,
@@ -36,6 +133,10 @@ class AppointmentModel extends Equatable {
     this.schedule,
     this.familyMember,
     this.createdAt,
+    this.prescriptionDate,
+    this.prescriptionImage,
+    this.prescriptions = const [],
+    this.testRequests = const [],
   });
 
   /// [date] + [times] combined into one [DateTime] — used to sort/filter
@@ -72,6 +173,14 @@ class AppointmentModel extends Equatable {
             ? null
             : FamilyMemberModel.fromJson(json['family_member'] as Map<String, dynamic>),
         createdAt: DateTime.tryParse(json['created_at'] as String? ?? ''),
+        prescriptionDate: DateTime.tryParse(json['prescription_date'] as String? ?? ''),
+        prescriptionImage: json['prescription_image'] as String?,
+        prescriptions: (json['prescriptions'] as List<dynamic>? ?? [])
+            .map((e) => PrescriptionModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        testRequests: (json['test_requests'] as List<dynamic>? ?? [])
+            .map((e) => TestRequestModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
       );
 
   @override
@@ -90,5 +199,9 @@ class AppointmentModel extends Equatable {
         schedule,
         familyMember,
         createdAt,
+        prescriptionDate,
+        prescriptionImage,
+        prescriptions,
+        testRequests,
       ];
 }

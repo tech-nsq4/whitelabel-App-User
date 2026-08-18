@@ -60,7 +60,22 @@
     "status_pending": "قيد الانتظار",
     "status_confirmed": "مؤكد",
     "status_completed": "مكتمل",
-    "status_cancelled": "ملغي"
+    "status_cancelled": "ملغي",
+    "status_in_progress": "قيد التنفيذ",
+    "status_all": "الكل",
+    "order_id_label": "رقم الطلب",
+    "my_bookings_title": "حجوزاتي",
+    "no_bookings_title": "لا توجد حجوزات بعد",
+    "no_bookings_description": "لسه ما حجزتش أي موعد — احجز موعدك الأول عشان يظهر هنا",
+    "prescription_title": "الوصفة الطبية",
+    "attached_prescription": "الروشتة المرفقة",
+    "dosage_label": "الجرعة",
+    "duration_label": "المدة",
+    "test_results_title": "نتائج الفحوصات",
+    "result_pending": "بانتظار النتيجة",
+    "result_ready": "النتيجة جاهزة",
+    "result_normal": "طبيعي",
+    "result_not_normal": "غير طبيعي"
   },
   "calendar": {
     "sat": "سبت",

@@ -8,6 +8,7 @@ import '../../features/booking/logic/appointments_cubit.dart';
 import '../../features/booking/logic/branches_cubit.dart';
 import '../../features/booking/logic/doctor_details_cubit.dart';
 import '../../features/booking/logic/doctors_cubit.dart';
+import '../../features/booking/logic/my_bookings_cubit.dart';
 import '../../features/booking/logic/specializations_cubit.dart';
 import '../../features/booking/logic/time_tables_cubit.dart';
 import '../../features/family/data/family_repo.dart';
@@ -40,6 +41,7 @@ Future<void> setupDi() async {
   getIt.registerFactory(() => BranchesCubit(getIt()));
   getIt.registerFactory(() => TimeTablesCubit(getIt()));
   getIt.registerFactory(() => AppointmentDetailCubit(getIt()));
+  getIt.registerFactory(() => MyBookingsCubit(getIt()));
 
   // `AppointmentsCubit` is a singleton (not the usual per-screen factory):
   // `DoctorScreen` refreshes it right after booking and `HomeScreen`'s

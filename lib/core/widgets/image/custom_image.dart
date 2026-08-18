@@ -113,8 +113,8 @@ void openBottomSheet(BuildContext context, ImageProvider imageProvider) =>
                     PhotoViewHeroAttributes(tag: imageProvider.toString()),
               ),
               Positioned(
-                top: 5,
-                right: 5,
+                top: 20,
+                right: 20,
                 child: GestureDetector(
                   onTap: () {
                     Navigator.of(context).pop();

@@ -75,6 +75,12 @@ class MedicalFileScreen extends StatelessWidget {
               child: Column(
                 children: [
                   ListRowTile(
+                    icon: AppSvgIcons.calendar,
+                    title: 'حجوزاتي',
+                    subtitle: 'احجز وتابع مواعيدك',
+                    onTap: () => Navigator.pushNamed(context, Routes.myBookings),
+                  ),
+                  ListRowTile(
                     icon: AppSvgIcons.medicalFile,
                     title: 'زياراتي',
                     subtitle: '14 زيارة · آخرها 8 يونيو',
