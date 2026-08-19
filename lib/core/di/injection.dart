@@ -13,6 +13,8 @@ import '../../features/booking/logic/specializations_cubit.dart';
 import '../../features/booking/logic/time_tables_cubit.dart';
 import '../../features/family/data/family_repo.dart';
 import '../../features/family/logic/family_cubit.dart';
+import '../../features/notifications/data/notifications_repo.dart';
+import '../../features/notifications/logic/notifications_cubit.dart';
 import '../../features/profile/logic/profile_cubit.dart';
 import '../network/dio_client.dart';
 import '../storage/local_storage.dart';
@@ -30,6 +32,7 @@ Future<void> setupDi() async {
   getIt.registerLazySingleton(() => AuthRepo(dio: getIt(), storage: getIt()));
   getIt.registerLazySingleton(() => BookingRepo(dio: getIt()));
   getIt.registerLazySingleton(() => FamilyRepo(dio: getIt()));
+  getIt.registerLazySingleton(() => NotificationsRepo(dio: getIt()));
 
   // ─── Cubits ───────────────────────────────────────────────────────────────
   getIt.registerFactory(() => AuthCubit(getIt()));
@@ -42,6 +45,7 @@ Future<void> setupDi() async {
   getIt.registerFactory(() => TimeTablesCubit(getIt()));
   getIt.registerFactory(() => AppointmentDetailCubit(getIt()));
   getIt.registerFactory(() => MyBookingsCubit(getIt()));
+  getIt.registerFactory(() => NotificationsCubit(getIt()));
 
   // `AppointmentsCubit` is a singleton (not the usual per-screen factory):
   // `DoctorScreen` refreshes it right after booking and `HomeScreen`'s

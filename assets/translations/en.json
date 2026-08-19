@@ -75,7 +75,16 @@
     "result_pending": "Awaiting Result",
     "result_ready": "Result Ready",
     "result_normal": "Normal",
-    "result_not_normal": "Not Normal"
+    "result_not_normal": "Not Normal",
+    "reschedule_action": "Reschedule",
+    "cancel_action": "Cancel Booking",
+    "book_again_action": "Book Again",
+    "confirm_reschedule": "Confirm New Appointment",
+    "reschedule_success": "Your appointment has been rescheduled",
+    "cancel_dialog_title": "Cancel this booking?",
+    "cancel_dialog_message": "Are you sure you want to cancel this booking? This can't be undone.",
+    "cancel_dialog_confirm": "Yes, Cancel",
+    "cancel_success": "Booking cancelled"
   },
   "calendar": {
     "sat": "Sat",
@@ -120,7 +129,9 @@
     "search": "Search",
     "retry": "Retry",
     "confirm": "Confirm",
-    "currency": "SAR"
+    "currency": "SAR",
+    "today": "Today",
+    "yesterday": "Yesterday"
   },
   "family": {
     "title": "Family",
@@ -179,6 +190,37 @@
     "medications": "Medications",
     "medications_subtitle": "Next dose 2:00 PM",
     "coming_soon": "Coming soon"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty_title": "No notifications yet",
+    "empty_description": "We'll let you know here as soon as there's an update on your bookings",
+    "booking": {
+      "booked": {
+        "manager": {
+          "title": "Booking received",
+          "body": "Your appointment request has been recorded — we'll let you know once the clinic confirms it."
+        }
+      },
+      "accepted": {
+        "manager": {
+          "title": "Appointment confirmed",
+          "body": "The clinic has confirmed your booking. Get ready for your appointment."
+        }
+      },
+      "started": {
+        "manager": {
+          "title": "Your appointment has started",
+          "body": "The doctor has started seeing you — check the booking for details."
+        }
+      },
+      "completed": {
+        "manager": {
+          "title": "Appointment completed",
+          "body": "Your appointment is done. Review your prescription and test results in the booking details."
+        }
+      }
+    }
   },
   "more": {
     "title": "More",

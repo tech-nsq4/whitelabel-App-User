@@ -41,23 +41,39 @@ class BookingSlotResult {
 
 Future<BookingSlotResult?> showBookingSlotsSheet(
   BuildContext context,
-  DoctorProfileModel doctor,
-) {
+  DoctorProfileModel doctor, {
+  String? ctaLabel,
+  bool showFamilyMemberSelector = true,
+}) {
   return showModalBottomSheet<BookingSlotResult>(
     context: context,
     backgroundColor: Colors.transparent,
     isScrollControlled: true,
-    builder: (_) => BookingSlotsSheet(doctor: doctor),
+    builder: (_) => BookingSlotsSheet(
+      doctor: doctor,
+      ctaLabel: ctaLabel,
+      showFamilyMemberSelector: showFamilyMemberSelector,
+    ),
   );
 }
 
 /// "Choose day & time" sheet, backed by `GET /doctors/{id}/time-tables` —
 /// a month calendar (each day shows its available-slot count) followed by
-/// that day's time-slot grid and a booking summary.
+/// that day's time-slot grid and a booking summary. Reused as-is for
+/// rescheduling ([showFamilyMemberSelector]: `false` — reschedule doesn't
+/// change who it's for — with a [ctaLabel] that reads "confirm" instead of
+/// "continue to payment").
 class BookingSlotsSheet extends StatefulWidget {
-  const BookingSlotsSheet({super.key, required this.doctor});
+  const BookingSlotsSheet({
+    super.key,
+    required this.doctor,
+    this.ctaLabel,
+    this.showFamilyMemberSelector = true,
+  });
 
   final DoctorProfileModel doctor;
+  final String? ctaLabel;
+  final bool showFamilyMemberSelector;
 
   @override
   State<BookingSlotsSheet> createState() => _BookingSlotsSheetState();
@@ -245,16 +261,18 @@ class _BookingSlotsSheetState extends State<BookingSlotsSheet> {
                                     selected: _selectedSlot,
                                     onSelect: (s) => setState(() => _selectedSlot = s),
                                   ),
-                                18.height,
-                                AppText(LocaleKeys.booking_bookForLabel.tr(),
-                                    fontSize: 12.5,
-                                    fontWeight: FontWeight.w700,
-                                    color: AppColors.textPrimaryColor.themeColor),
-                                10.height,
-                                BookingFamilyMemberSelector(
-                                  selected: _selectedFamilyMember,
-                                  onSelect: (m) => setState(() => _selectedFamilyMember = m),
-                                ),
+                                if (widget.showFamilyMemberSelector) ...[
+                                  18.height,
+                                  AppText(LocaleKeys.booking_bookForLabel.tr(),
+                                      fontSize: 12.5,
+                                      fontWeight: FontWeight.w700,
+                                      color: AppColors.textPrimaryColor.themeColor),
+                                  10.height,
+                                  BookingFamilyMemberSelector(
+                                    selected: _selectedFamilyMember,
+                                    onSelect: (m) => setState(() => _selectedFamilyMember = m),
+                                  ),
+                                ],
                                 18.height,
                                 BookingSummaryCard(
                                   doctorName: widget.doctor.name,
@@ -275,7 +293,7 @@ class _BookingSlotsSheetState extends State<BookingSlotsSheet> {
                   if (!hasNoAppointments) ...[
                     16.height,
                     CustomButton(
-                      title: LocaleKeys.booking_continueToPayment.tr(),
+                      title: widget.ctaLabel ?? LocaleKeys.booking_continueToPayment.tr(),
                       color: _selectedSlot == null ? AppColors.hintColor.themeColor : null,
                       onTap: _selectedSlot == null || _selectedDate == null
                           ? () {}

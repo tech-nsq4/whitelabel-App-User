@@ -147,6 +147,41 @@ class BookingRepo {
     }
   }
 
+  /// Reschedules [appointmentId] to the new doctor/slot picked on
+  /// `BookingSlotsSheet` — same fields as [createAppointment], minus
+  /// `family_member_id` (who it's for doesn't change on reschedule).
+  Future<void> rescheduleAppointment({
+    required int appointmentId,
+    required int doctorId,
+    required int timeTableId,
+    required int scheduleId,
+    required String shiftId,
+    required String times,
+    required DateTime date,
+  }) async {
+    try {
+      await _dio.post(ApiEndpoints.appointmentReschedule(appointmentId), data: {
+        'doctor_id': doctorId,
+        'time_table_id': timeTableId,
+        'schedule_id': scheduleId,
+        'shift_id': shiftId,
+        'times': times,
+        'date': _formatApiDate(date),
+      });
+    } on DioException catch (e) {
+      throw NetworkException.fromDioException(e);
+    }
+  }
+
+  /// Cancels an appointment that hasn't happened yet.
+  Future<void> cancelAppointment(int appointmentId) async {
+    try {
+      await _dio.post(ApiEndpoints.appointmentCancel(appointmentId));
+    } on DioException catch (e) {
+      throw NetworkException.fromDioException(e);
+    }
+  }
+
   /// "2026-08-17" — locale-independent, unlike `DateFormat`.
   String _formatApiDate(DateTime date) {
     String pad2(int n) => n.toString().padLeft(2, '0');

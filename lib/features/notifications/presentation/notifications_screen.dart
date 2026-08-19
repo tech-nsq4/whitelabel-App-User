@@ -1,15 +1,20 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../core/extensions/extensions.dart';
-import '../../../core/utils/app_colors.dart';
-import '../../../core/utils/app_svg_icons.dart';
-import '../../../core/widgets/app_card.dart';
-import '../../../core/widgets/app_svg_icon.dart';
-import '../../../core/widgets/app_text.dart';
+import '../../../app/router/routes.dart';
+import '../../../core/di/injection.dart';
+import '../../../core/utils/locale_keys.dart';
 import '../../../core/widgets/screen_header.dart';
-import '../data/notification_model.dart';
+import '../../../core/widgets/screen_state_layout.dart';
+import '../logic/notifications_cubit.dart';
+import 'widgets/no_notifications_view.dart';
+import 'widgets/notification_tile.dart';
 
+/// Notifications feed, backed by `GET /notifications` — reached from the
+/// bell icon on `HomeHeader`. Each row is appointment-related; tapping one
+/// with an `appointment_id` opens `AppointmentDetailScreen` for it.
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
 
@@ -18,106 +23,70 @@ class NotificationsScreen extends StatefulWidget {
 }
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
-  late List<NotificationModel> _items = [
-    NotificationModel(
-      icon: AppSvgIcons.calendar,
-      title: 'موعدك غدًا 10:30 ص',
-      body: 'د. خالد العتيبي — فرع العلا. سجّل حضورك قبل الموعد بساعة من البطاقة الصحية.',
-      time: 'اليوم 4:15 م',
-      accentColor: AppColors.primaryColor.themeColor,
-    ),
-    NotificationModel(
-      icon: AppSvgIcons.videoCam,
-      title: 'جلستك جاهزة',
-      body: 'د. ريم الدوسري في انتظارك. ادخل الجلسة من شاشة الاستشارات.',
-      time: 'اليوم 2:00 م',
-      accentColor: AppColors.primaryColor.themeColor,
-    ),
-    NotificationModel(
-      icon: AppSvgIcons.flask,
-      title: 'نتيجة فيتامين د صدرت',
-      body: 'القراءة 22 ng/mL — أقل من الطبيعي. راجع التوصية في سجلك.',
-      time: 'اليوم 11:20 ص',
-      accentColor: AppColors.warningColor.themeColor,
-    ),
-    NotificationModel(
-      icon: AppSvgIcons.family,
-      title: 'تم ربط ولي عبدالله',
-      body: 'وافق على الربط عبر رمز التحقق. سجله الطبي متاح الآن في حسابك.',
-      time: 'أمس 8:40 م',
-      isRead: true,
-    ),
-  ];
+  late final NotificationsCubit _cubit = getIt<NotificationsCubit>();
 
-  void _readAll() => setState(() {
-        _items = _items.map((n) => n.copyWith(isRead: true)).toList();
-      });
+  @override
+  void initState() {
+    super.initState();
+    _cubit.getNotifications();
+  }
+
+  @override
+  void dispose() {
+    _cubit.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: ListView(
-          padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 24.h),
-          children: [
-            ScreenHeader(
-              title: 'التنبيهات',
-              trailing: GestureDetector(
-                onTap: _readAll,
-                child: AppText('تعليم الكل كمقروء',
-                    fontSize: 11.5,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.primaryColor.themeColor),
-              ),
-            ),
-            for (final n in _items)
-              AppCard(
-                margin: EdgeInsets.only(bottom: 10.h),
-                color: n.isRead
-                    ? AppColors.cardColor.themeColor.withValues(alpha: 0.6)
-                    : null,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+    return BlocProvider.value(
+      value: _cubit,
+      child: BlocBuilder<NotificationsCubit, NotificationsState>(
+        builder: (context, state) {
+          final notifications = state is NotificationsSuccess ? state.notifications : const [];
+
+          return Scaffold(
+            body: SafeArea(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 0),
+                child: Column(
                   children: [
-                    Container(
-                      width: 40.r,
-                      height: 40.r,
-                      decoration: BoxDecoration(
-                        color: (n.accentColor ?? AppColors.mutedColor.themeColor)
-                            .withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(13.r),
-                      ),
-                      child: Center(
-                        child: AppSvgIcon(n.icon,
-                            size: 18.sp,
-                            color: n.accentColor ?? AppColors.mutedColor.themeColor),
-                      ),
-                    ),
-                    12.width,
+                    ScreenHeader(title: LocaleKeys.notifications_title.tr()),
                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          AppText(n.title,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.textPrimaryColor.themeColor),
-                          4.height,
-                          AppText(n.body,
-                              fontSize: 11,
-                              color: AppColors.mutedColor.themeColor,
-                              height: 1.5),
-                          6.height,
-                          AppText(n.time,
-                              fontSize: 10, color: AppColors.hintColor.themeColor),
-                        ],
+                      child: CustomScreenStateLayout(
+                        isLoading: state is NotificationsLoading || state is NotificationsInitial,
+                        error: state is NotificationsError
+                            ? ErrorModel(code: ErrorEnum.other, errorMessage: state.message)
+                            : null,
+                        onRetry: () => _cubit.getNotifications(),
+                        isEmpty: notifications.isEmpty,
+                        noDataBuilder: (_) => const NoNotificationsView(),
+                        builder: (context) => ListView.builder(
+                          padding: EdgeInsets.only(bottom: 24.h),
+                          itemCount: notifications.length,
+                          itemBuilder: (context, index) {
+                            final notification = notifications[index];
+                            final appointmentId = notification.appointmentId;
+                            return NotificationTile(
+                              notification: notification,
+                              onTap: appointmentId == null
+                                  ? null
+                                  : () => Navigator.pushNamed(
+                                        context,
+                                        Routes.appointmentDetail,
+                                        arguments: {'id': appointmentId},
+                                      ),
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-          ],
-        ),
+            ),
+          );
+        },
       ),
     );
   }

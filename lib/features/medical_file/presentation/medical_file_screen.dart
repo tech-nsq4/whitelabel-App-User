@@ -80,12 +80,12 @@ class MedicalFileScreen extends StatelessWidget {
                     subtitle: 'احجز وتابع مواعيدك',
                     onTap: () => Navigator.pushNamed(context, Routes.myBookings),
                   ),
-                  ListRowTile(
-                    icon: AppSvgIcons.medicalFile,
-                    title: 'زياراتي',
-                    subtitle: '14 زيارة · آخرها 8 يونيو',
-                    onTap: () => Navigator.pushNamed(context, Routes.visits),
-                  ),
+                  // ListRowTile(
+                  //   icon: AppSvgIcons.medicalFile,
+                  //   title: 'زياراتي',
+                  //   subtitle: '14 زيارة · آخرها 8 يونيو',
+                  //   onTap: () => Navigator.pushNamed(context, Routes.visits),
+                  // ),
                   ListRowTile(
                     icon: AppSvgIcons.flask,
                     title: 'نتائج المختبر',

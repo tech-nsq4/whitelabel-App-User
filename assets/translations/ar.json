@@ -75,7 +75,16 @@
     "result_pending": "بانتظار النتيجة",
     "result_ready": "النتيجة جاهزة",
     "result_normal": "طبيعي",
-    "result_not_normal": "غير طبيعي"
+    "result_not_normal": "غير طبيعي",
+    "reschedule_action": "إعادة الجدولة",
+    "cancel_action": "إلغاء الحجز",
+    "book_again_action": "احجز مرة أخرى",
+    "confirm_reschedule": "تأكيد الموعد الجديد",
+    "reschedule_success": "تم تعديل موعدك بنجاح",
+    "cancel_dialog_title": "إلغاء الحجز؟",
+    "cancel_dialog_message": "هل أنت متأكد إنك عايز تلغي هذا الحجز؟ الإجراء ده مش هينفع يتراجع فيه.",
+    "cancel_dialog_confirm": "نعم، ألغِ الحجز",
+    "cancel_success": "تم إلغاء الحجز"
   },
   "calendar": {
     "sat": "سبت",
@@ -120,7 +129,9 @@
     "search": "بحث",
     "retry": "إعادة المحاولة",
     "confirm": "تأكيد",
-    "currency": "ريال"
+    "currency": "ريال",
+    "today": "اليوم",
+    "yesterday": "أمس"
   },
   "family": {
     "title": "العائلة",
@@ -179,6 +190,37 @@
     "medications": "الأدوية",
     "medications_subtitle": "جرعتك القادمة 2:00 م",
     "coming_soon": "قيد التطوير"
+  },
+  "notifications": {
+    "title": "التنبيهات",
+    "empty_title": "لا توجد تنبيهات بعد",
+    "empty_description": "هنبلغك هنا فور ما يكون فيه تحديث على حجوزاتك",
+    "booking": {
+      "booked": {
+        "manager": {
+          "title": "تم استلام حجزك",
+          "body": "تم تسجيل حجز موعدك بنجاح — هنبلغك فور ما العيادة توافق عليه."
+        }
+      },
+      "accepted": {
+        "manager": {
+          "title": "تم تأكيد موعدك",
+          "body": "العيادة أكدت حجزك. استعد لموعدك في الوقت المحدد."
+        }
+      },
+      "started": {
+        "manager": {
+          "title": "موعدك بدأ الآن",
+          "body": "الطبيب بدأ استقبال حالتك — تابع التفاصيل من صفحة الحجز."
+        }
+      },
+      "completed": {
+        "manager": {
+          "title": "اكتمل موعدك",
+          "body": "تم إنهاء موعدك بنجاح. راجع الروشتة ونتائج الفحوصات في تفاصيل الحجز."
+        }
+      }
+    }
   },
   "more": {
     "title": "المزيد",

@@ -41,6 +41,14 @@ class ApiEndpoints {
   /// A single appointment's full details, shown on `AppointmentDetailScreen`.
   static String appointmentDetails(int id) => 'appointments/$id';
 
+  /// Moves an existing appointment to a new doctor/schedule/slot, chosen the
+  /// same way as a fresh booking (`BookingSlotsSheet`) — same body shape as
+  /// [appointments]' `POST`, minus `family_member_id`.
+  static String appointmentReschedule(int id) => 'appointments/$id/reschedule';
+
+  /// Cancels an appointment that hasn't happened yet.
+  static String appointmentCancel(int id) => 'appointments/$id/cancel';
+
   // ─── Family ───────────────────────────────────────────────────────────────
   /// `GET` lists the account's linked family members; `POST` (multipart,
   /// for the `medical_files[]` attachments) adds a new one.
@@ -49,6 +57,13 @@ class ApiEndpoints {
   /// Updates one family member (multipart, same shape as [familyMembers]'s
   /// `POST`).
   static String familyMemberDetails(int id) => 'family-members/$id';
+
+  // ─── Notifications ────────────────────────────────────────────────────────
+  /// The account's notifications feed, shown on `NotificationsScreen`.
+  /// `title`/`body` come back as `easy_localization` dot-path keys (e.g.
+  /// `"notifications.booking.completed.manager.title"`), not literal text —
+  /// translate them client-side.
+  static const String notifications = 'notifications';
 
   // ─── Device ───────────────────────────────────────────────────────────────
   /// Registers/refreshes this device's push-notification token.

@@ -84,6 +84,15 @@ abstract class LocaleKeys {
   static const String booking_resultReady = 'booking.result_ready';
   static const String booking_resultNormal = 'booking.result_normal';
   static const String booking_resultNotNormal = 'booking.result_not_normal';
+  static const String booking_rescheduleAction = 'booking.reschedule_action';
+  static const String booking_cancelAction = 'booking.cancel_action';
+  static const String booking_bookAgainAction = 'booking.book_again_action';
+  static const String booking_confirmReschedule = 'booking.confirm_reschedule';
+  static const String booking_rescheduleSuccess = 'booking.reschedule_success';
+  static const String booking_cancelDialogTitle = 'booking.cancel_dialog_title';
+  static const String booking_cancelDialogMessage = 'booking.cancel_dialog_message';
+  static const String booking_cancelDialogConfirm = 'booking.cancel_dialog_confirm';
+  static const String booking_cancelSuccess = 'booking.cancel_success';
 
   // ─── Calendar ─────────────────────────────────────────────────────────────
   static const String calendar_sat = 'calendar.sat';
@@ -101,6 +110,8 @@ abstract class LocaleKeys {
   static const String common_retry = 'common.retry';
   static const String common_confirm = 'common.confirm';
   static const String common_currency = 'common.currency';
+  static const String common_today = 'common.today';
+  static const String common_yesterday = 'common.yesterday';
 
   // ─── Family ───────────────────────────────────────────────────────────────
   static const String family_title = 'family.title';
@@ -189,6 +200,27 @@ abstract class LocaleKeys {
   static const String home_medications = 'home.medications';
   static const String home_medicationsSubtitle = 'home.medications_subtitle';
   static const String home_comingSoon = 'home.coming_soon';
+
+  // ─── Notifications ────────────────────────────────────────────────────────
+  static const String notifications_title = 'notifications.title';
+  static const String notifications_emptyTitle = 'notifications.empty_title';
+  static const String notifications_emptyDescription = 'notifications.empty_description';
+  static const String notifications_bookingBookedManagerTitle =
+      'notifications.booking.booked.manager.title';
+  static const String notifications_bookingBookedManagerBody =
+      'notifications.booking.booked.manager.body';
+  static const String notifications_bookingAcceptedManagerTitle =
+      'notifications.booking.accepted.manager.title';
+  static const String notifications_bookingAcceptedManagerBody =
+      'notifications.booking.accepted.manager.body';
+  static const String notifications_bookingStartedManagerTitle =
+      'notifications.booking.started.manager.title';
+  static const String notifications_bookingStartedManagerBody =
+      'notifications.booking.started.manager.body';
+  static const String notifications_bookingCompletedManagerTitle =
+      'notifications.booking.completed.manager.title';
+  static const String notifications_bookingCompletedManagerBody =
+      'notifications.booking.completed.manager.body';
 
   // ─── More ─────────────────────────────────────────────────────────────────
   static const String more_title = 'more.title';
