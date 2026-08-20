@@ -69,4 +69,18 @@ class AppointmentDetailCubit extends Cubit<AppointmentDetailState> {
       return false;
     }
   }
+
+  /// Rates a completed [appointmentId], then reloads it so the "rate" action
+  /// disappears. `false` on failure (only shows the error overlay).
+  Future<bool> rate({required int appointmentId, required int rate, String? comment}) async {
+    try {
+      await _repo.rateAppointment(appointmentId: appointmentId, rate: rate, comment: comment);
+      await getAppointment(appointmentId);
+      return true;
+    } catch (e) {
+      final msg = e is NetworkException ? e.message : e.toString();
+      AppOverlay.showError(msg);
+      return false;
+    }
+  }
 }

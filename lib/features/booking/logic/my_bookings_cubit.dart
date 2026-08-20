@@ -78,4 +78,24 @@ class MyBookingsCubit extends Cubit<MyBookingsState> {
       return false;
     }
   }
+
+  /// Rates a completed [appointmentId], then re-fetches the list under
+  /// [status] so the row picks up the new rating. `false` on failure (only
+  /// shows the error overlay).
+  Future<bool> rate({
+    required int appointmentId,
+    required int rate,
+    String? comment,
+    required String? status,
+  }) async {
+    try {
+      await _repo.rateAppointment(appointmentId: appointmentId, rate: rate, comment: comment);
+      await getAppointments(status: status);
+      return true;
+    } catch (e) {
+      final msg = e is NetworkException ? e.message : e.toString();
+      AppOverlay.showError(msg);
+      return false;
+    }
+  }
 }

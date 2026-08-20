@@ -49,6 +49,9 @@ class ApiEndpoints {
   /// Cancels an appointment that hasn't happened yet.
   static String appointmentCancel(int id) => 'appointments/$id/cancel';
 
+  /// Rates a completed appointment (1-5 stars + an optional comment).
+  static String appointmentRate(int id) => 'appointments/$id/rate';
+
   // ─── Family ───────────────────────────────────────────────────────────────
   /// `GET` lists the account's linked family members; `POST` (multipart,
   /// for the `medical_files[]` attachments) adds a new one.
@@ -58,12 +61,36 @@ class ApiEndpoints {
   /// `POST`).
   static String familyMemberDetails(int id) => 'family-members/$id';
 
+  // ─── Medical records ──────────────────────────────────────────────────────
+  /// The account's lab-analysis history (`TestRequestModel`, `type:
+  /// "analysis"`), shown on `TestHistoryScreen`.
+  static const String analysesHistory = 'analyses/history';
+
+  /// The account's x-ray history (`TestRequestModel`, `type: "xray"`), shown
+  /// on `TestHistoryScreen`.
+  static const String xraysHistory = 'xrays/history';
+
+  /// The account's full prescription/medication history, shown on
+  /// `MedicationsScreen`.
+  static const String prescriptionsHistory = 'prescriptions/history';
+
   // ─── Notifications ────────────────────────────────────────────────────────
   /// The account's notifications feed, shown on `NotificationsScreen`.
   /// `title`/`body` come back as `easy_localization` dot-path keys (e.g.
   /// `"notifications.booking.completed.manager.title"`), not literal text —
   /// translate them client-side.
   static const String notifications = 'notifications';
+
+  /// The account's unread notifications count — powers the bell badge on
+  /// `HomeHeader`, fetched once `LayoutScreen` mounts.
+  static const String notificationsUnreadCount = 'notifications/unread-count';
+
+  /// Marks every notification as read (`NotificationsScreen`'s header
+  /// action).
+  static const String notificationsReadAll = 'notifications/read-all';
+
+  /// Marks a single notification as read — fired when it's tapped.
+  static String notificationRead(String id) => 'notifications/$id/read';
 
   // ─── Device ───────────────────────────────────────────────────────────────
   /// Registers/refreshes this device's push-notification token.

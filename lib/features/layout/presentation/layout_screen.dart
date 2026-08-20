@@ -11,6 +11,7 @@ import '../../account/presentation/account_screen.dart';
 import '../../family/presentation/family_screen.dart';
 import '../../home/presentation/home_screen.dart';
 import '../../medical_file/presentation/medical_file_screen.dart';
+import '../../notifications/logic/unread_count_cubit.dart';
 import '../../profile/logic/profile_cubit.dart';
 import 'widgets/custom_nav_bar.dart';
 
@@ -46,6 +47,7 @@ class _LayoutScreenState extends State<LayoutScreen> {
     super.initState();
     _currentIndex = widget.currentPage;
     _syncDeviceOnLogin();
+    if (!kIsGuest) getIt<UnreadCountCubit>().getUnreadCount();
   }
 
   /// Fires the two device-housekeeping calls once, right when the

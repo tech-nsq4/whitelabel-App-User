@@ -21,6 +21,7 @@ import 'widgets/appointment_detail_actions.dart';
 import 'widgets/appointment_detail_body.dart';
 import 'widgets/booking_confirmed_dialog.dart';
 import 'widgets/booking_slots_sheet.dart';
+import 'widgets/rate_appointment_sheet.dart';
 
 /// Appointment detail screen, backed by `GET /appointments/{id}` — reached
 /// by tapping the home screen's "upcoming appointment" card or a row on
@@ -102,6 +103,21 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     unawaited(_appointmentsCubit.getAppointments());
   }
 
+  Future<void> _rate(AppointmentModel appointment) async {
+    final result = await showRateAppointmentSheet(context, doctorName: appointment.doctor?.name);
+    if (result == null || !mounted) return;
+
+    final ok = await _cubit.rate(
+      appointmentId: appointment.id,
+      rate: result.rate,
+      comment: result.comment,
+    );
+    if (!ok || !mounted) return;
+
+    AppOverlay.showSuccess(LocaleKeys.booking_rateSuccess.tr());
+    unawaited(_appointmentsCubit.getAppointments());
+  }
+
   Future<void> _bookAgain(AppointmentModel appointment) async {
     final doctor = appointment.doctor;
     if (doctor == null) return;
@@ -172,6 +188,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                         appointment: appointment,
                         onReschedule: () => _reschedule(appointment),
                         onCancel: () => _cancel(appointment),
+                        onRate: () => _rate(appointment),
                         onBookAgain: () => _bookAgain(appointment),
                       ),
                     ],

@@ -20,4 +20,34 @@ class NotificationsRepo {
       throw NetworkException.fromDioException(e);
     }
   }
+
+  /// The account's unread notifications count, for the bell badge on
+  /// `HomeHeader`.
+  Future<int> getUnreadCount() async {
+    try {
+      final response = await _dio.get(ApiEndpoints.notificationsUnreadCount);
+      final data = response.data['data'] as Map<String, dynamic>;
+      return (data['unread_count'] as num?)?.toInt() ?? 0;
+    } on DioException catch (e) {
+      throw NetworkException.fromDioException(e);
+    }
+  }
+
+  /// Marks every notification as read.
+  Future<void> markAllAsRead() async {
+    try {
+      await _dio.post(ApiEndpoints.notificationsReadAll);
+    } on DioException catch (e) {
+      throw NetworkException.fromDioException(e);
+    }
+  }
+
+  /// Marks a single notification as read.
+  Future<void> markAsRead(String notificationId) async {
+    try {
+      await _dio.post(ApiEndpoints.notificationRead(notificationId));
+    } on DioException catch (e) {
+      throw NetworkException.fromDioException(e);
+    }
+  }
 }

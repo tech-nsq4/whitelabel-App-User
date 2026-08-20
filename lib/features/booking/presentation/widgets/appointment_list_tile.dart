@@ -24,6 +24,7 @@ class AppointmentListTile extends StatelessWidget {
     this.onTap,
     required this.onReschedule,
     required this.onCancel,
+    required this.onRate,
     required this.onBookAgain,
   });
 
@@ -31,6 +32,7 @@ class AppointmentListTile extends StatelessWidget {
   final VoidCallback? onTap;
   final VoidCallback onReschedule;
   final VoidCallback onCancel;
+  final VoidCallback onRate;
   final VoidCallback onBookAgain;
 
   @override
@@ -145,6 +147,7 @@ class AppointmentListTile extends StatelessWidget {
               appointment: appointment,
               onReschedule: onReschedule,
               onCancel: onCancel,
+              onRate: onRate,
               onBookAgain: onBookAgain,
             ),
           ],

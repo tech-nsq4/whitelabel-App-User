@@ -53,27 +53,34 @@ class TestModel extends Equatable {
   List<Object?> get props => [id, name, description, price];
 }
 
-/// A lab analysis or x-ray request attached to an appointment, inside
-/// [AppointmentModel.testRequests] — `has_result` flips once the clinic
-/// uploads a result via [url] (an image/PDF), optionally rated [resultRate].
+/// A lab analysis or x-ray request — attached to an appointment inside
+/// [AppointmentModel.testRequests], and also the shape of each entry on
+/// `GET /analyses/history` / `GET /xrays/history` (flat, cross-appointment
+/// lists, hence [appointmentId] here too). `has_result` flips once the
+/// clinic uploads a result via [url] (an image/PDF), optionally rated
+/// [resultRate].
 class TestRequestModel extends Equatable {
   final int id;
+  final int? appointmentId;
   final String type; // "analysis" | "xray"
   final bool hasResult;
   final String? resultRate; // e.g. "normal" | "not_normal", null until resulted
   final String? note;
   final String? url;
   final DateTime? resultedAt;
+  final DateTime? createdAt;
   final TestModel? test;
 
   const TestRequestModel({
     required this.id,
+    this.appointmentId,
     required this.type,
     this.hasResult = false,
     this.resultRate,
     this.note,
     this.url,
     this.resultedAt,
+    this.createdAt,
     this.test,
   });
 
@@ -81,17 +88,20 @@ class TestRequestModel extends Equatable {
 
   factory TestRequestModel.fromJson(Map<String, dynamic> json) => TestRequestModel(
         id: json['id'] as int,
+        appointmentId: json['appointment_id'] as int?,
         type: json['type'] as String? ?? '',
         hasResult: json['has_result'] as bool? ?? false,
         resultRate: json['result_rate'] as String?,
         note: json['note'] as String?,
         url: json['url'] as String?,
         resultedAt: DateTime.tryParse(json['resulted_at'] as String? ?? ''),
+        createdAt: DateTime.tryParse(json['created_at'] as String? ?? ''),
         test: json['test'] == null ? null : TestModel.fromJson(json['test'] as Map<String, dynamic>),
       );
 
   @override
-  List<Object?> get props => [id, type, hasResult, resultRate, note, url, resultedAt, test];
+  List<Object?> get props =>
+      [id, appointmentId, type, hasResult, resultRate, note, url, resultedAt, createdAt, test];
 }
 
 /// A booked appointment from `POST/GET /appointments`.
@@ -118,6 +128,15 @@ class AppointmentModel extends Equatable {
   final List<PrescriptionModel> prescriptions;
   final List<TestRequestModel> testRequests;
 
+  /// The account's 1-5 rating for this appointment (`POST
+  /// /appointments/{id}/rate`) — `null` until rated, only offered once
+  /// [status] is "completed".
+  final int? rate;
+  final String? comment;
+  final DateTime? ratedAt;
+
+  bool get isRated => rate != null;
+
   const AppointmentModel({
     required this.id,
     required this.doctorId,
@@ -137,6 +156,9 @@ class AppointmentModel extends Equatable {
     this.prescriptionImage,
     this.prescriptions = const [],
     this.testRequests = const [],
+    this.rate,
+    this.comment,
+    this.ratedAt,
   });
 
   /// [date] + [times] combined into one [DateTime] — used to sort/filter
@@ -181,6 +203,9 @@ class AppointmentModel extends Equatable {
         testRequests: (json['test_requests'] as List<dynamic>? ?? [])
             .map((e) => TestRequestModel.fromJson(e as Map<String, dynamic>))
             .toList(),
+        rate: json['rate'] as int?,
+        comment: json['comment'] as String?,
+        ratedAt: json['rated_at'] == null ? null : DateTime.tryParse(json['rated_at'] as String),
       );
 
   @override
@@ -203,5 +228,8 @@ class AppointmentModel extends Equatable {
         prescriptionImage,
         prescriptions,
         testRequests,
+        rate,
+        comment,
+        ratedAt,
       ];
 }

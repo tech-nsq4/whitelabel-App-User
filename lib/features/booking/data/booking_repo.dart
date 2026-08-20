@@ -182,6 +182,22 @@ class BookingRepo {
     }
   }
 
+  /// Rates a completed appointment — [comment] is optional.
+  Future<void> rateAppointment({
+    required int appointmentId,
+    required int rate,
+    String? comment,
+  }) async {
+    try {
+      await _dio.post(ApiEndpoints.appointmentRate(appointmentId), data: {
+        'rate': rate,
+        if (comment != null && comment.isNotEmpty) 'comment': comment,
+      });
+    } on DioException catch (e) {
+      throw NetworkException.fromDioException(e);
+    }
+  }
+
   /// "2026-08-17" — locale-independent, unlike `DateFormat`.
   String _formatApiDate(DateTime date) {
     String pad2(int n) => n.toString().padLeft(2, '0');

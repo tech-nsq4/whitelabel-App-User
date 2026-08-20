@@ -10,17 +10,17 @@ import '../../../../core/widgets/app_svg_icon.dart';
 import '../../../../core/widgets/app_text.dart';
 import '../../../../core/widgets/custom_tap_effect.dart';
 
-/// Medical-record shortcuts card: visits, lab results, x-ray, medications.
+/// Medical-record shortcuts card: bookings, lab results, x-ray, medications.
 class MedicalRecordList extends StatelessWidget {
   const MedicalRecordList({
     super.key,
-    this.onVisitsTap,
+    this.onBookingsTap,
     this.onLabResultsTap,
     this.onXrayTap,
     this.onMedicationsTap,
   });
 
-  final VoidCallback? onVisitsTap;
+  final VoidCallback? onBookingsTap;
   final VoidCallback? onLabResultsTap;
   final VoidCallback? onXrayTap;
   final VoidCallback? onMedicationsTap;
@@ -45,10 +45,10 @@ class MedicalRecordList extends StatelessWidget {
       child: Column(
         children: [
           _RecordRow(
-            icon: AppSvgIcons.medicalFile,
-            title: LocaleKeys.home_visits.tr(),
-            subtitle: LocaleKeys.home_visitsSubtitle.tr(),
-            onTap: onVisitsTap,
+            icon: AppSvgIcons.calendar,
+            title: LocaleKeys.home_bookings.tr(),
+            subtitle: LocaleKeys.home_bookingsSubtitle.tr(),
+            onTap: onBookingsTap,
           ),
           _RecordRow(
             icon: AppSvgIcons.flask,

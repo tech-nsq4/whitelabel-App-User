@@ -20,6 +20,8 @@ import '../../features/booking/presentation/doctor_search_screen.dart';
 import '../../features/booking/presentation/my_bookings_screen.dart';
 import '../../features/booking/presentation/specs_screen.dart';
 import '../../features/booking/presentation/symptom_checker_screen.dart';
+import '../../features/booking/presentation/test_result_detail_screen.dart';
+import '../../features/booking/data/models/appointment_model.dart' show TestRequestModel;
 import '../../features/emergency/presentation/em_ambulance_screen.dart';
 import '../../features/emergency/presentation/em_checkin_screen.dart';
 import '../../features/emergency/presentation/em_nearest_screen.dart';
@@ -30,10 +32,8 @@ import '../../features/family/logic/family_cubit.dart';
 import '../../features/family/presentation/member_screen.dart';
 import '../../features/homecare/presentation/homecare_screen.dart';
 import '../../features/immunity/presentation/immunity_screen.dart';
-import '../../features/lab/data/models/clinic_report_model.dart';
-import '../../features/lab/presentation/clinic_appts_screen.dart';
-import '../../features/lab/presentation/clinic_reports_screen.dart';
-import '../../features/lab/presentation/report_view_screen.dart';
+import '../../features/lab/logic/test_history_cubit.dart' show TestHistoryType;
+import '../../features/lab/presentation/test_history_screen.dart';
 import '../../features/layout/presentation/layout_screen.dart';
 import '../../features/medications/presentation/medications_screen.dart';
 import '../../features/notifications/presentation/notifications_screen.dart';
@@ -97,23 +97,10 @@ class RouteGenerator {
         ));
 
       case Routes.labClinics:
-        return _pageRoute(const ClinicReportsScreen(type: ReportType.lab));
+        return _pageRoute(const TestHistoryScreen(type: TestHistoryType.analysis));
 
       case Routes.xrayClinics:
-        return _pageRoute(const ClinicReportsScreen(type: ReportType.xray));
-
-      case Routes.clinicAppts:
-        return _pageRoute(ClinicApptsScreen(
-          type: arguments?['type'] as ReportType,
-          clinic: arguments?['clinic'] as String,
-        ));
-
-      case Routes.reportView:
-        return _pageRoute(ReportViewScreen(
-          type: arguments?['type'] as ReportType,
-          clinic: arguments?['clinic'] as String,
-          number: arguments?['number'] as String,
-        ));
+        return _pageRoute(const TestHistoryScreen(type: TestHistoryType.xray));
 
       case Routes.phClinics:
         return _pageRoute(const PhClinicsScreen());
@@ -186,6 +173,9 @@ class RouteGenerator {
 
       case Routes.myBookings:
         return _pageRoute(const MyBookingsScreen());
+
+      case Routes.testResultDetail:
+        return _pageRoute(TestResultDetailScreen(request: arguments?['request'] as TestRequestModel));
 
       case Routes.symptomChecker:
         return _pageRoute(const SymptomCheckerScreen());

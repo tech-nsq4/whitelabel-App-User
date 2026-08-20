@@ -93,6 +93,19 @@ abstract class LocaleKeys {
   static const String booking_cancelDialogMessage = 'booking.cancel_dialog_message';
   static const String booking_cancelDialogConfirm = 'booking.cancel_dialog_confirm';
   static const String booking_cancelSuccess = 'booking.cancel_success';
+  static const String booking_rateAction = 'booking.rate_action';
+  static const String booking_rateTitle = 'booking.rate_title';
+  static const String booking_rateCommentHint = 'booking.rate_comment_hint';
+  static const String booking_rateSubmit = 'booking.rate_submit';
+  static const String booking_rateSuccess = 'booking.rate_success';
+  static const String booking_yourRatingTitle = 'booking.your_rating_title';
+  static const String booking_reportLabel = 'booking.report_label';
+  static const String booking_descriptionLabel = 'booking.description_label';
+  static const String booking_requestDateLabel = 'booking.request_date_label';
+  static const String booking_resultDateLabel = 'booking.result_date_label';
+  static const String booking_noResultYet = 'booking.no_result_yet';
+  static const String booking_viewAppointmentAction = 'booking.view_appointment_action';
+  static const String booking_testPriceLabel = 'booking.test_price_label';
 
   // ─── Calendar ─────────────────────────────────────────────────────────────
   static const String calendar_sat = 'calendar.sat';
@@ -112,6 +125,7 @@ abstract class LocaleKeys {
   static const String common_currency = 'common.currency';
   static const String common_today = 'common.today';
   static const String common_yesterday = 'common.yesterday';
+  static const String common_tapToZoom = 'common.tap_to_zoom';
 
   // ─── Family ───────────────────────────────────────────────────────────────
   static const String family_title = 'family.title';
@@ -190,8 +204,8 @@ abstract class LocaleKeys {
   static const String home_emergency = 'home.emergency';
   static const String home_emergencySubtitle = 'home.emergency_subtitle';
   static const String home_medicalRecord = 'home.medical_record';
-  static const String home_visits = 'home.visits';
-  static const String home_visitsSubtitle = 'home.visits_subtitle';
+  static const String home_bookings = 'home.bookings';
+  static const String home_bookingsSubtitle = 'home.bookings_subtitle';
   static const String home_labResults = 'home.lab_results';
   static const String home_labResultsSubtitle = 'home.lab_results_subtitle';
   static const String home_labResultsBadge = 'home.lab_results_badge';
@@ -201,10 +215,24 @@ abstract class LocaleKeys {
   static const String home_medicationsSubtitle = 'home.medications_subtitle';
   static const String home_comingSoon = 'home.coming_soon';
 
+  // ─── Lab ──────────────────────────────────────────────────────────────────
+  static const String lab_resultsTitle = 'lab.results_title';
+  static const String lab_xrayTitle = 'lab.xray_title';
+  static const String lab_analysesEmptyTitle = 'lab.analyses_empty_title';
+  static const String lab_analysesEmptyDescription = 'lab.analyses_empty_description';
+  static const String lab_xrayEmptyTitle = 'lab.xray_empty_title';
+  static const String lab_xrayEmptyDescription = 'lab.xray_empty_description';
+
+  // ─── Medications ──────────────────────────────────────────────────────────
+  static const String medications_title = 'medications.title';
+  static const String medications_emptyTitle = 'medications.empty_title';
+  static const String medications_emptyDescription = 'medications.empty_description';
+
   // ─── Notifications ────────────────────────────────────────────────────────
   static const String notifications_title = 'notifications.title';
   static const String notifications_emptyTitle = 'notifications.empty_title';
   static const String notifications_emptyDescription = 'notifications.empty_description';
+  static const String notifications_markAllRead = 'notifications.mark_all_read';
   static const String notifications_bookingBookedManagerTitle =
       'notifications.booking.booked.manager.title';
   static const String notifications_bookingBookedManagerBody =

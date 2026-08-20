@@ -84,7 +84,20 @@
     "cancel_dialog_title": "Cancel this booking?",
     "cancel_dialog_message": "Are you sure you want to cancel this booking? This can't be undone.",
     "cancel_dialog_confirm": "Yes, Cancel",
-    "cancel_success": "Booking cancelled"
+    "cancel_success": "Booking cancelled",
+    "rate_action": "Rate",
+    "rate_title": "Rate Your Experience",
+    "rate_comment_hint": "Share your feedback (optional)",
+    "rate_submit": "Submit Rating",
+    "rate_success": "Thanks for your rating",
+    "your_rating_title": "Your Rating",
+    "report_label": "Report",
+    "description_label": "Description",
+    "request_date_label": "Request Date",
+    "result_date_label": "Result Date",
+    "no_result_yet": "No result yet",
+    "view_appointment_action": "View Booking Details",
+    "test_price_label": "Price"
   },
   "calendar": {
     "sat": "Sat",
@@ -131,7 +144,8 @@
     "confirm": "Confirm",
     "currency": "SAR",
     "today": "Today",
-    "yesterday": "Yesterday"
+    "yesterday": "Yesterday",
+    "tap_to_zoom": "Tap to zoom"
   },
   "family": {
     "title": "Family",
@@ -180,8 +194,8 @@
     "emergency": "Emergency",
     "emergency_subtitle": "24/7",
     "medical_record": "Medical Record",
-    "visits": "My Visits",
-    "visits_subtitle": "Last visit Jun 8 · 3 procedures",
+    "bookings": "My Bookings",
+    "bookings_subtitle": "Book and track your appointments",
     "lab_results": "Lab Results",
     "lab_results_subtitle": "Vitamin D - low · Yesterday",
     "lab_results_badge": "New",
@@ -191,10 +205,24 @@
     "medications_subtitle": "Next dose 2:00 PM",
     "coming_soon": "Coming soon"
   },
+  "lab": {
+    "results_title": "Lab Results",
+    "xray_title": "X-Rays",
+    "analyses_empty_title": "No lab results yet",
+    "analyses_empty_description": "Any analysis your doctor requests will show up here once it's ready",
+    "xray_empty_title": "No x-rays yet",
+    "xray_empty_description": "Any x-ray your doctor requests will show up here once it's ready"
+  },
+  "medications": {
+    "title": "My Medications",
+    "empty_title": "No prescriptions yet",
+    "empty_description": "Medications your doctor prescribes will show up here"
+  },
   "notifications": {
     "title": "Notifications",
     "empty_title": "No notifications yet",
     "empty_description": "We'll let you know here as soon as there's an update on your bookings",
+    "mark_all_read": "Mark all as read",
     "booking": {
       "booked": {
         "manager": {

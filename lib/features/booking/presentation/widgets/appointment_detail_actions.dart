@@ -11,7 +11,9 @@ import '../../data/models/appointment_model.dart';
 /// [AppointmentModel.status] and its actual date/time:
 /// - Hasn't happened yet (pending/confirmed/in_progress *and* still in the
 ///   future): reschedule + cancel.
-/// - Completed/cancelled: book the same doctor again for a new slot.
+/// - Completed and not yet rated ([AppointmentModel.isRated]): rate this
+///   appointment + book the same doctor again.
+/// - Completed and already rated, or cancelled: just book again.
 /// - Any other case — including a pending/confirmed booking whose slot
 ///   already passed without the backend marking it completed/cancelled —
 ///   nothing: it's too late to reschedule or cancel, and it's not clearly
@@ -22,12 +24,14 @@ class AppointmentDetailActions extends StatelessWidget {
     required this.appointment,
     required this.onReschedule,
     required this.onCancel,
+    required this.onRate,
     required this.onBookAgain,
   });
 
   final AppointmentModel appointment;
   final VoidCallback onReschedule;
   final VoidCallback onCancel;
+  final VoidCallback onRate;
   final VoidCallback onBookAgain;
 
   static const _upcomingStatuses = {'pending', 'confirmed', 'in_progress'};
@@ -70,6 +74,27 @@ class AppointmentDetailActions extends StatelessWidget {
               borderColor: AppColors.errorColor.themeColor,
               textColor: AppColors.errorColor.themeColor,
               onTap: onCancel,
+            ),
+          ),
+        ],
+      );
+    }
+
+    if (appointment.status == 'completed' && !appointment.isRated) {
+      return Row(
+        children: [
+          Expanded(
+            child: CustomButton(
+              title: LocaleKeys.booking_rateAction.tr(),
+              onTap: onRate,
+            ),
+          ),
+          12.width,
+          Expanded(
+            child: CustomButton(
+              title: LocaleKeys.booking_bookAgainAction.tr(),
+              isOutlined: true,
+              onTap: onBookAgain,
             ),
           ),
         ],

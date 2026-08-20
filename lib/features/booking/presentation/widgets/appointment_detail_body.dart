@@ -16,6 +16,7 @@ import 'booking_summary_card.dart';
 import 'doctor_clinic_card.dart';
 import 'doctor_profile_header.dart';
 import 'prescription_card.dart';
+import 'rating_summary_card.dart';
 import 'test_results_card.dart';
 
 /// Scrollable content for `AppointmentDetailScreen`, once
@@ -101,6 +102,17 @@ class AppointmentDetailBody extends StatelessWidget {
                     color: AppColors.mutedColor.themeColor)),
             10.height,
             TestResultsCard(requests: appointment.testRequests),
+          ],
+          if (appointment.isRated) ...[
+            14.height,
+            Text(LocaleKeys.booking_yourRatingTitle.tr(),
+                style: TextStyle(
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1.2,
+                    color: AppColors.mutedColor.themeColor)),
+            10.height,
+            RatingSummaryCard(rate: appointment.rate!, comment: appointment.comment),
           ],
         ],
       ],

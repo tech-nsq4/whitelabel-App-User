@@ -28,10 +28,10 @@ String _relativeDayTimeLabel(DateTime dateTime, String locale) {
 /// `easy_localization` keys straight from the API — `.tr()` translates them
 /// (or shows the raw key untouched if it's ever missing from our files).
 class NotificationTile extends StatelessWidget {
-  const NotificationTile({super.key, required this.notification, this.onTap});
+  const NotificationTile({super.key, required this.notification, required this.onTap});
 
   final NotificationModel notification;
-  final VoidCallback? onTap;
+  final VoidCallback onTap;
 
   static final _icons = {
     'booked': AppSvgIcons.calendar,
@@ -62,9 +62,14 @@ class NotificationTile extends StatelessWidget {
     final color = _color();
     final createdAt = notification.createdAt;
 
+    final isUnread = !notification.isRead;
+
     return AppCard(
       margin: EdgeInsets.only(bottom: 10.h),
-      color: notification.isRead ? AppColors.cardColor.themeColor.withValues(alpha: 0.6) : null,
+      color: isUnread
+          ? AppColors.primaryColor.themeColor.withValues(alpha: 0.06)
+          : AppColors.cardColor.themeColor,
+      borderColor: isUnread ? AppColors.primaryColor.themeColor.withValues(alpha: 0.25) : null,
       onTap: onTap,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,7 +94,7 @@ class NotificationTile extends StatelessWidget {
                   notification.title.tr(),
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimaryColor.themeColor,
+                  color: isUnread ? AppColors.textPrimaryColor.themeColor : AppColors.textSecondaryColor.themeColor,
                 ),
                 4.height,
                 AppText(
@@ -107,6 +112,15 @@ class NotificationTile extends StatelessWidget {
               ],
             ),
           ),
+          if (isUnread) ...[
+            8.width,
+            Container(
+              width: 8.r,
+              height: 8.r,
+              margin: EdgeInsets.only(top: 4.h),
+              decoration: BoxDecoration(color: AppColors.primaryColor.themeColor, shape: BoxShape.circle),
+            ),
+          ],
         ],
       ),
     );

@@ -23,6 +23,7 @@ import 'widgets/booking_confirmed_dialog.dart';
 import 'widgets/booking_slots_sheet.dart';
 import 'widgets/booking_status_tabs.dart';
 import 'widgets/no_bookings_view.dart';
+import 'widgets/rate_appointment_sheet.dart';
 
 /// The account's booking history, backed by `GET /appointments` — reached
 /// from `MedicalFileScreen`'s "حجوزاتي" row. [BookingStatusTabs] re-fetches
@@ -108,6 +109,22 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
     unawaited(_appointmentsCubit.getAppointments());
   }
 
+  Future<void> _rate(AppointmentModel appointment) async {
+    final result = await showRateAppointmentSheet(context, doctorName: appointment.doctor?.name);
+    if (result == null || !mounted) return;
+
+    final ok = await _cubit.rate(
+      appointmentId: appointment.id,
+      rate: result.rate,
+      comment: result.comment,
+      status: _filter.apiValue,
+    );
+    if (!ok || !mounted) return;
+
+    AppOverlay.showSuccess(LocaleKeys.booking_rateSuccess.tr());
+    unawaited(_appointmentsCubit.getAppointments());
+  }
+
   Future<void> _bookAgain(AppointmentModel appointment) async {
     final doctor = appointment.doctor;
     if (doctor == null) return;
@@ -188,6 +205,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                               ),
                               onReschedule: () => _reschedule(appointment),
                               onCancel: () => _cancel(appointment),
+                              onRate: () => _rate(appointment),
                               onBookAgain: () => _bookAgain(appointment),
                             );
                           },

@@ -9,6 +9,7 @@ import '../../../core/extensions/extensions.dart';
 import '../../../core/utils/locale_keys.dart';
 import '../../../core/widgets/section_header.dart';
 import '../../booking/logic/appointments_cubit.dart';
+import '../../notifications/logic/unread_count_cubit.dart';
 import 'widgets/ai_assistant_banner.dart';
 import 'widgets/health_card.dart';
 import 'widgets/health_card_modal.dart';
@@ -52,10 +53,15 @@ class _HomeScreenState extends State<HomeScreen> {
           child: ListView(
             padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 110.h),
             children: [
-              HomeHeader(
-                notificationCount: 4,
-                onNotificationsTap: () => Navigator.pushNamed(context, Routes.notifications),
-                onCardTap: () => showHealthCardModal(context),
+              BlocBuilder<UnreadCountCubit, UnreadCountState>(
+                bloc: getIt<UnreadCountCubit>(),
+                builder: (context, unreadState) {
+                  return HomeHeader(
+                    notificationCount: unreadState is UnreadCountSuccess ? unreadState.count : 0,
+                    onNotificationsTap: () => Navigator.pushNamed(context, Routes.notifications),
+                    onCardTap: () => showHealthCardModal(context),
+                  );
+                },
               ),
               22.height,
               HealthCard(onTap: () => showHealthCardModal(context)),
@@ -116,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               12.height,
               MedicalRecordList(
-                onVisitsTap: () => Navigator.pushNamed(context, Routes.visits),
+                onBookingsTap: () => Navigator.pushNamed(context, Routes.myBookings),
                 onLabResultsTap: () => Navigator.pushNamed(context, Routes.labClinics),
                 onXrayTap: () => Navigator.pushNamed(context, Routes.xrayClinics),
                 onMedicationsTap: () => Navigator.pushNamed(context, Routes.medications),

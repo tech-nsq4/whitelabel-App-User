@@ -13,8 +13,13 @@ import '../../features/booking/logic/specializations_cubit.dart';
 import '../../features/booking/logic/time_tables_cubit.dart';
 import '../../features/family/data/family_repo.dart';
 import '../../features/family/logic/family_cubit.dart';
+import '../../features/lab/data/lab_repo.dart';
+import '../../features/lab/logic/test_history_cubit.dart';
+import '../../features/medications/data/medications_repo.dart';
+import '../../features/medications/logic/medications_cubit.dart';
 import '../../features/notifications/data/notifications_repo.dart';
 import '../../features/notifications/logic/notifications_cubit.dart';
+import '../../features/notifications/logic/unread_count_cubit.dart';
 import '../../features/profile/logic/profile_cubit.dart';
 import '../network/dio_client.dart';
 import '../storage/local_storage.dart';
@@ -33,6 +38,8 @@ Future<void> setupDi() async {
   getIt.registerLazySingleton(() => BookingRepo(dio: getIt()));
   getIt.registerLazySingleton(() => FamilyRepo(dio: getIt()));
   getIt.registerLazySingleton(() => NotificationsRepo(dio: getIt()));
+  getIt.registerLazySingleton(() => LabRepo(dio: getIt()));
+  getIt.registerLazySingleton(() => MedicationsRepo(dio: getIt()));
 
   // ─── Cubits ───────────────────────────────────────────────────────────────
   getIt.registerFactory(() => AuthCubit(getIt()));
@@ -46,6 +53,8 @@ Future<void> setupDi() async {
   getIt.registerFactory(() => AppointmentDetailCubit(getIt()));
   getIt.registerFactory(() => MyBookingsCubit(getIt()));
   getIt.registerFactory(() => NotificationsCubit(getIt()));
+  getIt.registerFactory(() => TestHistoryCubit(getIt()));
+  getIt.registerFactory(() => MedicationsCubit(getIt()));
 
   // `AppointmentsCubit` is a singleton (not the usual per-screen factory):
   // `DoctorScreen` refreshes it right after booking and `HomeScreen`'s
@@ -54,4 +63,10 @@ Future<void> setupDi() async {
   // re-fetch on navigation. Never call `.close()` on it from a screen's
   // `dispose()`; it lives for the app's session.
   getIt.registerLazySingleton(() => AppointmentsCubit(getIt()));
+
+  // Same reasoning as `AppointmentsCubit` above: `LayoutScreen` fetches this
+  // once on app-shell mount, `HomeHeader`'s bell badge reads it, and
+  // `NotificationsScreen` refreshes this exact instance after marking
+  // anything read.
+  getIt.registerLazySingleton(() => UnreadCountCubit(getIt()));
 }
