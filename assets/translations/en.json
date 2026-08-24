@@ -47,6 +47,8 @@
     "available_slots_count": "{count} available slots",
     "no_slots_for_day": "No available slots for this day",
     "continue_to_payment": "Continue to Payment",
+    "guest_login_title": "Sign In to Complete Booking",
+    "guest_login_description": "You're currently browsing as a guest. Sign in or create an account to finish booking your appointment.",
     "doctor_label": "Doctor",
     "appointment_label": "Appointment",
     "branch_label": "Branch",

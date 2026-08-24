@@ -14,7 +14,15 @@ import 'widgets/auth_header.dart';
 import 'widgets/phone_auth_card.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+  const RegisterScreen({super.key, this.popOnSuccess = false, this.entryRoute});
+
+  /// See [LoginScreen.popOnSuccess] / [OtpScreen.popOnSuccess].
+  final bool popOnSuccess;
+
+  /// The `LoginScreen` route this resumed flow ultimately needs to unwind
+  /// back to — received from `LoginScreen` and just passed straight through
+  /// to `OtpScreen`; this screen never acts on it itself.
+  final Route<dynamic>? entryRoute;
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -50,6 +58,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
             arguments: {
               'phone': state.result.phone,
               'isNewUser': state.result.isNewUser,
+              'popOnSuccess': widget.popOnSuccess,
+              'entryRoute': widget.entryRoute,
             },
           );
         }

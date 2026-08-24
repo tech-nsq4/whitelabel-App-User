@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../app/router/routes.dart';
 import '../../../core/extensions/extensions.dart';
 import '../../../core/utils/app_colors.dart';
-import '../../../core/utils/app_constants.dart';
 import '../../../core/utils/app_svg_icons.dart';
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/app_text.dart';
@@ -20,8 +19,6 @@ class AccountScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isGuest = kIsGuest;
-
     return Scaffold(
       body: SafeArea(
         child: ListView(
@@ -104,30 +101,44 @@ class AccountScreen extends StatelessWidget {
                 ],
               ),
             ),
-            if (!isGuest)
-              AppCard(
-                onTap: () => _logout(context),
-                child: Row(
-                  children: [
-                    Icon(Icons.logout_rounded, color: AppColors.errorColor.themeColor, size: 18.sp),
-                    10.width,
-                    AppText('تسجيل الخروج',
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.errorColor.themeColor),
-                  ],
-                ),
-              )
-            else
-              AppCard(
-                color: AppColors.primaryColor.themeColor,
-                borderColor: Colors.transparent,
-                onTap: () => Navigator.pushNamedAndRemoveUntil(
-                    context, Routes.loginScreen, (_) => false),
-                child: Center(
-                  child: AppText('سجّل الدخول', isHeading: true, color: Colors.white, fontSize: 13),
-                ),
-              ),
+            // `LayoutScreen` keeps every tab alive in an `IndexedStack` built
+            // from a `static final` list, so `AccountScreen.build()` only
+            // ever runs once per app session — a plain `kIsGuest` read here
+            // would freeze at whatever it was on that first build (e.g. a
+            // guest who signs in later via `requireGuestLogin` from another
+            // tab would keep seeing "Login" instead of "Logout"). Scoping
+            // just this button to a `BlocSelector<ProfileCubit>` — same
+            // selector as `MoreScreen` — keeps it reactive without forcing
+            // the AppCards above to rebuild too.
+            BlocSelector<ProfileCubit, ProfileState, bool>(
+              selector: (state) => state is! ProfileSuccess,
+              builder: (context, isGuest) {
+                if (!isGuest) {
+                  return AppCard(
+                    onTap: () => _logout(context),
+                    child: Row(
+                      children: [
+                        Icon(Icons.logout_rounded, color: AppColors.errorColor.themeColor, size: 18.sp),
+                        10.width,
+                        AppText('تسجيل الخروج',
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.errorColor.themeColor),
+                      ],
+                    ),
+                  );
+                }
+                return AppCard(
+                  color: AppColors.primaryColor.themeColor,
+                  borderColor: Colors.transparent,
+                  onTap: () => Navigator.pushNamedAndRemoveUntil(
+                      context, Routes.loginScreen, (_) => false),
+                  child: Center(
+                    child: AppText('سجّل الدخول', isHeading: true, color: Colors.white, fontSize: 13),
+                  ),
+                );
+              },
+            ),
           ],
         ),
       ),

@@ -7,6 +7,7 @@ import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/app_svg_icons.dart';
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/app_text.dart';
+import '../../../core/widgets/guest_login_dialog.dart';
 import '../../../core/widgets/list_row_tile.dart';
 import '../../home/presentation/widgets/ai_assistant_banner.dart';
 
@@ -64,7 +65,7 @@ class MedicalFileScreen extends StatelessWidget {
             ),
             18.height,
             AiAssistantBanner(
-              onTap: () => Navigator.pushNamed(context, Routes.aiAssistant),
+              onTap: () => pushNamedOrRequireLogin(context, Routes.aiAssistant),
             ),
             18.height,
             _SectionTitle('السجل'),
@@ -78,7 +79,7 @@ class MedicalFileScreen extends StatelessWidget {
                     icon: AppSvgIcons.calendar,
                     title: 'حجوزاتي',
                     subtitle: 'احجز وتابع مواعيدك',
-                    onTap: () => Navigator.pushNamed(context, Routes.myBookings),
+                    onTap: () => pushNamedOrRequireLogin(context, Routes.myBookings),
                   ),
                   // ListRowTile(
                   //   icon: AppSvgIcons.medicalFile,
@@ -97,32 +98,32 @@ class MedicalFileScreen extends StatelessWidget {
                       background: AppColors.warningColor.themeColor.withValues(alpha: 0.12),
                       color: AppColors.warningColor.themeColor,
                     ),
-                    onTap: () => Navigator.pushNamed(context, Routes.labClinics),
+                    onTap: () => pushNamedOrRequireLogin(context, Routes.labClinics),
                   ),
                   ListRowTile(
                     icon: AppSvgIcons.xray,
                     title: 'الأشعة',
                     subtitle: 'ركبة اليمنى · 5 يونيو',
-                    onTap: () => Navigator.pushNamed(context, Routes.xrayClinics),
+                    onTap: () => pushNamedOrRequireLogin(context, Routes.xrayClinics),
                   ),
                   ListRowTile(
                     icon: AppSvgIcons.document,
                     title: 'الوصفات',
                     subtitle: 'وصفة سارية · رمز للصيدلية',
-                    onTap: () => Navigator.pushNamed(context, Routes.phClinics),
+                    onTap: () => pushNamedOrRequireLogin(context, Routes.phClinics),
                   ),
                   ListRowTile(
                     icon: AppSvgIcons.pill,
                     title: 'الأدوية',
                     subtitle: '3 أدوية نشطة',
-                    onTap: () => Navigator.pushNamed(context, Routes.medications),
+                    onTap: () => pushNamedOrRequireLogin(context, Routes.medications),
                   ),
                   ListRowTile(
                     icon: AppSvgIcons.heartbeat,
                     title: 'المؤشرات الحيوية',
                     subtitle: 'محدثة اليوم',
                     showDivider: false,
-                    onTap: () => Navigator.pushNamed(context, Routes.vitals),
+                    onTap: () => pushNamedOrRequireLogin(context, Routes.vitals),
                   ),
                 ],
               ),
@@ -145,14 +146,14 @@ class MedicalFileScreen extends StatelessWidget {
                       background: AppColors.warningColor.themeColor.withValues(alpha: 0.12),
                       color: AppColors.warningColor.themeColor,
                     ),
-                    onTap: () => Navigator.pushNamed(context, Routes.payments),
+                    onTap: () => pushNamedOrRequireLogin(context, Routes.payments),
                   ),
                   ListRowTile(
                     icon: AppSvgIcons.card,
                     title: 'محفظتي',
                     subtitle: '240 ريال + نقاط ولاء',
                     showDivider: false,
-                    onTap: () => Navigator.pushNamed(context, Routes.payments),
+                    onTap: () => pushNamedOrRequireLogin(context, Routes.payments),
                   ),
                 ],
               ),
@@ -167,20 +168,20 @@ class MedicalFileScreen extends StatelessWidget {
                     icon: AppSvgIcons.vaccine,
                     title: 'الحساسية والتطعيمات',
                     subtitle: 'حساسية البنسلين · تطعيم مستحق',
-                    onTap: () => Navigator.pushNamed(context, Routes.immunity),
+                    onTap: () => pushNamedOrRequireLogin(context, Routes.immunity),
                   ),
                   ListRowTile(
                     icon: AppSvgIcons.document,
                     title: 'التقارير والإجازات',
                     subtitle: 'إجازة موثقة · إصدار تقرير',
-                    onTap: () => Navigator.pushNamed(context, Routes.reports),
+                    onTap: () => pushNamedOrRequireLogin(context, Routes.reports),
                   ),
                   ListRowTile(
                     icon: AppSvgIcons.chatBubble,
                     title: 'اسأل طبيبك',
                     subtitle: 'استفسار مجاني · رد خلال 24 ساعة',
                     showDivider: false,
-                    onTap: () => Navigator.pushNamed(context, Routes.askDoctor),
+                    onTap: () => pushNamedOrRequireLogin(context, Routes.askDoctor),
                   ),
                 ],
               ),

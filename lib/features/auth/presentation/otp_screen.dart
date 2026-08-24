@@ -21,10 +21,32 @@ import 'widgets/otp_resend_button.dart';
 /// both flows request a code via the same `/auth/otp` endpoint and land
 /// here to confirm it via `/auth/login`.
 class OtpScreen extends StatefulWidget {
-  const OtpScreen({super.key, required this.phone, this.isNewUser = false});
+  const OtpScreen({
+    super.key,
+    required this.phone,
+    this.isNewUser = false,
+    this.popOnSuccess = false,
+    this.entryRoute,
+  });
 
   final String phone;
   final bool isNewUser;
+
+  /// `true` when this whole login/register flow was pushed on top of an
+  /// existing screen instead of being the app's root auth flow (see
+  /// `requireGuestLogin`). Changes what a successful verification does:
+  /// instead of resetting the stack to the app shell, it unwinds back to
+  /// [entryRoute] (the original `LoginScreen` push) to reveal that original
+  /// screen again, resolving its pending `Navigator.pushNamed` with `true`
+  /// so it can resume its own flow (e.g. re-open the payment sheet) with its
+  /// own still-intact local state — never re-entering `LayoutScreen`.
+  final bool popOnSuccess;
+
+  /// The `LoginScreen` route to unwind back to on success. Reached via
+  /// `popUntil` rather than a fixed number of `pop()` calls because the
+  /// stack depth here varies — the guest may have gone straight
+  /// Login → Otp, or detoured through Login → Register → Otp first.
+  final Route<dynamic>? entryRoute;
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -102,6 +124,12 @@ class _OtpScreenState extends State<OtpScreen> {
       // verifyOtp already returns the full profile — seed the cache with it
       // instead of firing an extra GET /profile right after login.
       context.read<ProfileCubit>().setUser(state.user);
+
+      if (widget.popOnSuccess) {
+        await _finishResumedFlow(state.user.profileCompleted);
+        return;
+      }
+
       Navigator.pushNamedAndRemoveUntil(
         context,
         state.user.profileCompleted
@@ -112,6 +140,40 @@ class _OtpScreenState extends State<OtpScreen> {
     } else {
       _otpBoxesKey.currentState?.clear();
     }
+  }
+
+  /// The [popOnSuccess] counterpart of the normal post-login navigation
+  /// above: never touches `LayoutScreen`. If the profile still needs
+  /// completing, that screen is pushed (not replacing) with the same flag so
+  /// it unwinds the same way; either way this ends by unwinding everything
+  /// back down to [entryRoute] and popping it too, handing `true` back to
+  /// whoever is awaiting that screen's `Navigator.pushNamed` call.
+  Future<void> _finishResumedFlow(bool profileCompleted) async {
+    if (!profileCompleted) {
+      // Untyped for the same reason as `requireGuestLogin`'s push — a typed
+      // `pushNamed<bool>` throws against `RouteGenerator`'s untyped routes.
+      final completed = await Navigator.pushNamed(
+        context,
+        Routes.completeProfileScreen,
+        arguments: {'popOnSuccess': true},
+      );
+      // Backed out of completing the profile — stay put rather than forcing
+      // the rest of the pop chain, so the guest is left back on the OTP
+      // screen instead of getting silently kicked further than they chose.
+      if (completed != true || !mounted) return;
+    }
+    if (!mounted) return;
+    final navigator = Navigator.of(context);
+    final entry = widget.entryRoute;
+    // `popUntil` (rather than a fixed pop count) so this unwinds correctly
+    // whether the guest went straight Login → Otp or detoured through
+    // Login → Register → Otp first.
+    if (entry != null) {
+      navigator.popUntil((route) => identical(route, entry));
+    } else {
+      navigator.pop(); // fallback: just this OTP screen, best-effort.
+    }
+    navigator.pop(true); // entryRoute (the Login screen) itself.
   }
 
   @override

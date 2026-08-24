@@ -47,6 +47,8 @@
     "available_slots_count": "{count} مواعيد متاحة",
     "no_slots_for_day": "لا توجد مواعيد متاحة في هذا اليوم",
     "continue_to_payment": "متابعة للدفع",
+    "guest_login_title": "سجّل الدخول لإتمام الحجز",
+    "guest_login_description": "أنت تتصفح كزائر الآن. سجّل الدخول أو أنشئ حساب جديد عشان تقدر تكمل حجز موعدك.",
     "doctor_label": "الطبيب",
     "appointment_label": "الموعد",
     "branch_label": "الفرع",

@@ -65,19 +65,28 @@ class RouteGenerator {
         return _pageRoute(const OnBoardingScreen());
 
       case Routes.loginScreen:
-        return _pageRoute(const LoginScreen());
+        return _pageRoute(LoginScreen(
+          popOnSuccess: arguments?['popOnSuccess'] as bool? ?? false,
+        ));
 
       case Routes.registerScreen:
-        return _pageRoute(const RegisterScreen());
+        return _pageRoute(RegisterScreen(
+          popOnSuccess: arguments?['popOnSuccess'] as bool? ?? false,
+          entryRoute: arguments?['entryRoute'] as Route<dynamic>?,
+        ));
 
       case Routes.otpScreen:
         return _pageRoute(OtpScreen(
           phone: arguments?['phone'] as String,
           isNewUser: arguments?['isNewUser'] as bool? ?? false,
+          popOnSuccess: arguments?['popOnSuccess'] as bool? ?? false,
+          entryRoute: arguments?['entryRoute'] as Route<dynamic>?,
         ));
 
       case Routes.completeProfileScreen:
-        return _pageRoute(const CompleteProfileScreen());
+        return _pageRoute(CompleteProfileScreen(
+          popOnSuccess: arguments?['popOnSuccess'] as bool? ?? false,
+        ));
 
       case Routes.layoutScreen:
         return _pageRoute(LayoutScreen(

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "317023976449",
+    "project_id": "white-label-app-605ad",
+    "storage_bucket": "white-label-app-605ad.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:317023976449:android:ac7200b9767f4c0d219400",
+        "android_client_info": {
+          "package_name": "com.example.app_base"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhe2Kuu2-nhd36SGUaaxXbWKX3GK-tkIM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:317023976449:android:61c95ecac86b554b219400",
+        "android_client_info": {
+          "package_name": "com.hazem.white_label_provider"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhe2Kuu2-nhd36SGUaaxXbWKX3GK-tkIM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

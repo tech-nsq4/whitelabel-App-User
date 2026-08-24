@@ -80,7 +80,7 @@ class PhoneAuthCard extends StatelessWidget {
             CustomTextFieldPhoneCode(
               hint: LocaleKeys.auth_phone.tr(),
               controller: phoneController,
-              egyptIsInitial: true,
+              // egyptIsInitial: true,
               onChanged: onPhoneChanged,
             ),
             24.height,

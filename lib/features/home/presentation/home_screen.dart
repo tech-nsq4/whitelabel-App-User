@@ -6,7 +6,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../app/router/routes.dart';
 import '../../../core/di/injection.dart';
 import '../../../core/extensions/extensions.dart';
+import '../../../core/utils/app_constants.dart';
 import '../../../core/utils/locale_keys.dart';
+import '../../../core/widgets/guest_login_dialog.dart';
 import '../../../core/widgets/section_header.dart';
 import '../../booking/logic/appointments_cubit.dart';
 import '../../notifications/logic/unread_count_cubit.dart';
@@ -29,11 +31,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late final AppointmentsCubit _cubit = getIt<AppointmentsCubit>();
 
-  @override
-  void initState() {
-    super.initState();
-    _cubit.getAppointments();
-  }
+  // No `initState`-time fetch here: `LayoutScreen` (this screen's only
+  // parent — it's never reached any other way) already fires
+  // `getAppointments()` on this exact singleton both at boot and whenever a
+  // guest session turns into a signed-in one, so firing it again here would
+  // just be a redundant duplicate call on the same timing.
 
   // No `dispose()`/`.close()` override here: `_cubit` is the app-wide
   // `AppointmentsCubit` singleton (see `injection.dart`) — `DoctorScreen`
@@ -58,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 builder: (context, unreadState) {
                   return HomeHeader(
                     notificationCount: unreadState is UnreadCountSuccess ? unreadState.count : 0,
-                    onNotificationsTap: () => Navigator.pushNamed(context, Routes.notifications),
+                    onNotificationsTap: () => pushNamedOrRequireLogin(context, Routes.notifications),
                     onCardTap: () => showHealthCardModal(context),
                   );
                 },
@@ -74,6 +76,9 @@ class _HomeScreenState extends State<HomeScreen> {
               10.height,
               BlocBuilder<AppointmentsCubit, AppointmentsState>(
                 builder: (context, state) {
+                  if (kIsGuest) {
+                    return NoUpcomingAppointmentTile(onTap: () => Navigator.pushNamed(context, Routes.book));
+                  }
                   if (state is AppointmentsLoading || state is AppointmentsInitial) {
                     return const SizedBox.shrink();
                   }
@@ -118,14 +123,14 @@ class _HomeScreenState extends State<HomeScreen> {
               SectionHeader(
                 title: LocaleKeys.home_medicalRecord.tr(),
                 actionLabel: LocaleKeys.home_seeAll.tr(),
-                onActionTap: () => Navigator.pushNamed(context, Routes.visits),
+                onActionTap: () => pushNamedOrRequireLogin(context, Routes.visits),
               ),
               12.height,
               MedicalRecordList(
-                onBookingsTap: () => Navigator.pushNamed(context, Routes.myBookings),
-                onLabResultsTap: () => Navigator.pushNamed(context, Routes.labClinics),
-                onXrayTap: () => Navigator.pushNamed(context, Routes.xrayClinics),
-                onMedicationsTap: () => Navigator.pushNamed(context, Routes.medications),
+                onBookingsTap: () => pushNamedOrRequireLogin(context, Routes.myBookings),
+                onLabResultsTap: () => pushNamedOrRequireLogin(context, Routes.labClinics),
+                onXrayTap: () => pushNamedOrRequireLogin(context, Routes.xrayClinics),
+                onMedicationsTap: () => pushNamedOrRequireLogin(context, Routes.medications),
               ),
             ],
           ),

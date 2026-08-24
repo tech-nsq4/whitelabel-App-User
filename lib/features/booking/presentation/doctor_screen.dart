@@ -6,7 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../core/di/injection.dart';
+import '../../../core/utils/app_constants.dart';
 import '../../../core/utils/locale_keys.dart';
+import '../../../core/widgets/guest_login_dialog.dart';
 import '../../../core/widgets/screen_header.dart';
 import '../../../core/widgets/screen_state_layout.dart';
 import '../../payments/presentation/widgets/payment_sheet.dart';
@@ -49,6 +51,16 @@ class _DoctorScreenState extends State<DoctorScreen> {
   Future<void> _book(BuildContext context, DoctorProfileModel doctor) async {
     final slot = await showBookingSlotsSheet(context, doctor);
     if (slot == null || !context.mounted) return;
+
+    // Gate right at the "confirm" step, not earlier — browsing the doctor's
+    // profile and schedule stays open to a guest, but actually booking
+    // needs an account. `requireGuestLogin` pushes the login flow on top of
+    // this screen and pops back here on success, so `slot` (already picked)
+    // just carries straight through into the payment step below.
+    if (kIsGuest) {
+      final loggedIn = await requireGuestLogin(context);
+      if (!loggedIn || !context.mounted) return;
+    }
 
     final locale = context.locale.languageCode;
     final when = '${slot.dayLabel(locale)} · ${slot.timeLabel}';

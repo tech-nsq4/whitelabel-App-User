@@ -54,6 +54,8 @@ abstract class LocaleKeys {
   static const String booking_availableSlotsCount = 'booking.available_slots_count';
   static const String booking_noSlotsForDay = 'booking.no_slots_for_day';
   static const String booking_continueToPayment = 'booking.continue_to_payment';
+  static const String booking_guestLoginTitle = 'booking.guest_login_title';
+  static const String booking_guestLoginDescription = 'booking.guest_login_description';
   static const String booking_doctorLabel = 'booking.doctor_label';
   static const String booking_appointmentLabel = 'booking.appointment_label';
   static const String booking_branchLabel = 'booking.branch_label';

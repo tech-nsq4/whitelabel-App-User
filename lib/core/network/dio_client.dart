@@ -164,7 +164,13 @@ class _AuthInterceptor extends Interceptor {
   @override
   Future<void> onError(
       DioException err, ErrorInterceptorHandler handler) async {
-    if (err.response?.statusCode == 401) {
+    // Only treat this as "your session expired": if the failed request never
+    // carried a token to begin with, the 401 just means a guest hit an
+    // authenticated-only endpoint (e.g. `/appointments` from the home
+    // screen) — expected, and not a reason to wipe storage and boot a guest
+    // back to the login screen.
+    final hadToken = err.requestOptions.headers.containsKey('Authorization');
+    if (err.response?.statusCode == 401 && hadToken) {
       await _storage.clearAll();
       AppOverlay.showError(LocaleKeys.error_unauthorized.tr());
       NavigationService.navigationKey.currentState

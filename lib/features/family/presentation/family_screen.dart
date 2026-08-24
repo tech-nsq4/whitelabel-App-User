@@ -13,6 +13,7 @@ import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/app_text.dart';
 import '../../../core/widgets/guest_prompt.dart';
 import '../../../core/widgets/screen_state_layout.dart';
+import '../../profile/logic/profile_cubit.dart';
 import '../data/models/family_member_model.dart';
 import '../logic/family_cubit.dart';
 import 'widgets/add_family_member_sheet.dart';
@@ -44,115 +45,130 @@ class _FamilyScreenState extends State<FamilyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (kIsGuest) {
-      return Scaffold(
-        body: SafeArea(
-          child: GuestPrompt(
-            title: LocaleKeys.family_guestTitle.tr(),
-            description: LocaleKeys.family_guestDescription.tr(),
-          ),
-        ),
-      );
-    }
-
-    final primary = AppColors.primaryColor.themeColor;
-
-    return BlocProvider.value(
-      value: _cubit,
-      child: BlocBuilder<FamilyCubit, FamilyState>(
-        builder: (context, state) {
-          final members = state is FamilySuccess ? state.members : const <FamilyMemberModel>[];
-
+    // `LayoutScreen` keeps every tab alive in an `IndexedStack` built from a
+    // `static final` list, so this `build()` only ever runs once per app
+    // session — reading `kIsGuest` directly here would freeze whatever it
+    // was at that first build forever (e.g. a guest who then signs in via
+    // `requireGuestLogin` from another tab would keep seeing this guest
+    // prompt). `BlocConsumer<ProfileCubit>` makes the guest/member check
+    // reactive instead: the `builder` re-evaluates on every profile-state
+    // change, and the `listener` fires the member fetch `initState` skipped
+    // the moment a guest session actually becomes a signed-in one.
+    return BlocConsumer<ProfileCubit, ProfileState>(
+      listenWhen: (previous, current) => previous is! ProfileSuccess && current is ProfileSuccess,
+      listener: (context, state) => _cubit.getFamilyMembers(),
+      builder: (context, profileState) {
+        if (profileState is! ProfileSuccess) {
           return Scaffold(
             body: SafeArea(
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 0),
-                child: Column(
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              child: GuestPrompt(
+                title: LocaleKeys.family_guestTitle.tr(),
+                description: LocaleKeys.family_guestDescription.tr(),
+              ),
+            ),
+          );
+        }
+
+        final primary = AppColors.primaryColor.themeColor;
+
+        return BlocProvider.value(
+          value: _cubit,
+          child: BlocBuilder<FamilyCubit, FamilyState>(
+            builder: (context, state) {
+              final members = state is FamilySuccess ? state.members : const <FamilyMemberModel>[];
+
+              return Scaffold(
+                body: SafeArea(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 0),
+                    child: Column(
                       children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(LocaleKeys.family_title.tr(),
-                                  style: TextStyle(
-                                      fontSize: 10.sp,
-                                      fontWeight: FontWeight.w600,
-                                      letterSpacing: 1.2,
-                                      color: AppColors.mutedColor.themeColor)),
-                              3.height,
-                              AppText(
-                                  LocaleKeys.family_membersCount.tr(namedArgs: {'count': '${members.length}'}),
-                                  isHeading: true,
-                                  fontSize: 19,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.textPrimaryColor.themeColor),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          width: 40.r,
-                          height: 40.r,
-                          decoration: BoxDecoration(
-                            color: AppColors.cardColor.themeColor,
-                            borderRadius: BorderRadius.circular(18.r),
-                            border: Border.all(color: AppColors.dividerColor.themeColor),
-                          ),
-                          child: IconButton(
-                            padding: EdgeInsets.zero,
-                            onPressed: () => showAddFamilyMemberSheet(context, cubit: _cubit),
-                            icon: Icon(Icons.add_rounded, color: primary),
-                          ),
-                        ),
-                      ],
-                    ),
-                    22.height,
-                    Expanded(
-                      child: CustomScreenStateLayout(
-                        onRefresh:_cubit.getFamilyMembers,
-                        isLoading: state is FamilyLoading || state is FamilyInitial,
-                        error: state is FamilyError
-                            ? ErrorModel(code: ErrorEnum.other, errorMessage: state.message)
-                            : null,
-                        onRetry: _cubit.getFamilyMembers,
-                        builder: (context) => ListView(
-                          padding: EdgeInsets.only(bottom: 110.h),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            for (final m in members)
-                              FamilyMemberCard(
-                                member: m,
-                                onTap: () => Navigator.pushNamed(context, Routes.member,
-                                    arguments: {'member': m, 'cubit': _cubit}),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(LocaleKeys.family_title.tr(),
+                                      style: TextStyle(
+                                          fontSize: 10.sp,
+                                          fontWeight: FontWeight.w600,
+                                          letterSpacing: 1.2,
+                                          color: AppColors.mutedColor.themeColor)),
+                                  3.height,
+                                  AppText(
+                                      LocaleKeys.family_membersCount.tr(namedArgs: {'count': '${members.length}'}),
+                                      isHeading: true,
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.textPrimaryColor.themeColor),
+                                ],
                               ),
-                            AppCard(
-                              onTap: () => showAddFamilyMemberSheet(context, cubit: _cubit),
-                              borderColor: AppColors.dividerColor.themeColor,
-                              child: Center(
-                                child: Column(
-                                  children: [
-                                    Icon(Icons.add_rounded, color: AppColors.mutedColor.themeColor, size: 22.sp),
-                                    6.height,
-                                    AppText(LocaleKeys.family_addMember.tr(),
-                                        fontSize: 12.5,
-                                        fontWeight: FontWeight.w600,
-                                        color: AppColors.textSecondaryColor.themeColor),
-                                  ],
-                                ),
+                            ),
+                            Container(
+                              width: 40.r,
+                              height: 40.r,
+                              decoration: BoxDecoration(
+                                color: AppColors.cardColor.themeColor,
+                                borderRadius: BorderRadius.circular(18.r),
+                                border: Border.all(color: AppColors.dividerColor.themeColor),
+                              ),
+                              child: IconButton(
+                                padding: EdgeInsets.zero,
+                                onPressed: () => showAddFamilyMemberSheet(context, cubit: _cubit),
+                                icon: Icon(Icons.add_rounded, color: primary),
                               ),
                             ),
                           ],
                         ),
-                      ),
+                        22.height,
+                        Expanded(
+                          child: CustomScreenStateLayout(
+                            onRefresh: _cubit.getFamilyMembers,
+                            isLoading: state is FamilyLoading || state is FamilyInitial,
+                            error: state is FamilyError
+                                ? ErrorModel(code: ErrorEnum.other, errorMessage: state.message)
+                                : null,
+                            onRetry: _cubit.getFamilyMembers,
+                            builder: (context) => ListView(
+                              padding: EdgeInsets.only(bottom: 110.h),
+                              children: [
+                                for (final m in members)
+                                  FamilyMemberCard(
+                                    member: m,
+                                    onTap: () => Navigator.pushNamed(context, Routes.member,
+                                        arguments: {'member': m, 'cubit': _cubit}),
+                                  ),
+                                AppCard(
+                                  onTap: () => showAddFamilyMemberSheet(context, cubit: _cubit),
+                                  borderColor: AppColors.dividerColor.themeColor,
+                                  child: Center(
+                                    child: Column(
+                                      children: [
+                                        Icon(Icons.add_rounded, color: AppColors.mutedColor.themeColor, size: 22.sp),
+                                        6.height,
+                                        AppText(LocaleKeys.family_addMember.tr(),
+                                            fontSize: 12.5,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.textSecondaryColor.themeColor),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          );
-        },
-      ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

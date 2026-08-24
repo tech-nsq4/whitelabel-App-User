@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/extensions/extensions.dart';
 import '../../../../core/utils/app_colors.dart';
+import '../../../../core/utils/app_constants.dart';
 import '../../../../core/utils/locale_keys.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text.dart';
@@ -97,7 +98,10 @@ class _BookingSlotsSheetState extends State<BookingSlotsSheet> {
   void initState() {
     super.initState();
     _cubit.getTimeTables(widget.doctor.id);
-    _familyCubit.getFamilyMembers();
+    // A guest has no `/family-members` to fetch (and the selector already
+    // falls back to just "myself" on anything but `FamilySuccess`) — skip
+    // the guaranteed-to-401 call entirely, same as `FamilyScreen`.
+    if (!kIsGuest) _familyCubit.getFamilyMembers();
   }
 
   @override

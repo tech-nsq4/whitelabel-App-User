@@ -19,7 +19,13 @@ import '../../../core/widgets/app_date_field.dart';
 /// Shown right after a first login/register when the API reports
 /// `profile_completed: false` — collects the rest of the user's basic data.
 class CompleteProfileScreen extends StatefulWidget {
-  const CompleteProfileScreen({super.key});
+  const CompleteProfileScreen({super.key, this.popOnSuccess = false});
+
+  /// See `OtpScreen.popOnSuccess`: `true` when this was reached from a
+  /// guest-gated flow resuming into an existing screen rather than the app's
+  /// normal post-login path — on success this pops itself with `true`
+  /// instead of resetting to `LayoutScreen`.
+  final bool popOnSuccess;
 
   @override
   State<CompleteProfileScreen> createState() => _CompleteProfileScreenState();
@@ -91,6 +97,10 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
     return BlocListener<ProfileCubit, ProfileState>(
       listener: (context, state) {
         if (state is ProfileSuccess) {
+          if (widget.popOnSuccess) {
+            Navigator.pop(context, true);
+            return;
+          }
           Navigator.pushNamedAndRemoveUntil(
               context, Routes.layoutScreen, (_) => false);
         }

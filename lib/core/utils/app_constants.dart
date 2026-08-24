@@ -1,4 +1,3 @@
-import 'package:google_fonts/google_fonts.dart';
 import 'package:vivacare_white_label/features/auth/data/models/user_model.dart';
 
 class AppConstants {
@@ -28,10 +27,8 @@ class AppFonts {
   AppFonts._();
 
   /// Body text — IBM Plex Sans Arabic.
-  static String get bodyFont => GoogleFonts.ibmPlexSansArabic().fontFamily!;
-
-  /// Headings, numbers, buttons — Readex Pro.
-  static String get headingFont => GoogleFonts.readexPro().fontFamily!;
+  static const String bodyFont = 'Cairo';
+  static const String headingFont = 'Cairo';
 }
 
 /// The currently authenticated user. `null` means the user is browsing as a guest.

@@ -1,11 +1,25 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <!-- Used to power the "nearest doctor" filter on the doctors list. -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <!-- Required on Android 13+ to show the push-notification permission prompt. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <application
         android:label="App Base"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <!-- Default channel used for background/terminated FCM notifications
+             (must match NotificationService's `_channelId` exactly), plus the
+             small icon they're shown with. Without these, background/killed
+             notifications still arrive (sound only) with no visible banner. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="vivacare_default" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@mipmap/ic_launcher" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
