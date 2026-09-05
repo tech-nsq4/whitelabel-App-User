@@ -1,5 +1,44 @@
 import 'package:equatable/equatable.dart';
 
+class UserVitalSignsModel extends Equatable {
+  final int id;
+  final String? bloodPressure;
+  final int? pulse;
+  final double? temperature;
+  final int? oxygen;
+  final DateTime? updatedAt;
+
+  const UserVitalSignsModel({
+    required this.id,
+    this.bloodPressure,
+    this.pulse,
+    this.temperature,
+    this.oxygen,
+    this.updatedAt,
+  });
+
+  factory UserVitalSignsModel.fromJson(Map<String, dynamic> json) => UserVitalSignsModel(
+        id: json['id'] as int? ?? 0,
+        bloodPressure: json['blood_pressure'] as String?,
+        pulse: json['pulse'] as int?,
+        temperature: double.tryParse('${json['temperature']}'),
+        oxygen: json['oxygen'] as int?,
+        updatedAt: DateTime.tryParse(json['updated_at'] as String? ?? ''),
+      );
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'blood_pressure': bloodPressure,
+        'pulse': pulse,
+        'temperature': temperature,
+        'oxygen': oxygen,
+        'updated_at': updatedAt?.toIso8601String(),
+      };
+
+  @override
+  List<Object?> get props => [id, bloodPressure, pulse, temperature, oxygen, updatedAt];
+}
+
 class UserModel extends Equatable {
   final int id;
   final String phone;
@@ -12,6 +51,7 @@ class UserModel extends Equatable {
   final int familyMembersCount;
   final bool profileCompleted;
   final String? phoneVerifiedAt;
+  final UserVitalSignsModel? userVitalSigns;
 
   const UserModel({
     required this.id,
@@ -25,6 +65,7 @@ class UserModel extends Equatable {
     this.familyMembersCount = 0,
     this.profileCompleted = false,
     this.phoneVerifiedAt,
+    this.userVitalSigns,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
@@ -39,6 +80,9 @@ class UserModel extends Equatable {
         familyMembersCount: json['family_members_count'] as int? ?? 0,
         profileCompleted: json['profile_completed'] as bool? ?? false,
         phoneVerifiedAt: json['phone_verified_at'] as String?,
+        userVitalSigns: json['user_vital_signs'] == null
+            ? null
+            : UserVitalSignsModel.fromJson(json['user_vital_signs'] as Map<String, dynamic>),
       );
 
   /// The API returns `height`/`weight` as numbers before a profile update
@@ -62,6 +106,7 @@ class UserModel extends Equatable {
         'family_members_count': familyMembersCount,
         'profile_completed': profileCompleted,
         'phone_verified_at': phoneVerifiedAt,
+        'user_vital_signs': userVitalSigns?.toJson(),
       };
 
   @override
@@ -77,5 +122,6 @@ class UserModel extends Equatable {
         familyMembersCount,
         profileCompleted,
         phoneVerifiedAt,
+        userVitalSigns,
       ];
 }

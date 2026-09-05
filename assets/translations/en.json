@@ -27,14 +27,29 @@
     "sub_specialties_count": "{count} sub-specialties",
     "doctors_count": "{count} doctors",
     "experience_years": "{years} years experience",
+    "years_value": "{years} yrs",
+    "experience_label": "Experience",
+    "rating_label": "Rating",
+    "fee_label": "Fee",
+    "nearest_available": "Nearest available: {when} · {time}",
+    "nearest_available_label": "Nearest available slot",
     "doctor_profile_title": "Doctor Profile",
     "available_appointments": "Available Appointments",
     "about": "About",
     "clinic_info": "Clinic Information",
+    "clinics": "Clinics",
+    "clinics_count": "{count} clinics",
+    "select_clinic": "Choose a clinic",
+    "appointments_action": "Appointments",
+    "specializations": "Specializations",
+    "sub_specializations": "Sub-specialties",
     "search_doctor_hint": "Search for a doctor",
-    "filter_consultant": "Consultant",
-    "filter_top_rated": "Top Rated",
-    "filter_nearest": "Nearest",
+    "search_specialty_hint": "Search for a specialty",
+    "search_branch_hint": "Search for a branch",
+    "sort_closest_available": "Soonest appointment",
+    "sort_nearest_distance": "Nearest to me",
+    "sort_highest_rated": "Highest rated",
+    "sort_lowest_price": "Lowest price",
     "location_unavailable": "Couldn't access your current location — make sure location services and permission are enabled",
     "by_doctor": "By Doctor",
     "by_doctor_subtitle": "Search by doctor's name",
@@ -147,7 +162,9 @@
     "currency": "SAR",
     "today": "Today",
     "yesterday": "Yesterday",
-    "tap_to_zoom": "Tap to zoom"
+    "tap_to_zoom": "Tap to zoom",
+    "no_data_title": "Nothing here yet",
+    "no_data_desc": "There's nothing to show on this page right now"
   },
   "family": {
     "title": "Family",
@@ -252,6 +269,18 @@
       }
     }
   },
+  "payments": {
+    "title": "Payments",
+    "total_paid_label": "TOTAL PAID",
+    "invoices_title": "MY INVOICES",
+    "invoices_count": "{count} invoices",
+    "invoice_number": "Invoice #{id}",
+    "for_member": "For {name}",
+    "paid": "Paid",
+    "pay_now": "Pay now",
+    "empty_title": "No invoices yet",
+    "empty_description": "Invoices for your appointments will show up here"
+  },
   "more": {
     "title": "More",
     "profile_card_subtitle": "User data and quick settings"
@@ -285,5 +314,19 @@
     "unauthorized": "Session expired, please login again",
     "not_found": "Resource not found",
     "generic": "Something went wrong, please try again"
+  },
+  "vitals": {
+    "title": "Vital Signs",
+    "description": "These readings are taken from your clinic record — updated with every visit.",
+    "updated_on": "Last updated: {date}",
+    "empty": "No vital signs recorded yet",
+    "pulse": "Pulse",
+    "pulse_unit": "bpm",
+    "blood_pressure": "Blood Pressure",
+    "blood_pressure_unit": "mmHg",
+    "temperature": "Temperature",
+    "temperature_unit": "°C",
+    "oxygen": "Oxygen",
+    "oxygen_unit": "%"
   }
 }

@@ -14,10 +14,16 @@ class BookingRepo {
   final DioClient _dio;
 
   /// The specialties tree shown on `SpecsScreen` — top-level specializations,
-  /// each optionally carrying its own sub-specializations.
-  Future<List<SpecializationModel>> getSpecializations() async {
+  /// each optionally carrying its own sub-specializations. [name] filters the
+  /// list server-side by specialization title.
+  Future<List<SpecializationModel>> getSpecializations({String? name}) async {
     try {
-      final response = await _dio.get(ApiEndpoints.specializations);
+      final response = await _dio.get(
+        ApiEndpoints.specializations,
+        queryParameters: {
+          if (name != null && name.isNotEmpty) 'name': name,
+        },
+      );
       final data = response.data['data'] as List<dynamic>;
       return data
           .map((e) => SpecializationModel.fromJson(e as Map<String, dynamic>))
@@ -27,12 +33,15 @@ class BookingRepo {
     }
   }
 
-  /// Doctors, optionally filtered by [specializationId]/[clinicId]/[name],
-  /// or sorted nearest-first when [lat]/[lng] are given.
+  /// Doctors, optionally filtered by [specializationId]/[clinicId]/[name] and
+  /// ordered by [sort] (`highest_rated` | `closest_available` | `lowest_price`
+  /// — `closest_available` ranks by distance when [lat]/[lng] are sent,
+  /// otherwise by soonest open slot).
   Future<List<DoctorProfileModel>> getDoctors({
     int? specializationId,
     int? clinicId,
     String? name,
+    String? sort,
     double? lat,
     double? lng,
   }) async {
@@ -43,6 +52,7 @@ class BookingRepo {
           if (specializationId != null) 'specialization_id': specializationId,
           if (clinicId != null) 'clinic_id': clinicId,
           if (name != null && name.isNotEmpty) 'name': name,
+          if (sort != null && sort.isNotEmpty) 'sort': sort,
           if (lat != null) 'lat': lat,
           if (lng != null) 'lng': lng,
         },
@@ -68,10 +78,15 @@ class BookingRepo {
 
   /// The clinics/branches list shown on `BranchesScreen` — reuses
   /// [DoctorClinicModel] since `/branches` returns the exact same shape as
-  /// a doctor's `clinic`.
-  Future<List<DoctorClinicModel>> getBranches() async {
+  /// a doctor's `clinic`. [name] filters the list server-side by branch name.
+  Future<List<DoctorClinicModel>> getBranches({String? name}) async {
     try {
-      final response = await _dio.get(ApiEndpoints.branches);
+      final response = await _dio.get(
+        ApiEndpoints.branches,
+        queryParameters: {
+          if (name != null && name.isNotEmpty) 'name': name,
+        },
+      );
       final data = response.data['data'] as List<dynamic>;
       return data.map((e) => DoctorClinicModel.fromJson(e as Map<String, dynamic>)).toList();
     } on DioException catch (e) {
@@ -80,10 +95,20 @@ class BookingRepo {
   }
 
   /// A doctor's recurring weekly schedule(s), for the calendar/time picker
-  /// on `BookingSlotsSheet`.
-  Future<List<DoctorTimeTableModel>> getDoctorTimeTables(int doctorId) async {
+  /// on `BookingSlotsSheet`. Called once with no [date] to build the
+  /// calendar itself (a generic weekly template — its `available` flags
+  /// aren't tied to any one real date), then again with [date] set every
+  /// time the user picks a day, so that day's `available` flags reflect
+  /// what's actually booked on that specific date rather than the template.
+  Future<List<DoctorTimeTableModel>> getDoctorTimeTables(int doctorId, {DateTime? date, int? clinicId}) async {
     try {
-      final response = await _dio.get(ApiEndpoints.doctorTimeTables(doctorId));
+      final response = await _dio.get(
+        ApiEndpoints.doctorTimeTables(doctorId),
+        queryParameters: {
+          if (date != null) 'date': _formatApiDate(date),
+          if (clinicId != null) 'clinic_id': clinicId,
+        },
+      );
       final data = response.data['data'] as List<dynamic>;
       return data.map((e) => DoctorTimeTableModel.fromJson(e as Map<String, dynamic>)).toList();
     } on DioException catch (e) {
@@ -100,6 +125,7 @@ class BookingRepo {
     required String shiftId,
     required String times,
     required DateTime date,
+    int? clinicId,
     int? familyMemberId,
   }) async {
     try {
@@ -110,6 +136,7 @@ class BookingRepo {
         'shift_id': shiftId,
         'times': times,
         'date': _formatApiDate(date),
+        if (clinicId != null) 'clinic_id': clinicId,
         'family_member_id': familyMemberId,
       });
       return AppointmentModel.fromJson(response.data['data'] as Map<String, dynamic>);
@@ -158,6 +185,7 @@ class BookingRepo {
     required String shiftId,
     required String times,
     required DateTime date,
+    int? clinicId,
   }) async {
     try {
       await _dio.post(ApiEndpoints.appointmentReschedule(appointmentId), data: {
@@ -167,6 +195,7 @@ class BookingRepo {
         'shift_id': shiftId,
         'times': times,
         'date': _formatApiDate(date),
+        if (clinicId != null) 'clinic_id': clinicId,
       });
     } on DioException catch (e) {
       throw NetworkException.fromDioException(e);

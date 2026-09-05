@@ -15,7 +15,7 @@ import '../../data/models/doctor_profile_model.dart';
 import '../../logic/doctors_cubit.dart';
 import 'doctor_filter_chips.dart';
 import 'doctor_list_tile.dart';
-import 'doctor_search_bar.dart';
+import 'search_bar_field.dart';
 import 'specialty_options_list.dart';
 
 /// Search bar + filter chips + the resulting doctors list, backed by
@@ -36,7 +36,7 @@ class DoctorSearchList extends StatefulWidget {
 class _DoctorSearchListState extends State<DoctorSearchList> {
   final _searchController = TextEditingController();
   Timer? _searchDebounce;
-  DoctorFilter? _selectedFilter;
+  DoctorSort? _selectedSort;
   double? _lat;
   double? _lng;
 
@@ -58,6 +58,7 @@ class _DoctorSearchListState extends State<DoctorSearchList> {
           specializationId: widget.specializationId,
           clinicId: widget.clinicId,
           name: _searchController.text.trim(),
+          sort: _selectedSort?.value,
           lat: _lat,
           lng: _lng,
         );
@@ -68,26 +69,37 @@ class _DoctorSearchListState extends State<DoctorSearchList> {
     _searchDebounce = Timer(const Duration(milliseconds: 400), _fetch);
   }
 
-  Future<void> _onFilterSelected(DoctorFilter filter) async {
-    setState(() => _selectedFilter = filter);
-
-    if (filter != DoctorFilter.nearest) {
-      // `consultant`/`topRated` aren't backed by a real `/doctors` field yet
-      // — just reflect the selection visually and re-run the current query.
+  Future<void> _onSortSelected(DoctorSort sort) async {
+    if (_selectedSort == sort) {
+      setState(() {
+        _selectedSort = null;
+        _lat = null;
+        _lng = null;
+      });
       _fetch();
       return;
     }
 
-    final position = await LocationHelper.getCurrentPosition();
-    if (!mounted) return;
-    if (position == null) {
-      AppOverlay.showError(LocaleKeys.booking_locationUnavailable.tr());
-      setState(() => _selectedFilter = null);
+    if (sort.needsLocation) {
+      final position = await LocationHelper.getCurrentPosition();
+      if (!mounted) return;
+      if (position == null) {
+        AppOverlay.showError(LocaleKeys.booking_locationUnavailable.tr());
+        return;
+      }
+      setState(() {
+        _selectedSort = sort;
+        _lat = position.latitude;
+        _lng = position.longitude;
+      });
+      _fetch();
       return;
     }
+
     setState(() {
-      _lat = position.latitude;
-      _lng = position.longitude;
+      _selectedSort = sort;
+      _lat = null;
+      _lng = null;
     });
     _fetch();
   }
@@ -100,9 +112,13 @@ class _DoctorSearchListState extends State<DoctorSearchList> {
 
         return Column(
           children: [
-            DoctorSearchBar(controller: _searchController, onChanged: _onSearchChanged),
+            SearchBarField(
+              controller: _searchController,
+              onChanged: _onSearchChanged,
+              hint: LocaleKeys.booking_searchDoctorHint.tr(),
+            ),
             12.height,
-            DoctorFilterChips(selected: _selectedFilter, onSelect: _onFilterSelected),
+            DoctorFilterChips(selected: _selectedSort, onSelect: _onSortSelected),
             Expanded(
               child: CustomScreenStateLayout(
                 isLoading: state is DoctorsLoading || state is DoctorsInitial,

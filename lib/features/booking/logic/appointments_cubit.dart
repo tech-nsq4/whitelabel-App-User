@@ -35,6 +35,7 @@ class AppointmentsCubit extends Cubit<AppointmentsState> {
     required String shiftId,
     required String times,
     required DateTime date,
+    int? clinicId,
     int? familyMemberId,
   }) async {
     try {
@@ -45,6 +46,7 @@ class AppointmentsCubit extends Cubit<AppointmentsState> {
         shiftId: shiftId,
         times: times,
         date: date,
+        clinicId: clinicId,
         familyMemberId: familyMemberId,
       );
     } catch (e) {

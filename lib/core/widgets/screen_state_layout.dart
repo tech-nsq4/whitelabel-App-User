@@ -83,7 +83,6 @@ class CustomNoDataView extends StatelessWidget {
   final String? _title;
   final String? _desc;
   final String? _image;
-  final String _imageSvg;
   final double _padding;
   final Future<void> Function()? _onRefresh;
 
@@ -92,64 +91,162 @@ class CustomNoDataView extends StatelessWidget {
     String? title,
     String? desc,
     String? image,
-    double padding = 12,
+    double padding = 24,
     Future<void> Function()? onRefresh,
-    String imageSvg = AppImages.noData,
   })  : _title = title,
         _padding = padding,
         _onRefresh = onRefresh,
         _desc = desc,
-        _image = image,
-        _imageSvg = imageSvg;
+        _image = image;
+
   @override
   Widget build(BuildContext context) {
-    if (_onRefresh != null) {
-      return RefreshIndicator(
-          onRefresh: _onRefresh,
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: EdgeInsets.all(_padding.r),
-            child: Center(
-                child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                (_image != null)
-                    ? Image.asset(_image)
-                    : SvgPicture.asset(_imageSvg,
-                        width: 200.w, height: 200.h, fit: BoxFit.fill),
-                12.height,
-                Text(_title ?? tr(LocaleKeys.error_notFound),
-                    textAlign: TextAlign.center),
-                12.height,
-                Text(_desc ?? '', textAlign: TextAlign.center),
-              ],
-            )),
-          ));
-    } else {
-      return Padding(
-        padding: EdgeInsets.all(_padding.r),
-        child: Center(
-            child: FittedBox(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              (_image != null)
-                  ? Image.asset(_image)
-                  : SvgPicture.asset(_imageSvg,
-                      width: 200.w, height: 200.h, fit: BoxFit.fill),
-              12.height,
-              Text(_title ?? tr(LocaleKeys.error_notFound),
-                  textAlign: TextAlign.center),
-              12.height,
-              Text(_desc ?? '', textAlign: TextAlign.center),
-            ],
+    final onRefresh = _onRefresh;
+    final scrollable = LayoutBuilder(
+      builder: (context, constraints) => SingleChildScrollView(
+        physics: onRefresh != null
+            ? const AlwaysScrollableScrollPhysics()
+            : const ClampingScrollPhysics(),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minHeight: constraints.maxHeight.isFinite ? constraints.maxHeight : 0,
           ),
-        )),
-      );
+          child: Padding(
+            padding: EdgeInsets.all(_padding.r),
+            child: Center(child: _body(context)),
+          ),
+        ),
+      ),
+    );
+
+    if (onRefresh != null) {
+      return RefreshIndicator(onRefresh: onRefresh, child: scrollable);
     }
+    return scrollable;
   }
+
+  Widget _body(BuildContext context) {
+    final desc = _desc;
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: 320.w),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _EmptyStateIllustration(image: _image),
+          20.height,
+          AppText(
+            _title ?? tr(LocaleKeys.common_noDataTitle),
+            isHeading: true,
+            fontSize: 17,
+            fontWeight: FontWeight.w800,
+            textAlign: TextAlign.center,
+            color: AppColors.textPrimaryColor.themeColor,
+          ),
+          8.height,
+          AppText(
+            desc != null && desc.isNotEmpty ? desc : tr(LocaleKeys.common_noDataDesc),
+            fontSize: 13.5,
+            fontWeight: FontWeight.w500,
+            textAlign: TextAlign.center,
+            height: 1.6,
+            color: AppColors.mutedColor.themeColor,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _EmptyStateIllustration extends StatelessWidget {
+  const _EmptyStateIllustration({this.image});
+
+  final String? image;
+
+  @override
+  Widget build(BuildContext context) {
+    final accent = AppColors.primaryColor.themeColor;
+    final image = this.image;
+    return SizedBox(
+      width: 132.w,
+      height: 132.w,
+      child: image != null
+          ? Center(child: Image.asset(image, width: 100.w, height: 100.w))
+          : CustomPaint(painter: _EmptyBoxPainter(color: accent)),
+    );
+  }
+}
+
+class _EmptyBoxPainter extends CustomPainter {
+  _EmptyBoxPainter({required this.color});
+
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+    Offset p(double fx, double fy) => Offset(w * fx, h * fy);
+    Paint fill(double opacity) => Paint()..color = color.withValues(alpha: opacity);
+    final stroke = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = w * 0.03
+      ..strokeJoin = StrokeJoin.round
+      ..strokeCap = StrokeCap.round;
+
+    canvas.drawOval(
+      Rect.fromCenter(center: p(0.5, 0.9), width: w * 0.6, height: h * 0.085),
+      fill(0.10),
+    );
+
+    final fl = p(0.24, 0.44);
+    final fr = p(0.76, 0.44);
+    final bkL = p(0.34, 0.34);
+    final bkR = p(0.66, 0.34);
+
+    final leftFlap = Path()
+      ..moveTo(fl.dx, fl.dy)
+      ..lineTo(w * 0.07, h * 0.40)
+      ..lineTo(w * 0.14, h * 0.22)
+      ..lineTo(bkL.dx, bkL.dy)
+      ..close();
+    final rightFlap = Path()
+      ..moveTo(fr.dx, fr.dy)
+      ..lineTo(w * 0.93, h * 0.40)
+      ..lineTo(w * 0.86, h * 0.22)
+      ..lineTo(bkR.dx, bkR.dy)
+      ..close();
+    for (final flap in [leftFlap, rightFlap]) {
+      canvas.drawPath(flap, fill(0.05));
+      canvas.drawPath(flap, stroke);
+    }
+
+    final mouth = Path()
+      ..moveTo(fl.dx, fl.dy)
+      ..lineTo(bkL.dx, bkL.dy)
+      ..lineTo(bkR.dx, bkR.dy)
+      ..lineTo(fr.dx, fr.dy)
+      ..close();
+    canvas.drawPath(mouth, fill(0.20));
+    canvas.drawPath(mouth, stroke);
+
+    final body = Path()
+      ..moveTo(fl.dx, fl.dy)
+      ..lineTo(fr.dx, fr.dy)
+      ..lineTo(w * 0.72, h * 0.84)
+      ..lineTo(w * 0.28, h * 0.84)
+      ..close();
+    canvas.drawPath(body, fill(0.10));
+    canvas.drawPath(body, stroke);
+
+    final dot = fill(0.5);
+    canvas.drawCircle(p(0.5, 0.11), w * 0.023, dot);
+    canvas.drawCircle(p(0.33, 0.18), w * 0.016, dot);
+    canvas.drawCircle(p(0.67, 0.16), w * 0.016, dot);
+  }
+
+  @override
+  bool shouldRepaint(_EmptyBoxPainter oldDelegate) => oldDelegate.color != color;
 }
 
 class CustomErrorView extends StatelessWidget {

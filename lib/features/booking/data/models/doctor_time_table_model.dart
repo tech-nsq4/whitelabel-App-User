@@ -206,9 +206,36 @@ class DoctorTimeTableModel extends Equatable {
 /// schedules, if any — that flow has its own separate mock sheet).
 class DoctorAvailability {
   DoctorAvailability(List<DoctorTimeTableModel> timeTables)
-      : _timeTables = timeTables.where((t) => t.type == 'clinic').toList();
+      : _timeTables = timeTables.where((t) => t.type == 'clinic').toList(),
+        _dayOverrides = const {};
+
+  DoctorAvailability._(this._timeTables, this._dayOverrides);
 
   final List<DoctorTimeTableModel> _timeTables;
+
+  /// Per-date slot lists that override the generic weekly template — set by
+  /// [withDateOverride] once the backend confirms a specific date's real
+  /// booked/available slots (the initial `GET .../time-tables` fetch has no
+  /// `date`, so its `available` flags only reflect a generic recurring
+  /// template, not any one actual calendar date).
+  final Map<DateTime, List<TimeTableSlotModel>> _dayOverrides;
+
+  static DateTime _dayKey(DateTime date) => DateTime(date.year, date.month, date.day);
+
+  /// A copy of this availability with [date]'s slots replaced by [slots] —
+  /// the result of re-fetching `GET .../time-tables?date=...` for that
+  /// specific date. Every other date keeps using the weekly template.
+  DoctorAvailability withDateOverride(DateTime date, List<TimeTableSlotModel> slots) {
+    final overrides = Map<DateTime, List<TimeTableSlotModel>>.of(_dayOverrides);
+    overrides[_dayKey(date)] = slots;
+    return DoctorAvailability._(_timeTables, overrides);
+  }
+
+  /// `true` once [withDateOverride] has confirmed [date]'s real slots —
+  /// `false` means [slotsFor] is still only returning the generic weekly
+  /// template for it. Lets callers avoid treating template-only slots as
+  /// something safe to auto-select or book.
+  bool hasConfirmedDate(DateTime date) => _dayOverrides.containsKey(_dayKey(date));
 
   bool get isEmpty => _timeTables.isEmpty;
 
@@ -226,10 +253,27 @@ class DoctorAvailability {
 
   /// All slots (available and not) across every clinic time-table for
   /// [date], sorted chronologically.
+  ///
+  /// De-duplicated by (time, shift): a doctor can't actually be booked
+  /// twice at the same time, so if two of their `clinic` time-tables both
+  /// cover this weekday with overlapping hours (e.g. two "all days"
+  /// templates set up on the backend for overlapping date ranges), that's
+  /// always redundant data, never a genuinely separate slot — without this
+  /// the grid would render the same time chip once per overlapping
+  /// time-table.
   List<TimeTableSlotModel> slotsFor(DateTime date) {
+    final override = _dayOverrides[_dayKey(date)];
+    final slots = override ?? _rawSlotsFor(date);
+    return _dropSlotsBeforeMinimumLeadTime(date, slots);
+  }
+
+  List<TimeTableSlotModel> _rawSlotsFor(DateTime date) {
     final slots = <TimeTableSlotModel>[];
+    final seen = <String>{};
     for (final t in _timeTables) {
-      slots.addAll(t.slotsFor(date));
+      for (final slot in t.slotsFor(date)) {
+        if (seen.add('${slot.time}|${slot.shift}')) slots.add(slot);
+      }
     }
     slots.sort((a, b) {
       final ta = a.time24;
@@ -238,6 +282,27 @@ class DoctorAvailability {
       return (ta.$1 * 60 + ta.$2).compareTo(tb.$1 * 60 + tb.$2);
     });
     return slots;
+  }
+
+  /// A same-day walk-in can't happen with zero notice — a slot starting
+  /// less than [_minimumBookingLeadTime] from *right now* is dropped
+  /// entirely (not just marked unavailable) for today specifically. If that
+  /// empties out today's list, [availableCountFor]/[hasAvailability] fall to
+  /// zero right along with it, which is what makes the calendar cell for
+  /// today grey itself out on its own once nothing bookable is left — no
+  /// separate "is this today" handling needed anywhere else.
+  static const _minimumBookingLeadTime = Duration(hours: 2);
+
+  List<TimeTableSlotModel> _dropSlotsBeforeMinimumLeadTime(DateTime date, List<TimeTableSlotModel> slots) {
+    final now = DateTime.now();
+    if (_dayKey(date) != _dayKey(now)) return slots;
+    final cutoff = now.add(_minimumBookingLeadTime);
+    return slots.where((s) {
+      final t = s.time24;
+      if (t == null) return true; // can't parse the time — don't silently drop it
+      final slotTime = DateTime(date.year, date.month, date.day, t.$1, t.$2);
+      return slotTime.isAfter(cutoff);
+    }).toList();
   }
 
   int availableCountFor(DateTime date) => slotsFor(date).where((s) => s.available).length;

@@ -22,9 +22,10 @@ class RatingSummaryCard extends StatelessWidget {
 
     return AppCard(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               for (var i = 1; i <= 5; i++)
                 Icon(
@@ -36,7 +37,7 @@ class RatingSummaryCard extends StatelessWidget {
           ),
           if (comment != null && comment!.isNotEmpty) ...[
             8.height,
-            AppText(comment!, fontSize: 12, color: AppColors.textSecondaryColor.themeColor, height: 1.6),
+            AppText(comment!, fontSize: 14, color: AppColors.textSecondaryColor.themeColor, height: 1.6),
           ],
         ],
       ),

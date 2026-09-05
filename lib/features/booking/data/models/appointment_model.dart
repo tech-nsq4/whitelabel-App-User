@@ -174,6 +174,12 @@ class AppointmentModel extends Equatable {
   /// Arabic-labelled 12h display (e.g. "4:00 م") for [times].
   String get timeLabel => formatApiTimeArabic(times);
 
+  static String? _fileUrl(dynamic value) {
+    if (value is String) return value.isEmpty ? null : value;
+    if (value is Map) return value['url'] as String?;
+    return null;
+  }
+
   factory AppointmentModel.fromJson(Map<String, dynamic> json) => AppointmentModel(
         id: json['id'] as int,
         doctorId: json['doctor_id'] as int? ?? 0,
@@ -196,7 +202,7 @@ class AppointmentModel extends Equatable {
             : FamilyMemberModel.fromJson(json['family_member'] as Map<String, dynamic>),
         createdAt: DateTime.tryParse(json['created_at'] as String? ?? ''),
         prescriptionDate: DateTime.tryParse(json['prescription_date'] as String? ?? ''),
-        prescriptionImage: json['prescription_image'] as String?,
+        prescriptionImage: _fileUrl(json['prescription_image']),
         prescriptions: (json['prescriptions'] as List<dynamic>? ?? [])
             .map((e) => PrescriptionModel.fromJson(e as Map<String, dynamic>))
             .toList(),

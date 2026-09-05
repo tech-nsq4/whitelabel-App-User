@@ -119,9 +119,9 @@ class BookingCalendar extends StatelessWidget {
                 }),
           ],
         ),
-        10.height,
-        Text(LocaleKeys.booking_calendarLegend.tr(),
-            style: TextStyle(fontSize: 10.sp, color: AppColors.mutedColor.themeColor)),
+        // 10.height,
+        // Text(LocaleKeys.booking_calendarLegend.tr(),
+        //     style: TextStyle(fontSize: 10.sp, color: AppColors.mutedColor.themeColor)),
       ],
     );
   }

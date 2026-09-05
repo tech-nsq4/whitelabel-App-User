@@ -10,6 +10,7 @@ import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/app_text.dart';
 import '../../../../core/widgets/image/custom_image.dart';
 import '../../data/models/doctor_profile_model.dart';
+import 'booking_slots_sheet.dart' show formatNearestAvailableDayLabel;
 
 /// One doctor row on the final ("pick a doctor") step of [SpecsScreen] —
 /// backed by the real `GET /doctors` record.
@@ -24,6 +25,8 @@ class DoctorListTile extends StatelessWidget {
     final primary = AppColors.primaryColor.themeColor;
     final hasImage = doctor.image != null && doctor.image!.isNotEmpty;
     final clinicName = doctor.clinic?.name;
+    final avgRate = doctor.avgRate;
+    final nearestAvailable = doctor.nearestAvailable;
 
     return AppCard(
       margin: EdgeInsets.only(bottom: 10.h),
@@ -53,10 +56,28 @@ class DoctorListTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AppText(doctor.name,
-                    fontSize: 13.5,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimaryColor.themeColor),
+                Row(
+                  children: [
+                    Expanded(
+                      child: AppText(doctor.name,
+                          fontSize: 13.5,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textPrimaryColor.themeColor,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis),
+                    ),
+                    if (avgRate != null) ...[
+                      6.width,
+                      Icon(Icons.star_rounded, color: AppColors.accentGold.themeColor, size: 14.sp),
+                      2.width,
+                      Text(avgRate.toStringAsFixed(1),
+                          style: TextStyle(
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.textPrimaryColor.themeColor)),
+                    ],
+                  ],
+                ),
                 1.height,
                 AppText(
                     '${doctor.specialtyLabel} · ${LocaleKeys.booking_experienceYears.tr(namedArgs: {
@@ -92,6 +113,31 @@ class DoctorListTile extends StatelessWidget {
                     ],
                   ],
                 ),
+                if (nearestAvailable != null) ...[
+                  4.height,
+                  Row(
+                    children: [
+                      Icon(Icons.event_available_rounded,
+                          size: 12.sp, color: AppColors.successColor.themeColor),
+                      4.width,
+                      Expanded(
+                        child: AppText(
+                          LocaleKeys.booking_nearestAvailable.tr(namedArgs: {
+                            'when': nearestAvailable.date == null
+                                ? ''
+                                : formatNearestAvailableDayLabel(nearestAvailable.date!, context.locale.languageCode),
+                            'time': nearestAvailable.displayTime,
+                          }),
+                          fontSize: 10.5,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.successColor.themeColor,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ],
             ),
           ),

@@ -19,9 +19,6 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthCubit>(create: (_) => getIt<AuthCubit>()),
-        // The splash screen itself awaits `getProfile()` (when logged in)
-        // before deciding whether to route to the layout or to the
-        // complete-profile step, so it isn't kicked off here too.
         BlocProvider<ProfileCubit>(create: (_) => getIt<ProfileCubit>()),
       ],
       child: ScreenUtilInit(

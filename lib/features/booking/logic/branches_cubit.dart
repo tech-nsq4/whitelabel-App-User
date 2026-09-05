@@ -12,10 +12,10 @@ class BranchesCubit extends Cubit<BranchesState> {
 
   final BookingRepo _repo;
 
-  Future<void> getBranches() async {
+  Future<void> getBranches({String? name}) async {
     emit(const BranchesLoading());
     try {
-      final branches = await _repo.getBranches();
+      final branches = await _repo.getBranches(name: name);
       emit(BranchesSuccess(branches));
     } catch (e) {
       final msg = e is NetworkException ? e.message : e.toString();

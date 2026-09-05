@@ -10,6 +10,7 @@ import '../../../../core/utils/app_constants.dart';
 import '../../../../core/utils/locale_keys.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text.dart';
+import '../../../../core/widgets/custom_loading_widget.dart';
 import '../../../../core/widgets/screen_state_layout.dart';
 import '../../../family/data/models/family_member_model.dart';
 import '../../../family/logic/family_cubit.dart';
@@ -17,6 +18,7 @@ import '../../data/models/doctor_profile_model.dart';
 import '../../data/models/doctor_time_table_model.dart';
 import '../../logic/time_tables_cubit.dart';
 import 'booking_calendar.dart';
+import 'doctor_clinic_selector.dart';
 import 'booking_family_member_selector.dart';
 import 'booking_summary_card.dart';
 import 'booking_time_slot_grid.dart';
@@ -26,11 +28,18 @@ import 'no_slots_view.dart';
 String formatBookingDayLabel(DateTime date, String locale) =>
     '${DateFormat('EEEE', locale).format(date)} ${date.day} ${DateFormat('MMMM', locale).format(date)}';
 
+String formatNearestAvailableDayLabel(DateTime date, String locale) {
+  final now = DateTime.now();
+  final isToday = date.year == now.year && date.month == now.month && date.day == now.day;
+  return isToday ? LocaleKeys.common_today.tr() : formatBookingDayLabel(date, locale);
+}
+
 class BookingSlotResult {
-  const BookingSlotResult({required this.date, required this.slot, this.familyMember});
+  const BookingSlotResult({required this.date, required this.slot, this.clinicId, this.familyMember});
 
   final DateTime date;
   final TimeTableSlotModel slot;
+  final int? clinicId;
 
   /// The family member this appointment is for — `null` means the account
   /// holder is booking for themselves.
@@ -45,6 +54,7 @@ Future<BookingSlotResult?> showBookingSlotsSheet(
   DoctorProfileModel doctor, {
   String? ctaLabel,
   bool showFamilyMemberSelector = true,
+  int? clinicId,
 }) {
   return showModalBottomSheet<BookingSlotResult>(
     context: context,
@@ -54,6 +64,7 @@ Future<BookingSlotResult?> showBookingSlotsSheet(
       doctor: doctor,
       ctaLabel: ctaLabel,
       showFamilyMemberSelector: showFamilyMemberSelector,
+      clinicId: clinicId,
     ),
   );
 }
@@ -70,11 +81,13 @@ class BookingSlotsSheet extends StatefulWidget {
     required this.doctor,
     this.ctaLabel,
     this.showFamilyMemberSelector = true,
+    this.clinicId,
   });
 
   final DoctorProfileModel doctor;
   final String? ctaLabel;
   final bool showFamilyMemberSelector;
+  final int? clinicId;
 
   @override
   State<BookingSlotsSheet> createState() => _BookingSlotsSheetState();
@@ -84,6 +97,8 @@ class _BookingSlotsSheetState extends State<BookingSlotsSheet> {
   late final TimeTablesCubit _cubit = getIt<TimeTablesCubit>();
   late final FamilyCubit _familyCubit = getIt<FamilyCubit>();
   late DateTime _displayedMonth = DateTime(_today.year, _today.month);
+  late int? _selectedClinicId = widget.clinicId ??
+      (widget.doctor.clinics.isEmpty ? null : widget.doctor.clinics.first.id);
   DateTime? _selectedDate;
   TimeTableSlotModel? _selectedSlot;
   FamilyMemberModel? _selectedFamilyMember;
@@ -97,7 +112,7 @@ class _BookingSlotsSheetState extends State<BookingSlotsSheet> {
   @override
   void initState() {
     super.initState();
-    _cubit.getTimeTables(widget.doctor.id);
+    _cubit.getTimeTables(widget.doctor.id, clinicId: _selectedClinicId);
     // A guest has no `/family-members` to fetch (and the selector already
     // falls back to just "myself" on anything but `FamilySuccess`) — skip
     // the guaranteed-to-401 call entirely, same as `FamilyScreen`.
@@ -120,19 +135,7 @@ class _BookingSlotsSheetState extends State<BookingSlotsSheet> {
     for (var i = 0; i < 180; i++) {
       final date = _today.add(Duration(days: i));
       if (!availability.hasAvailability(date)) continue;
-      final slots = availability.slotsFor(date);
-      TimeTableSlotModel firstAvailable = slots.first;
-      for (final s in slots) {
-        if (s.available) {
-          firstAvailable = s;
-          break;
-        }
-      }
-      setState(() {
-        _selectedDate = date;
-        _selectedSlot = firstAvailable;
-        _displayedMonth = DateTime(date.year, date.month);
-      });
+      _selectDate(date, availability, resetMonth: true);
       return;
     }
   }
@@ -141,19 +144,50 @@ class _BookingSlotsSheetState extends State<BookingSlotsSheet> {
     setState(() => _displayedMonth = DateTime(_displayedMonth.year, _displayedMonth.month + delta));
   }
 
-  void _selectDate(DateTime date, DoctorAvailability availability) {
-    final slots = availability.slotsFor(date);
-    TimeTableSlotModel? firstAvailable;
-    for (final s in slots) {
-      if (s.available) {
-        firstAvailable = s;
-        break;
-      }
-    }
+  void _onSelectClinic(int id) {
+    if (id == _selectedClinicId) return;
+    setState(() {
+      _selectedClinicId = id;
+      _selectedDate = null;
+      _selectedSlot = null;
+      _autoSelected = false;
+      _displayedMonth = DateTime(_today.year, _today.month);
+    });
+    _cubit.getTimeTables(widget.doctor.id, clinicId: id);
+  }
+
+  void _selectDate(DateTime date, DoctorAvailability availability, {bool resetMonth = false}) {
+    if (date == _selectedDate) return; // already selected — no point re-fetching
     setState(() {
       _selectedDate = date;
-      _selectedSlot = firstAvailable;
+      // Deliberately not set from `availability.slotsFor(date)` here: that's
+      // still just the generic weekly template, not confirmed for this
+      // exact date, so nothing gets treated as bookable (CTA stays
+      // disabled — see its `onTap` below) until `refreshDaySlots` confirms
+      // real availability and `_pickFirstAvailableSlot` runs.
+      _selectedSlot = null;
+      if (resetMonth) _displayedMonth = DateTime(date.year, date.month);
     });
+    _cubit.refreshDaySlots(widget.doctor.id, date, clinicId: _selectedClinicId);
+  }
+
+  /// Auto-picks the first available slot once [availability] reflects
+  /// backend-confirmed data for [_selectedDate] — covers both the initial
+  /// auto-selected day and a manually tapped one, since neither picks a
+  /// slot up front anymore (see `_selectDate`). No-ops if something's
+  /// already selected, or nothing needs picking yet.
+  void _pickFirstAvailableSlot(DoctorAvailability availability) {
+    final date = _selectedDate;
+    if (date == null || _selectedSlot != null) return;
+    // Still just the generic template for this date — wait for
+    // `refreshDaySlots` to actually confirm it before picking anything.
+    if (!availability.hasConfirmedDate(date)) return;
+    for (final s in availability.slotsFor(date)) {
+      if (s.available) {
+        setState(() => _selectedSlot = s);
+        return;
+      }
+    }
   }
 
   @override
@@ -176,10 +210,19 @@ class _BookingSlotsSheetState extends State<BookingSlotsSheet> {
           ],
           child: BlocConsumer<TimeTablesCubit, TimeTablesState>(
             listener: (context, state) {
-              if (state is TimeTablesSuccess) _autoSelectFirstAvailable(state.availability);
+              if (state is TimeTablesSuccess) {
+                _autoSelectFirstAvailable(state.availability);
+                _pickFirstAvailableSlot(state.availability);
+              }
             },
             builder: (context, state) {
-              final hasNoAppointments = state is TimeTablesSuccess && state.availability.isEmpty;
+              final isDaySlotsLoading = state is TimeTablesDaySlotsLoading;
+              final currentAvailability = switch (state) {
+                TimeTablesSuccess(:final availability) => availability,
+                TimeTablesDaySlotsLoading(:final availability) => availability,
+                _ => null,
+              };
+              final hasNoAppointments = currentAvailability?.isEmpty ?? false;
 
               return Column(
                 mainAxisSize: MainAxisSize.min,
@@ -200,6 +243,19 @@ class _BookingSlotsSheetState extends State<BookingSlotsSheet> {
                       ),
                     ],
                   ),
+                  if (widget.doctor.clinics.length > 1) ...[
+                    14.height,
+                    AppText(LocaleKeys.booking_selectClinic.tr(),
+                        fontSize: 11.5,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.textPrimaryColor.themeColor),
+                    10.height,
+                    DoctorClinicSelector(
+                      clinics: widget.doctor.clinics,
+                      selectedId: _selectedClinicId,
+                      onSelect: _onSelectClinic,
+                    ),
+                  ],
                   16.height,
                   Flexible(
                     child: SingleChildScrollView(
@@ -208,9 +264,9 @@ class _BookingSlotsSheetState extends State<BookingSlotsSheet> {
                         error: state is TimeTablesError
                             ? ErrorModel(code: ErrorEnum.other, errorMessage: state.message)
                             : null,
-                        onRetry: () => _cubit.getTimeTables(widget.doctor.id),
+                        onRetry: () => _cubit.getTimeTables(widget.doctor.id, clinicId: _selectedClinicId),
                         builder: (context) {
-                          final availability = (state as TimeTablesSuccess).availability;
+                          final availability = currentAvailability!;
                           if (availability.isEmpty) return const NoSlotsView();
 
                           final selectedDate = _selectedDate;
@@ -243,15 +299,29 @@ class _BookingSlotsSheetState extends State<BookingSlotsSheet> {
                                             fontSize: 12.5.sp,
                                             fontWeight: FontWeight.w700,
                                             color: AppColors.textPrimaryColor.themeColor)),
-                                    Text(
-                                        LocaleKeys.booking_availableSlotsCount.tr(namedArgs: {
-                                          'count': '${slots.where((s) => s.available).length}'
-                                        }),
-                                        style: TextStyle(fontSize: 11.sp, color: AppColors.mutedColor.themeColor)),
+                                    // Hidden while the real count for this
+                                    // date is still loading — the template
+                                    // count isn't confirmed yet.
+                                    if (!isDaySlotsLoading)
+                                      Text(
+                                          LocaleKeys.booking_availableSlotsCount.tr(namedArgs: {
+                                            'count': '${slots.where((s) => s.available).length}'
+                                          }),
+                                          style: TextStyle(fontSize: 11.sp, color: AppColors.mutedColor.themeColor)),
                                   ],
                                 ),
                                 12.height,
-                                if (slots.isEmpty)
+                                // The calendar's slots are just the generic
+                                // weekly template until `refreshDaySlots`
+                                // confirms this exact date's real
+                                // booked/available state — show a spinner
+                                // instead of that unconfirmed data meanwhile.
+                                if (isDaySlotsLoading)
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 24.h),
+                                    child: CustomLoadingWidget(size: 32.h, color: AppColors.primaryColor.themeColor),
+                                  )
+                                else if (slots.isEmpty)
                                   Padding(
                                     padding: EdgeInsets.symmetric(vertical: 20.h),
                                     child: Center(
@@ -284,7 +354,7 @@ class _BookingSlotsSheetState extends State<BookingSlotsSheet> {
                                   whenLabel: _selectedSlot == null
                                       ? '—'
                                       : '${formatBookingDayLabel(selectedDate, locale)} · ${_selectedSlot!.displayLabel}',
-                                  clinicName: widget.doctor.clinic?.name,
+                                  clinicName: widget.doctor.clinicById(_selectedClinicId)?.name,
                                   priceLabel: '${widget.doctor.price.toStringAsFixed(0)} ${LocaleKeys.common_currency.tr()}',
                                 ),
                               ],
@@ -306,6 +376,7 @@ class _BookingSlotsSheetState extends State<BookingSlotsSheet> {
                               BookingSlotResult(
                                 date: _selectedDate!,
                                 slot: _selectedSlot!,
+                                clinicId: _selectedClinicId,
                                 familyMember: _selectedFamilyMember,
                               )),
                     ),

@@ -31,7 +31,15 @@ class LocalStorage {
   static const _hasTokenKey = 'has_token';
   static const _userKey = 'user';
 
-  Future<String?> getToken() => _secureBox.read(key: _tokenKey);
+  Future<String?> getToken() async {
+    try {
+      return await _secureBox.read(key: _tokenKey);
+    } catch (_) {
+      await _secureBox.deleteAll();
+      await remove(_hasTokenKey);
+      return null;
+    }
+  }
 
   Future<void> setToken(String v) async {
     await _secureBox.write(key: _tokenKey, value: v);

@@ -5,46 +5,44 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/locale_keys.dart';
 
-/// Filter chips shown under [DoctorSearchBar]. Only [DoctorFilter.nearest]
-/// is backed by a real query (`lat`/`lng`, from the device's location) —
-/// [consultant]/[topRated] are kept for visual parity with the design but
-/// don't affect the fetched list yet, since `/doctors` has no rating or
-/// "consultant" field to filter by.
-enum DoctorFilter { consultant, topRated, nearest }
+enum DoctorSort {
+  closestAvailable('closest_available', LocaleKeys.booking_sortClosestAvailable),
+  nearestDistance('closest_available', LocaleKeys.booking_sortNearestDistance),
+  highestRated('highest_rated', LocaleKeys.booking_sortHighestRated),
+  lowestPrice('lowest_price', LocaleKeys.booking_sortLowestPrice);
+
+  const DoctorSort(this.value, this.labelKey);
+
+  final String value;
+  final String labelKey;
+
+  bool get needsLocation => this == DoctorSort.nearestDistance;
+}
 
 class DoctorFilterChips extends StatelessWidget {
   const DoctorFilterChips({super.key, required this.selected, required this.onSelect});
 
-  final DoctorFilter? selected;
-  final ValueChanged<DoctorFilter> onSelect;
+  final DoctorSort? selected;
+  final ValueChanged<DoctorSort> onSelect;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Wrap(
-          spacing: 8.w,
-          runSpacing: 5.h,
-          children: [
-            _FilterChip(
-              label: LocaleKeys.booking_filterConsultant.tr(),
-              isSelected: selected == DoctorFilter.consultant,
-              onTap: () => onSelect(DoctorFilter.consultant),
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: EdgeInsetsDirectional.only(end: 12.w),
+      child: Row(
+        children: [
+          for (final sort in DoctorSort.values)
+            Padding(
+              padding: EdgeInsetsDirectional.only(end: 8.w),
+              child: _FilterChip(
+                label: sort.labelKey.tr(),
+                isSelected: selected == sort,
+                onTap: () => onSelect(sort),
+              ),
             ),
-            _FilterChip(
-              label: LocaleKeys.booking_filterTopRated.tr(),
-              isSelected: selected == DoctorFilter.topRated,
-              onTap: () => onSelect(DoctorFilter.topRated),
-            ),
-            _FilterChip(
-              label: LocaleKeys.booking_filterNearest.tr(),
-              isSelected: selected == DoctorFilter.nearest,
-              onTap: () => onSelect(DoctorFilter.nearest),
-            ),
-          ],
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

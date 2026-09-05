@@ -45,6 +45,7 @@ class MyBookingsCubit extends Cubit<MyBookingsState> {
     required String times,
     required DateTime date,
     required String? status,
+    int? clinicId,
   }) async {
     try {
       await _repo.rescheduleAppointment(
@@ -55,6 +56,7 @@ class MyBookingsCubit extends Cubit<MyBookingsState> {
         shiftId: shiftId,
         times: times,
         date: date,
+        clinicId: clinicId,
       );
       await getAppointments(status: status);
       return true;

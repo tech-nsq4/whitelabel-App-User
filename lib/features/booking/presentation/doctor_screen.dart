@@ -48,8 +48,8 @@ class _DoctorScreenState extends State<DoctorScreen> {
     super.dispose();
   }
 
-  Future<void> _book(BuildContext context, DoctorProfileModel doctor) async {
-    final slot = await showBookingSlotsSheet(context, doctor);
+  Future<void> _book(BuildContext context, DoctorProfileModel doctor, int? clinicId) async {
+    final slot = await showBookingSlotsSheet(context, doctor, clinicId: clinicId);
     if (slot == null || !context.mounted) return;
 
     // Gate right at the "confirm" step, not earlier — browsing the doctor's
@@ -80,6 +80,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
       shiftId: slot.slot.shift,
       times: slot.slot.time,
       date: slot.date,
+      clinicId: slot.clinicId,
       familyMemberId: slot.familyMember?.id,
     );
     if (appointment == null || !context.mounted) return;
@@ -94,7 +95,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
       context,
       doctor: doctor.name,
       when: when,
-      branch: doctor.clinic?.name ?? '',
+      branch: doctor.clinicById(slot.clinicId)?.name ?? '',
     );
   }
 
@@ -120,7 +121,8 @@ class _DoctorScreenState extends State<DoctorScreen> {
                         onRetry: () => _cubit.getDoctor(widget.doctorId),
                         builder: (context) {
                           final doctor = (state as DoctorDetailsSuccess).doctor;
-                          return DoctorProfileBody(doctor: doctor, onBook: () => _book(context, doctor));
+                          return DoctorProfileBody(
+                              doctor: doctor, onBook: (clinicId) => _book(context, doctor, clinicId));
                         },
                       ),
                     ),

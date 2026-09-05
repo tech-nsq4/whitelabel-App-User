@@ -1,39 +1,109 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/extensions/extensions.dart';
 import '../../../../core/utils/app_colors.dart';
+import '../../../../core/utils/app_overlay.dart';
+import '../../../../core/utils/helper_methods.dart';
+import '../../../../core/utils/locale_keys.dart';
+import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/app_text.dart';
 import '../../data/models/doctor_profile_model.dart';
 
-/// Clinic name/address/area card on [DoctorScreen], built from
-/// `doctor.clinic`.
 class DoctorClinicCard extends StatelessWidget {
-  const DoctorClinicCard({super.key, required this.clinic});
+  const DoctorClinicCard({super.key, required this.clinic, this.onBook});
 
   final DoctorClinicModel clinic;
+  final VoidCallback? onBook;
+
+  Future<void> _openDirections() async {
+    try {
+      await HelperMethods.openGoogleMaps(lat: clinic.lat!, lng: clinic.lng!);
+    } catch (_) {
+      AppOverlay.showError(LocaleKeys.error_generic.tr());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final areaLine = [clinic.location?.area?.name, clinic.location?.city?.name]
-        .where((s) => s != null && s.isNotEmpty)
-        .join('، ');
+    final primary = AppColors.primaryColor.themeColor;
+    final areaLine = [
+      clinic.location?.name,
+      clinic.location?.area?.name,
+      clinic.location?.city?.name,
+    ].where((s) => s != null && s.isNotEmpty).join('، ');
+    final hasCoordinates = clinic.lat != null && clinic.lng != null;
+    final showActions = onBook != null || hasCoordinates;
 
     return AppCard(
-      margin: EdgeInsets.only(bottom: 14.h),
+      margin: EdgeInsets.only(bottom: 10.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AppText(clinic.name,
-              fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textPrimaryColor.themeColor),
-          if (clinic.address != null && clinic.address!.isNotEmpty) ...[
-            4.height,
-            AppText(clinic.address!, fontSize: 11.5, color: AppColors.textSecondaryColor.themeColor),
-          ],
-          if (areaLine.isNotEmpty) ...[
-            4.height,
-            AppText(areaLine, fontSize: 10.5, color: AppColors.mutedColor.themeColor),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 40.r,
+                height: 40.r,
+                decoration: BoxDecoration(
+                  color: primary.withValues(alpha: 0.10),
+                  borderRadius: BorderRadius.circular(13.r),
+                ),
+                alignment: Alignment.center,
+                child: Icon(Icons.location_on_rounded, color: primary, size: 19.sp),
+              ),
+              12.width,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppText(clinic.name,
+                        fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.textPrimaryColor.themeColor),
+                    if (clinic.address != null && clinic.address!.isNotEmpty) ...[
+                      3.height,
+                      AppText(clinic.address!,
+                          fontSize: 11, color: AppColors.textSecondaryColor.themeColor, height: 1.5),
+                    ],
+                    if (areaLine.isNotEmpty) ...[
+                      2.height,
+                      AppText(areaLine, fontSize: 10.5, color: AppColors.mutedColor.themeColor),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ),
+          if (showActions) ...[
+            11.height,
+            Divider(height: 1, color: AppColors.dividerColor.themeColor),
+            11.height,
+            Row(
+              children: [
+                if (onBook != null)
+                  Expanded(
+                    child: CustomButton(
+                      title: LocaleKeys.booking_appointmentsAction.tr(),
+                      height: 38,
+                      fontSize: 12,
+                      onTap: onBook!,
+                    ),
+                  ),
+                if (onBook != null && hasCoordinates) 8.width,
+                if (hasCoordinates)
+                  Expanded(
+                    child: CustomButton(
+                      title: LocaleKeys.booking_directions.tr(),
+                      isOutlined: true,
+                      height: 38,
+                      fontSize: 12,
+                      onTap: _openDirections,
+                    ),
+                  ),
+              ],
+            ),
           ],
         ],
       ),

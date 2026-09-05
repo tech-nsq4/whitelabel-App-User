@@ -92,6 +92,11 @@ class ApiEndpoints {
   /// Marks a single notification as read — fired when it's tapped.
   static String notificationRead(String id) => 'notifications/$id/read';
 
+  // ─── Payments ─────────────────────────────────────────────────────────────
+  /// The account's payment summary — `total_paid` + the itemized `invoices`
+  /// (one per paid/pending appointment), shown on `PaymentsScreen`.
+  static const String payments = 'payments';
+
   // ─── Device ───────────────────────────────────────────────────────────────
   /// Registers/refreshes this device's push-notification token.
   static const String fcmToken = 'fcm-token';

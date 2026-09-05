@@ -1,13 +1,19 @@
+import 'dart:async';
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../core/di/injection.dart';
+import '../../../core/extensions/extensions.dart';
+import '../../../core/utils/locale_keys.dart';
 import '../../../core/widgets/screen_state_layout.dart';
 import '../data/models/specialization_model.dart';
 import '../logic/doctors_cubit.dart';
 import '../logic/specializations_cubit.dart';
 import 'widgets/doctor_search_list.dart';
+import 'widgets/search_bar_field.dart';
 import 'widgets/specs_screen_body.dart';
 import 'widgets/specs_screen_header.dart';
 
@@ -29,6 +35,8 @@ class SpecsScreen extends StatefulWidget {
 class _SpecsScreenState extends State<SpecsScreen> {
   late final SpecializationsCubit _specsCubit = getIt<SpecializationsCubit>();
   late final DoctorsCubit _doctorsCubit = getIt<DoctorsCubit>();
+  final _searchController = TextEditingController();
+  Timer? _searchDebounce;
   SpecializationModel? _specialization;
   SubSpecializationModel? _subSpecialization;
   bool _initialApplied = false;
@@ -36,14 +44,25 @@ class _SpecsScreenState extends State<SpecsScreen> {
   @override
   void initState() {
     super.initState();
-    _specsCubit.getSpecializations();
+    _fetchSpecializations();
   }
 
   @override
   void dispose() {
+    _searchDebounce?.cancel();
+    _searchController.dispose();
     _specsCubit.close();
     _doctorsCubit.close();
     super.dispose();
+  }
+
+  void _fetchSpecializations() {
+    _specsCubit.getSpecializations(name: _searchController.text.trim());
+  }
+
+  void _onSearchChanged(String value) {
+    _searchDebounce?.cancel();
+    _searchDebounce = Timer(const Duration(milliseconds: 400), _fetchSpecializations);
   }
 
   /// Once the real list is in, resolve [SpecsScreen.initialSpecialty] (a
@@ -87,6 +106,7 @@ class _SpecsScreenState extends State<SpecsScreen> {
             final specialization = _specialization;
             final onDoctorsLevel =
                 specialization != null && (!specialization.hasSubSpecializations || _subSpecialization != null);
+            final onSpecialtiesLevel = specialization == null;
 
             return BlocBuilder<DoctorsCubit, DoctorsState>(
               builder: (context, doctorsState) {
@@ -109,20 +129,35 @@ class _SpecsScreenState extends State<SpecsScreen> {
                                 ? DoctorSearchList(
                                     specializationId: _subSpecialization?.specializationId ?? specialization.id,
                                   )
-                                : CustomScreenStateLayout(
-                                    isLoading:
-                                        specsState is SpecializationsLoading || specsState is SpecializationsInitial,
-                                    error: specsState is SpecializationsError
-                                        ? ErrorModel(code: ErrorEnum.other, errorMessage: specsState.message)
-                                        : null,
-                                    onRetry: _specsCubit.getSpecializations,
-                                    isEmpty: specsState is SpecializationsSuccess && specializations.isEmpty,
-                                    builder: (context) => SpecsScreenBody(
-                                      specializations: specializations,
-                                      specialization: specialization,
-                                      onSelectSpecialization: (s) => setState(() => _specialization = s),
-                                      onSelectSubSpecialization: (sub) => setState(() => _subSpecialization = sub),
-                                    ),
+                                : Column(
+                                    children: [
+                                      if (onSpecialtiesLevel) ...[
+                                        SearchBarField(
+                                          controller: _searchController,
+                                          onChanged: _onSearchChanged,
+                                          hint: LocaleKeys.booking_searchSpecialtyHint.tr(),
+                                        ),
+                                        12.height,
+                                      ],
+                                      Expanded(
+                                        child: CustomScreenStateLayout(
+                                          isLoading: specsState is SpecializationsLoading ||
+                                              specsState is SpecializationsInitial,
+                                          error: specsState is SpecializationsError
+                                              ? ErrorModel(code: ErrorEnum.other, errorMessage: specsState.message)
+                                              : null,
+                                          onRetry: _fetchSpecializations,
+                                          isEmpty: specsState is SpecializationsSuccess && specializations.isEmpty,
+                                          builder: (context) => SpecsScreenBody(
+                                            specializations: specializations,
+                                            specialization: specialization,
+                                            onSelectSpecialization: (s) => setState(() => _specialization = s),
+                                            onSelectSubSpecialization: (sub) =>
+                                                setState(() => _subSpecialization = sub),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                           ),
                         ],

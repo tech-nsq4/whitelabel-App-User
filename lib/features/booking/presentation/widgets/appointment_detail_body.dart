@@ -4,12 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/extensions/extensions.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_overlay.dart';
-import '../../../../core/utils/helper_methods.dart';
 import '../../../../core/utils/locale_keys.dart';
-import '../../../../core/widgets/app_button.dart';
 import '../../data/models/appointment_model.dart';
-import '../../data/models/doctor_profile_model.dart';
 import 'appointment_status_badge.dart';
 import 'booking_slots_sheet.dart' show formatBookingDayLabel;
 import 'booking_summary_card.dart';
@@ -28,14 +24,6 @@ class AppointmentDetailBody extends StatelessWidget {
 
   final AppointmentModel appointment;
 
-  Future<void> _openDirections(DoctorClinicModel clinic) async {
-    try {
-      await HelperMethods.openGoogleMaps(lat: clinic.lat!, lng: clinic.lng!);
-    } catch (_) {
-      AppOverlay.showError(LocaleKeys.error_generic.tr());
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final locale = context.locale.languageCode;
@@ -43,7 +31,6 @@ class AppointmentDetailBody extends StatelessWidget {
     final clinic = doctor?.clinic;
     final date = appointment.date;
     final whenLabel = date == null ? '—' : '${formatBookingDayLabel(date, locale)} · ${appointment.timeLabel}';
-    final hasCoordinates = clinic?.lat != null && clinic?.lng != null;
 
     return ListView(
       padding: EdgeInsets.only(top: 6.h, bottom: 24.h),
@@ -73,12 +60,6 @@ class AppointmentDetailBody extends StatelessWidget {
                   color: AppColors.mutedColor.themeColor)),
           10.height,
           DoctorClinicCard(clinic: clinic),
-          if (hasCoordinates)
-            CustomButton(
-              title: LocaleKeys.booking_directions.tr(),
-              isOutlined: true,
-              onTap: () => _openDirections(clinic),
-            ),
         ],
         if (appointment.status == 'completed') ...[
           if (appointment.prescriptionImage != null || appointment.prescriptions.isNotEmpty) ...[

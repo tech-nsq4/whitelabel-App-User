@@ -1,14 +1,12 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/extensions/extensions.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_svg_icons.dart';
-import '../../../../core/utils/locale_keys.dart';
 import '../../../../core/widgets/app_svg_icon.dart';
-import '../../../../core/widgets/app_text.dart';
 import '../../../../core/widgets/custom_tap_effect.dart';
+import 'home_greeting.dart';
 
 /// Greeting + quick-action icon buttons (notifications, health card) shown
 /// at the top of the home screen.
@@ -29,27 +27,7 @@ class HomeHeader extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AppText(
-                LocaleKeys.home_greetingMorning.tr(),
-                fontSize: 10,
-                fontWeight: FontWeight.w600,
-                color: AppColors.mutedColor.themeColor,
-              ),
-              3.height,
-              AppText(
-                LocaleKeys.home_familyName.tr(),
-                isHeading: true,
-                fontSize: 19,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textPrimaryColor.themeColor,
-              ),
-            ],
-          ),
-        ),
+        const Expanded(child: HomeGreeting()),
         9.width,
         _HeaderIconButton(
           icon: AppSvgIcons.bell,

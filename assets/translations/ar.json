@@ -1,7 +1,7 @@
 {
   "app_name": "Vivacare",
   "auth": {
-    "tagline": "صحتك بين إيدك، بكل بساطة.",
+    "tagline": "صحتك بين يديك، بكل بساطة.",
     "login": "تسجيل الدخول",
     "register": "إنشاء حساب",
     "email": "البريد الإلكتروني",
@@ -16,7 +16,7 @@
     "login_subtitle": "أدخل رقم هاتفك لتسجيل الدخول.",
     "sign_in": "تسجيل الدخول",
     "otp_title": "تأكيد رقم الهاتف",
-    "otp_subtitle": "أدخل كود التفعيل المكوّن من 4 أرقام اللي بعتناه على {phone}",
+    "otp_subtitle": "أدخل كود التفعيل المكوّن من 4 أرقام الذي أرسلناه إلى {phone}",
     "otp_confirm": "تأكيد ومتابعة",
     "otp_resend": "إعادة إرسال الكود",
     "otp_resend_in": "إعادة الإرسال خلال {time}",
@@ -27,15 +27,30 @@
     "sub_specialties_count": "{count} تخصص فرعي",
     "doctors_count": "{count} أطباء",
     "experience_years": "{years} سنة خبرة",
+    "years_value": "{years} سنة",
+    "experience_label": "الخبرة",
+    "rating_label": "التقييم",
+    "fee_label": "الكشف",
+    "nearest_available": "أقرب موعد: {when} · {time}",
+    "nearest_available_label": "أقرب موعد متاح",
     "doctor_profile_title": "ملف الطبيب",
     "available_appointments": "المواعيد المتاحة",
     "about": "نبذة",
     "clinic_info": "معلومات العيادة",
+    "clinics": "العيادات",
+    "clinics_count": "{count} عيادات",
+    "select_clinic": "اختر العيادة",
+    "appointments_action": "المواعيد",
+    "specializations": "التخصصات",
+    "sub_specializations": "التخصصات الفرعية",
     "search_doctor_hint": "ابحث عن طبيب",
-    "filter_consultant": "استشاري",
-    "filter_top_rated": "الأعلى تقييمًا",
-    "filter_nearest": "الأقرب موعدًا",
-    "location_unavailable": "تعذر الوصول لموقعك الحالي — تأكد إن خدمة الموقع مفعّلة والصلاحية متاحة",
+    "search_specialty_hint": "ابحث عن تخصص",
+    "search_branch_hint": "ابحث عن فرع",
+    "sort_closest_available": "الأقرب موعدًا",
+    "sort_nearest_distance": "الأقرب مسافةً",
+    "sort_highest_rated": "الأعلى تقييمًا",
+    "sort_lowest_price": "الأقل سعرًا",
+    "location_unavailable": "تعذر الوصول إلى موقعك الحالي — تأكد من أن خدمة الموقع مفعّلة وأن الصلاحية متاحة",
     "by_doctor": "حسب الطبيب",
     "by_doctor_subtitle": "ابحث باسم الطبيب",
     "branches_title": "فروعنا",
@@ -48,13 +63,13 @@
     "no_slots_for_day": "لا توجد مواعيد متاحة في هذا اليوم",
     "continue_to_payment": "متابعة للدفع",
     "guest_login_title": "سجّل الدخول لإتمام الحجز",
-    "guest_login_description": "أنت تتصفح كزائر الآن. سجّل الدخول أو أنشئ حساب جديد عشان تقدر تكمل حجز موعدك.",
+    "guest_login_description": "أنت تتصفح حاليًا كزائر. سجّل الدخول أو أنشئ حسابًا جديدًا لتتمكن من إتمام حجز موعدك.",
     "doctor_label": "الطبيب",
     "appointment_label": "الموعد",
     "branch_label": "الفرع",
     "price_label": "الكشف",
     "no_appointments_title": "لا توجد مواعيد متاحة حاليًا",
-    "no_appointments_description": "الطبيب مش فاتح مواعيد جديدة دلوقتي — جرّب تاني لاحقًا أو تواصل مع العيادة",
+    "no_appointments_description": "لا يقبل الطبيب مواعيد جديدة حاليًا — يرجى المحاولة لاحقًا أو التواصل مع العيادة",
     "book_for_label": "احجز لـ",
     "book_for_self": "نفسي",
     "patient_label": "المريض",
@@ -68,9 +83,9 @@
     "order_id_label": "رقم الطلب",
     "my_bookings_title": "حجوزاتي",
     "no_bookings_title": "لا توجد حجوزات بعد",
-    "no_bookings_description": "لسه ما حجزتش أي موعد — احجز موعدك الأول عشان يظهر هنا",
+    "no_bookings_description": "لم تقم بحجز أي موعد بعد — احجز موعدك الأول ليظهر هنا",
     "prescription_title": "الوصفة الطبية",
-    "attached_prescription": "الروشتة المرفقة",
+    "attached_prescription": "الوصفة الطبية المرفقة",
     "dosage_label": "الجرعة",
     "duration_label": "المدة",
     "test_results_title": "نتائج الفحوصات",
@@ -84,7 +99,7 @@
     "confirm_reschedule": "تأكيد الموعد الجديد",
     "reschedule_success": "تم تعديل موعدك بنجاح",
     "cancel_dialog_title": "إلغاء الحجز؟",
-    "cancel_dialog_message": "هل أنت متأكد إنك عايز تلغي هذا الحجز؟ الإجراء ده مش هينفع يتراجع فيه.",
+    "cancel_dialog_message": "هل أنت متأكد من رغبتك في إلغاء هذا الحجز؟ لا يمكن التراجع عن هذا الإجراء.",
     "cancel_dialog_confirm": "نعم، ألغِ الحجز",
     "cancel_success": "تم إلغاء الحجز",
     "rate_action": "قيّم",
@@ -97,7 +112,7 @@
     "description_label": "الوصف",
     "request_date_label": "تاريخ الطلب",
     "result_date_label": "تاريخ النتيجة",
-    "no_result_yet": "لسه مفيش نتيجة",
+    "no_result_yet": "لا توجد نتيجة بعد",
     "view_appointment_action": "عرض تفاصيل الحجز",
     "test_price_label": "سعر الفحص"
   },
@@ -118,10 +133,10 @@
     "slide1_subtitle": "رفيقك الصحي الشامل؛ أطباء، أدوية، وسجلك الطبي في مكان واحد.",
     "slide2_title": "استشر طبيبك في أي وقت",
     "slide2_subtitle": "احجز استشارة فيديو أو محادثة فورية مع أطباء موثوقين أينما كنت.",
-    "slide3_title": "أدويتك توصلك لباب البيت",
+    "slide3_title": "أدويتك تصل إلى باب منزلك",
     "slide3_subtitle": "اطلب أدويتك من الصيدلية واستلمها أينما كنت.",
     "slide4_title": "سجل صحي آمن لك ولعائلتك",
-    "slide4_subtitle": "احفظ تاريخك الطبي وتاريخ عائلتك؛ المواعيد والروشتات والتقارير، منظمة وآمنة."
+    "slide4_subtitle": "احفظ تاريخك الطبي وتاريخ عائلتك؛ المواعيد والوصفات الطبية والتقارير، منظمة وآمنة."
   },
   "nav": {
     "home": "الرئيسية",
@@ -147,7 +162,9 @@
     "currency": "ريال",
     "today": "اليوم",
     "yesterday": "أمس",
-    "tap_to_zoom": "اضغط للتكبير"
+    "tap_to_zoom": "اضغط للتكبير",
+    "no_data_title": "لا يوجد شيء هنا بعد",
+    "no_data_desc": "لا توجد بيانات لعرضها في هذه الصفحة حالياً"
   },
   "family": {
     "title": "العائلة",
@@ -186,7 +203,7 @@
     "ai_assistant_badge": "جديد",
     "ai_assistant_desc": "اسأل عن نتائجك واحصل على شرح مبسط",
     "upcoming_appointment": "موعدي القادم",
-    "no_upcoming_appointment": "مفيش عندك مواعيد قادمة",
+    "no_upcoming_appointment": "لا توجد لديك مواعيد قادمة",
     "services": "الخدمات",
     "see_all": "الكل",
     "book_appointment": "حجز موعد",
@@ -211,25 +228,25 @@
     "results_title": "نتائج المختبر",
     "xray_title": "الأشعة",
     "analyses_empty_title": "لا توجد نتائج تحاليل بعد",
-    "analyses_empty_description": "أي تحليل تطلبه العيادة هيظهر هنا فور ما تكون نتيجته جاهزة",
+    "analyses_empty_description": "أي تحليل تطلبه العيادة سيظهر هنا فور أن تكون نتيجته جاهزة",
     "xray_empty_title": "لا توجد أشعة بعد",
-    "xray_empty_description": "أي أشعة تطلبها العيادة هتظهر هنا فور ما تكون نتيجتها جاهزة"
+    "xray_empty_description": "أي أشعة تطلبها العيادة ستظهر هنا فور أن تكون نتيجتها جاهزة"
   },
   "medications": {
     "title": "أدويتي",
     "empty_title": "لا توجد وصفات طبية بعد",
-    "empty_description": "الأدوية اللي هيصفها الطبيب هتظهر هنا"
+    "empty_description": "الأدوية التي يصفها الطبيب ستظهر هنا"
   },
   "notifications": {
     "title": "التنبيهات",
     "empty_title": "لا توجد تنبيهات بعد",
-    "empty_description": "هنبلغك هنا فور ما يكون فيه تحديث على حجوزاتك",
+    "empty_description": "سنعلمك هنا فور حدوث أي تحديث على حجوزاتك",
     "mark_all_read": "تعليم الكل كمقروء",
     "booking": {
       "booked": {
         "manager": {
           "title": "تم استلام حجزك",
-          "body": "تم تسجيل حجز موعدك بنجاح — هنبلغك فور ما العيادة توافق عليه."
+          "body": "تم تسجيل حجز موعدك بنجاح — سنعلمك فور موافقة العيادة عليه."
         }
       },
       "accepted": {
@@ -247,10 +264,22 @@
       "completed": {
         "manager": {
           "title": "اكتمل موعدك",
-          "body": "تم إنهاء موعدك بنجاح. راجع الروشتة ونتائج الفحوصات في تفاصيل الحجز."
+          "body": "تم إنهاء موعدك بنجاح. راجع الوصفة الطبية ونتائج الفحوصات في تفاصيل الحجز."
         }
       }
     }
+  },
+  "payments": {
+    "title": "المدفوعات",
+    "total_paid_label": "إجمالي المدفوعات",
+    "invoices_title": "فواتيري",
+    "invoices_count": "{count} فاتورة",
+    "invoice_number": "فاتورة رقم {id}",
+    "for_member": "لـ {name}",
+    "paid": "مدفوعة",
+    "pay_now": "ادفع الآن",
+    "empty_title": "لا توجد فواتير بعد",
+    "empty_description": "فواتير مواعيدك هتظهر هنا"
   },
   "more": {
     "title": "المزيد",
@@ -260,7 +289,7 @@
     "title": "ملفي الشخصي",
     "login_now": "تسجيل الدخول الآن",
     "complete_title": "أكمل بياناتك",
-    "complete_subtitle": "شوية تفاصيل بسيطة عشان نظبطلك تجربتك الصحية.",
+    "complete_subtitle": "بعض التفاصيل البسيطة لتخصيص تجربتك الصحية.",
     "date_of_birth": "تاريخ الميلاد",
     "height": "الطول (سم)",
     "weight": "الوزن (كجم)",
@@ -285,5 +314,19 @@
     "unauthorized": "انتهت الجلسة، يرجى تسجيل الدخول مجدداً",
     "not_found": "المورد غير موجود",
     "generic": "حدث خطأ ما، حاول مرة أخرى"
+  },
+  "vitals": {
+    "title": "المؤشرات الحيوية",
+    "description": "هذه القياسات مأخوذة من سجلك في العيادة — يتم تحديثها مع كل زيارة.",
+    "updated_on": "آخر تحديث: {date}",
+    "empty": "لا توجد لديك مؤشرات حيوية مسجلة بعد",
+    "pulse": "النبض",
+    "pulse_unit": "نبضة/د",
+    "blood_pressure": "ضغط الدم",
+    "blood_pressure_unit": "ملم زئبق",
+    "temperature": "درجة الحرارة",
+    "temperature_unit": "°C",
+    "oxygen": "الأكسجين",
+    "oxygen_unit": "%"
   }
 }

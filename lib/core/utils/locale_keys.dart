@@ -34,14 +34,29 @@ abstract class LocaleKeys {
       'booking.sub_specialties_count';
   static const String booking_doctorsCount = 'booking.doctors_count';
   static const String booking_experienceYears = 'booking.experience_years';
+  static const String booking_yearsValue = 'booking.years_value';
+  static const String booking_experienceLabel = 'booking.experience_label';
+  static const String booking_ratingLabel = 'booking.rating_label';
+  static const String booking_feeLabel = 'booking.fee_label';
+  static const String booking_nearestAvailable = 'booking.nearest_available';
+  static const String booking_nearestAvailableLabel = 'booking.nearest_available_label';
   static const String booking_doctorProfileTitle = 'booking.doctor_profile_title';
   static const String booking_availableAppointments = 'booking.available_appointments';
   static const String booking_about = 'booking.about';
   static const String booking_clinicInfo = 'booking.clinic_info';
+  static const String booking_clinics = 'booking.clinics';
+  static const String booking_clinicsCount = 'booking.clinics_count';
+  static const String booking_selectClinic = 'booking.select_clinic';
+  static const String booking_appointmentsAction = 'booking.appointments_action';
+  static const String booking_specializations = 'booking.specializations';
+  static const String booking_subSpecializations = 'booking.sub_specializations';
   static const String booking_searchDoctorHint = 'booking.search_doctor_hint';
-  static const String booking_filterConsultant = 'booking.filter_consultant';
-  static const String booking_filterTopRated = 'booking.filter_top_rated';
-  static const String booking_filterNearest = 'booking.filter_nearest';
+  static const String booking_searchSpecialtyHint = 'booking.search_specialty_hint';
+  static const String booking_searchBranchHint = 'booking.search_branch_hint';
+  static const String booking_sortClosestAvailable = 'booking.sort_closest_available';
+  static const String booking_sortNearestDistance = 'booking.sort_nearest_distance';
+  static const String booking_sortHighestRated = 'booking.sort_highest_rated';
+  static const String booking_sortLowestPrice = 'booking.sort_lowest_price';
   static const String booking_locationUnavailable = 'booking.location_unavailable';
   static const String booking_byDoctor = 'booking.by_doctor';
   static const String booking_byDoctorSubtitle = 'booking.by_doctor_subtitle';
@@ -128,6 +143,8 @@ abstract class LocaleKeys {
   static const String common_today = 'common.today';
   static const String common_yesterday = 'common.yesterday';
   static const String common_tapToZoom = 'common.tap_to_zoom';
+  static const String common_noDataTitle = 'common.no_data_title';
+  static const String common_noDataDesc = 'common.no_data_desc';
 
   // ─── Family ───────────────────────────────────────────────────────────────
   static const String family_title = 'family.title';
@@ -252,6 +269,18 @@ abstract class LocaleKeys {
   static const String notifications_bookingCompletedManagerBody =
       'notifications.booking.completed.manager.body';
 
+  // ─── Payments ─────────────────────────────────────────────────────────────
+  static const String payments_title = 'payments.title';
+  static const String payments_totalPaidLabel = 'payments.total_paid_label';
+  static const String payments_invoicesTitle = 'payments.invoices_title';
+  static const String payments_invoicesCount = 'payments.invoices_count';
+  static const String payments_invoiceNumber = 'payments.invoice_number';
+  static const String payments_forMember = 'payments.for_member';
+  static const String payments_paid = 'payments.paid';
+  static const String payments_payNow = 'payments.pay_now';
+  static const String payments_emptyTitle = 'payments.empty_title';
+  static const String payments_emptyDescription = 'payments.empty_description';
+
   // ─── More ─────────────────────────────────────────────────────────────────
   static const String more_title = 'more.title';
   static const String more_profileCardSubtitle = 'more.profile_card_subtitle';
@@ -288,4 +317,18 @@ abstract class LocaleKeys {
   static const String error_unauthorized = 'error.unauthorized';
   static const String error_notFound = 'error.not_found';
   static const String error_generic = 'error.generic';
+
+  // ─── Vitals ───────────────────────────────────────────────────────────────
+  static const String vitals_title = 'vitals.title';
+  static const String vitals_description = 'vitals.description';
+  static const String vitals_updatedOn = 'vitals.updated_on';
+  static const String vitals_empty = 'vitals.empty';
+  static const String vitals_pulse = 'vitals.pulse';
+  static const String vitals_pulseUnit = 'vitals.pulse_unit';
+  static const String vitals_bloodPressure = 'vitals.blood_pressure';
+  static const String vitals_bloodPressureUnit = 'vitals.blood_pressure_unit';
+  static const String vitals_temperature = 'vitals.temperature';
+  static const String vitals_temperatureUnit = 'vitals.temperature_unit';
+  static const String vitals_oxygen = 'vitals.oxygen';
+  static const String vitals_oxygenUnit = 'vitals.oxygen_unit';
 }

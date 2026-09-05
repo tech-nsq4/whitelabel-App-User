@@ -16,6 +16,7 @@ class DoctorsCubit extends Cubit<DoctorsState> {
     int? specializationId,
     int? clinicId,
     String? name,
+    String? sort,
     double? lat,
     double? lng,
   }) async {
@@ -25,6 +26,7 @@ class DoctorsCubit extends Cubit<DoctorsState> {
         specializationId: specializationId,
         clinicId: clinicId,
         name: name,
+        sort: sort,
         lat: lat,
         lng: lng,
       );

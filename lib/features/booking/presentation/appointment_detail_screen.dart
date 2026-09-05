@@ -64,6 +64,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       doctor,
       showFamilyMemberSelector: false,
       ctaLabel: LocaleKeys.booking_confirmReschedule.tr(),
+      clinicId: doctor.clinic?.id,
     );
     if (slot == null || !mounted) return;
 
@@ -75,6 +76,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       shiftId: slot.slot.shift,
       times: slot.slot.time,
       date: slot.date,
+      clinicId: slot.clinicId,
     );
     if (!ok || !mounted) return;
 
@@ -122,7 +124,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     final doctor = appointment.doctor;
     if (doctor == null) return;
 
-    final slot = await showBookingSlotsSheet(context, doctor);
+    final slot = await showBookingSlotsSheet(context, doctor, clinicId: doctor.clinic?.id);
     if (slot == null || !mounted) return;
 
     final locale = context.locale.languageCode;
@@ -143,6 +145,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       shiftId: slot.slot.shift,
       times: slot.slot.time,
       date: slot.date,
+      clinicId: slot.clinicId,
       familyMemberId: slot.familyMember?.id,
     );
     if (newAppointment == null || !mounted) return;
@@ -153,7 +156,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       context,
       doctor: doctor.name,
       when: when,
-      branch: doctor.clinic?.name ?? '',
+      branch: doctor.clinicById(slot.clinicId)?.name ?? '',
     );
   }
 

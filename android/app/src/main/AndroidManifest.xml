@@ -7,7 +7,7 @@
     <!-- Required on Android 13+ to show the push-notification permission prompt. -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <application
-        android:label="App Base"
+        android:label="White Label User"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <!-- Default channel used for background/terminated FCM notifications
