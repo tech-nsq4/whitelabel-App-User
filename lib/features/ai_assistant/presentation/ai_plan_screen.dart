@@ -21,13 +21,13 @@ class _AiPlanScreenState extends State<AiPlanScreen> {
   bool _yearly = true;
 
   Future<void> _subscribe() async {
-    final paid = await showPaymentSheet(
+    final result = await showPaymentSheet(
       context,
       title: _yearly ? 'اشتراك سنوي · المساعد الذكي' : 'اشتراك شهري · المساعد الذكي',
       detail: _yearly ? 'تجديد سنوي · يمكن الإلغاء' : 'تجديد شهري · يمكن الإلغاء',
       amountLabel: _yearly ? '290 ريال' : '29 ريال',
     );
-    if (paid != true || !mounted) return;
+    if (result == null || !mounted) return;
     await showDialog(
       context: context,
       builder: (_) => Dialog(

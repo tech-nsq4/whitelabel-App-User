@@ -4,22 +4,24 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/extensions/extensions.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_constants.dart';
 import '../../../../core/utils/locale_keys.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/app_text.dart';
+import '../../../../core/widgets/price_text.dart';
 import '../../../../core/widgets/section_header.dart';
+import '../../../offers/data/models/applied_offer.dart';
 import '../../data/models/doctor_profile_model.dart';
 import 'doctor_clinic_card.dart';
 import 'doctor_profile_header.dart';
 import 'doctor_specializations_section.dart';
 
 class DoctorProfileBody extends StatelessWidget {
-  const DoctorProfileBody({super.key, required this.doctor, required this.onBook});
+  const DoctorProfileBody({super.key, required this.doctor, required this.onBook, this.offer});
 
   final DoctorProfileModel doctor;
   final void Function(int? clinicId) onBook;
+  final AppliedOffer? offer;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class DoctorProfileBody extends StatelessWidget {
         ListView(
           padding: EdgeInsets.only(top: 6.h, bottom: 104.h),
           children: [
-            DoctorProfileHeader(doctor: doctor),
+            DoctorProfileHeader(doctor: doctor, offer: offer),
             if (description != null && description.isNotEmpty) ...[
               SectionHeader(title: LocaleKeys.booking_about.tr()),
               10.height,
@@ -58,7 +60,7 @@ class DoctorProfileBody extends StatelessWidget {
           bottom: 8.h,
           left: 0,
           right: 0,
-          child: _BookBar(doctor: doctor, onBook: () => onBook(null)),
+          child: _BookBar(doctor: doctor, offer: offer, onBook: () => onBook(null)),
         ),
       ],
     );
@@ -66,10 +68,11 @@ class DoctorProfileBody extends StatelessWidget {
 }
 
 class _BookBar extends StatelessWidget {
-  const _BookBar({required this.doctor, required this.onBook});
+  const _BookBar({required this.doctor, required this.onBook, this.offer});
 
   final DoctorProfileModel doctor;
   final VoidCallback onBook;
+  final AppliedOffer? offer;
 
   @override
   Widget build(BuildContext context) {
@@ -96,14 +99,12 @@ class _BookBar extends StatelessWidget {
               AppText(LocaleKeys.booking_feeLabel.tr(),
                   fontSize: 9.5, color: AppColors.mutedColor.themeColor),
               2.height,
-              Text(
-                '${doctor.price.toStringAsFixed(0)} ${LocaleKeys.common_currency.tr()}',
-                style: TextStyle(
-                  fontFamily: AppFonts.headingFont,
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.primaryColor.themeColor,
-                ),
+              PriceText(
+                amount: offer?.finalPriceFor(doctor.price) ?? doctor.price,
+                strikeAmount: doctor.price,
+                isHeading: true,
+                fontSize: 15,
+                color: AppColors.primaryColor.themeColor,
               ),
             ],
           ),

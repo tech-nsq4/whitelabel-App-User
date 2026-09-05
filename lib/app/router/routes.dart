@@ -11,6 +11,8 @@ class Routes {
 
   static const String notifications = '/notifications';
   static const String services = '/services';
+  static const String offers = '/offers';
+  static const String offerTargets = '/offer-targets';
 
   static const String visits = '/visits';
   static const String visitList = '/visits/list';
@@ -48,6 +50,7 @@ class Routes {
   static const String doctor = '/doctor';
   static const String appointmentDetail = '/appointment-detail';
   static const String myBookings = '/my-bookings';
+  static const String chat = '/chat';
   static const String testResultDetail = '/test-result-detail';
 
   static const String family = '/family';

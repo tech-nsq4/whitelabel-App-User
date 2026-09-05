@@ -210,8 +210,8 @@
     "book_appointment_subtitle": "عيادة أو فيديو",
     "consultation": "استشارة",
     "consultation_subtitle": "عن بعد",
-    "emergency": "طوارئ",
-    "emergency_subtitle": "24/7",
+    "offers": "العروض",
+    "offers_subtitle": "خصومات حصرية",
     "medical_record": "سجلي الطبي",
     "bookings": "حجوزاتي",
     "bookings_subtitle": "احجز وتابع مواعيدك",
@@ -269,6 +269,34 @@
       }
     }
   },
+  "chat": {
+    "online": "متصل الآن",
+    "last_seen_today": "آخر ظهور اليوم {time}",
+    "last_seen_date": "آخر ظهور {date} {time}",
+    "offline": "غير متصل",
+    "input_hint": "اكتب رسالة...",
+    "attach_camera": "الكاميرا",
+    "attach_gallery": "المعرض",
+    "attach_location": "الموقع",
+    "location_message_label": "موقع تمت مشاركته",
+    "empty_title": "ابدأ المحادثة",
+    "empty_description": "أرسل رسالة للتواصل مباشرة مع الطبيب"
+  },
+  "offers": {
+    "title": "العروض والخصومات",
+    "subtitle": "عروض وخصومات حصرية على حجوزاتك",
+    "ends_on": "ينتهي {date}",
+    "permanent": "عرض دائم",
+    "book_now": "احجز الآن",
+    "book_with_discount": "احجز الآن بالخصم",
+    "empty_title": "لا توجد عروض حالياً",
+    "empty_description": "تابعنا لمعرفة أحدث العروض والخصومات فور توفرها",
+    "targets_pick_doctor": "اختر طبيبًا للاستفادة من العرض",
+    "targets_pick_clinic": "اختر عيادة للاستفادة من العرض",
+    "targets_pick_specialization": "اختر تخصصًا للاستفادة من العرض",
+    "targets_empty_title": "لا يوجد متاح لهذا العرض",
+    "targets_empty_description": "لا توجد خيارات حجز متاحة لهذا العرض حاليًا"
+  },
   "payments": {
     "title": "المدفوعات",
     "total_paid_label": "إجمالي المدفوعات",
@@ -279,7 +307,14 @@
     "paid": "مدفوعة",
     "pay_now": "ادفع الآن",
     "empty_title": "لا توجد فواتير بعد",
-    "empty_description": "فواتير مواعيدك هتظهر هنا"
+    "empty_description": "فواتير مواعيدك هتظهر هنا",
+    "checkout_title": "الدفع",
+    "total_label": "الإجمالي",
+    "pay_now_action": "ادفع الآن",
+    "promo_code_label": "كود الخصم",
+    "promo_code_hint": "أدخل كود الخصم (اختياري)",
+    "method_mada": "مدى",
+    "method_wallet": "محفظتي"
   },
   "more": {
     "title": "المزيد",

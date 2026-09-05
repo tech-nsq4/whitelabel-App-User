@@ -130,13 +130,13 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     final locale = context.locale.languageCode;
     final when = '${slot.dayLabel(locale)} · ${slot.timeLabel}';
 
-    final paid = await showPaymentSheet(
+    final result = await showPaymentSheet(
       context,
       title: doctor.name,
       detail: '${doctor.name} · $when',
       amountLabel: '${doctor.price.toStringAsFixed(0)} ${LocaleKeys.common_currency.tr()}',
     );
-    if (paid != true || !mounted) return;
+    if (result == null || !mounted) return;
 
     final newAppointment = await _appointmentsCubit.createAppointment(
       doctorId: doctor.id,

@@ -6,21 +6,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/di/injection.dart';
 import '../../../core/utils/locale_keys.dart';
 import '../../../core/widgets/screen_header.dart';
+import '../../offers/data/models/applied_offer.dart';
 import '../logic/doctors_cubit.dart';
 import 'widgets/doctor_search_list.dart';
 
-/// Doctors search/browse entry point, backed by `GET /doctors` (no
-/// specialization filter at all — unlike the specialty drill-down on
-/// [SpecsScreen]). Doubles as two entry points:
-/// - `BookScreen` → "حسب الطبيب": [clinicId]/[title] both null, browses
-///   every doctor.
-/// - `BranchesScreen` → tapping a clinic: [clinicId] set and [title] is
-///   that clinic's name, scoping the list to its doctors.
 class DoctorSearchScreen extends StatefulWidget {
-  const DoctorSearchScreen({super.key, this.clinicId, this.title});
+  const DoctorSearchScreen({super.key, this.clinicId, this.specializationId, this.title, this.offer});
 
   final int? clinicId;
+  final int? specializationId;
   final String? title;
+  final AppliedOffer? offer;
 
   @override
   State<DoctorSearchScreen> createState() => _DoctorSearchScreenState();
@@ -46,7 +42,13 @@ class _DoctorSearchScreenState extends State<DoctorSearchScreen> {
             child: Column(
               children: [
                 ScreenHeader(title: widget.title ?? LocaleKeys.booking_byDoctor.tr()),
-                Expanded(child: DoctorSearchList(clinicId: widget.clinicId)),
+                Expanded(
+                  child: DoctorSearchList(
+                    clinicId: widget.clinicId,
+                    specializationId: widget.specializationId,
+                    offer: widget.offer,
+                  ),
+                ),
               ],
             ),
           ),

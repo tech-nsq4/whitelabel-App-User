@@ -22,6 +22,7 @@ import '../../features/booking/presentation/specs_screen.dart';
 import '../../features/booking/presentation/symptom_checker_screen.dart';
 import '../../features/booking/presentation/test_result_detail_screen.dart';
 import '../../features/booking/data/models/appointment_model.dart' show TestRequestModel;
+import '../../features/chat/presentation/chat_screen.dart';
 import '../../features/emergency/presentation/em_ambulance_screen.dart';
 import '../../features/emergency/presentation/em_checkin_screen.dart';
 import '../../features/emergency/presentation/em_nearest_screen.dart';
@@ -37,6 +38,10 @@ import '../../features/lab/presentation/test_history_screen.dart';
 import '../../features/layout/presentation/layout_screen.dart';
 import '../../features/medications/presentation/medications_screen.dart';
 import '../../features/notifications/presentation/notifications_screen.dart';
+import '../../features/offers/data/models/applied_offer.dart';
+import '../../features/offers/data/models/offer_model.dart';
+import '../../features/offers/presentation/offer_targets_screen.dart';
+import '../../features/offers/presentation/offers_screen.dart';
 import '../../features/onboarding/presentation/on_boarding_screen.dart';
 import '../../features/payments/presentation/payments_screen.dart';
 import '../../features/pharmacy/presentation/ph_appts_screen.dart';
@@ -123,6 +128,12 @@ class RouteGenerator {
       case Routes.services:
         return _pageRoute(const ServicesScreen());
 
+      case Routes.offers:
+        return _pageRoute(const OffersScreen());
+
+      case Routes.offerTargets:
+        return _pageRoute(OfferTargetsScreen(offer: arguments!['offer'] as OfferModel));
+
       case Routes.medications:
         return _pageRoute(const MedicationsScreen());
 
@@ -171,17 +182,29 @@ class RouteGenerator {
       case Routes.doctorSearch:
         return _pageRoute(DoctorSearchScreen(
           clinicId: arguments?['clinicId'] as int?,
+          specializationId: arguments?['specializationId'] as int?,
           title: arguments?['title'] as String?,
+          offer: arguments?['appliedOffer'] as AppliedOffer?,
         ));
 
       case Routes.doctor:
-        return _pageRoute(DoctorScreen(doctorId: arguments?['id'] as int));
+        return _pageRoute(DoctorScreen(
+          doctorId: arguments?['id'] as int,
+          offer: arguments?['appliedOffer'] as AppliedOffer?,
+        ));
 
       case Routes.appointmentDetail:
         return _pageRoute(AppointmentDetailScreen(appointmentId: arguments?['id'] as int));
 
       case Routes.myBookings:
         return _pageRoute(const MyBookingsScreen());
+
+      case Routes.chat:
+        return _pageRoute(ChatScreen(
+          doctorId: arguments?['doctorId'] as int,
+          doctorName: arguments?['doctorName'] as String,
+          doctorImage: arguments?['doctorImage'] as String?,
+        ));
 
       case Routes.testResultDetail:
         return _pageRoute(TestResultDetailScreen(request: arguments?['request'] as TestRequestModel));

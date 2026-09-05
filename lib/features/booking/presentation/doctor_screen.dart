@@ -9,8 +9,10 @@ import '../../../core/di/injection.dart';
 import '../../../core/utils/app_constants.dart';
 import '../../../core/utils/locale_keys.dart';
 import '../../../core/widgets/guest_login_dialog.dart';
+import '../../../core/widgets/price_text.dart';
 import '../../../core/widgets/screen_header.dart';
 import '../../../core/widgets/screen_state_layout.dart';
+import '../../offers/data/models/applied_offer.dart';
 import '../../payments/presentation/widgets/payment_sheet.dart';
 import '../data/models/doctor_profile_model.dart';
 import '../logic/appointments_cubit.dart';
@@ -21,9 +23,10 @@ import 'widgets/doctor_profile_body.dart';
 
 /// Doctor profile / booking-entry screen, backed by `GET /doctors/{id}`.
 class DoctorScreen extends StatefulWidget {
-  const DoctorScreen({super.key, required this.doctorId});
+  const DoctorScreen({super.key, required this.doctorId, this.offer});
 
   final int doctorId;
+  final AppliedOffer? offer;
 
   @override
   State<DoctorScreen> createState() => _DoctorScreenState();
@@ -49,7 +52,12 @@ class _DoctorScreenState extends State<DoctorScreen> {
   }
 
   Future<void> _book(BuildContext context, DoctorProfileModel doctor, int? clinicId) async {
-    final slot = await showBookingSlotsSheet(context, doctor, clinicId: clinicId);
+    final offer = widget.offer;
+    final price = doctor.price;
+    final finalPrice = offer?.finalPriceFor(price) ?? price;
+    final discounted = finalPrice < price;
+
+    final slot = await showBookingSlotsSheet(context, doctor, clinicId: clinicId, offer: offer);
     if (slot == null || !context.mounted) return;
 
     // Gate right at the "confirm" step, not earlier — browsing the doctor's
@@ -65,13 +73,15 @@ class _DoctorScreenState extends State<DoctorScreen> {
     final locale = context.locale.languageCode;
     final when = '${slot.dayLabel(locale)} · ${slot.timeLabel}';
 
-    final paid = await showPaymentSheet(
+    final result = await showPaymentSheet(
       context,
       title: doctor.name,
       detail: '${doctor.name} · $when',
-      amountLabel: '${doctor.price.toStringAsFixed(0)} ${LocaleKeys.common_currency.tr()}',
+      amountLabel: formatPriceLabel(finalPrice),
+      strikeAmountLabel: discounted ? formatPriceLabel(price) : null,
+      promoCodeEnabled: true,
     );
-    if (paid != true || !context.mounted) return;
+    if (result == null || !context.mounted) return;
 
     final appointment = await _appointmentsCubit.createAppointment(
       doctorId: doctor.id,
@@ -82,6 +92,8 @@ class _DoctorScreenState extends State<DoctorScreen> {
       date: slot.date,
       clinicId: slot.clinicId,
       familyMemberId: slot.familyMember?.id,
+      offerId: offer?.id,
+      promoCode: result.promoCode,
     );
     if (appointment == null || !context.mounted) return;
 
@@ -122,7 +134,9 @@ class _DoctorScreenState extends State<DoctorScreen> {
                         builder: (context) {
                           final doctor = (state as DoctorDetailsSuccess).doctor;
                           return DoctorProfileBody(
-                              doctor: doctor, onBook: (clinicId) => _book(context, doctor, clinicId));
+                              doctor: doctor,
+                              offer: widget.offer,
+                              onBook: (clinicId) => _book(context, doctor, clinicId));
                         },
                       ),
                     ),

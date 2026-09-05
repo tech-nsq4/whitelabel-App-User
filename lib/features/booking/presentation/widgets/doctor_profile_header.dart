@@ -5,18 +5,24 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/extensions/extensions.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_constants.dart';
+import '../../../../core/utils/app_svg_icons.dart';
 import '../../../../core/utils/locale_keys.dart';
 import '../../../../core/widgets/app_card.dart';
+import '../../../../core/widgets/app_svg_icon.dart';
 import '../../../../core/widgets/app_text.dart';
+import '../../../../core/widgets/custom_tap_effect.dart';
 import '../../../../core/widgets/image/custom_image.dart';
+import '../../../offers/data/models/applied_offer.dart';
 import '../../data/models/doctor_profile_model.dart';
 import 'booking_slots_sheet.dart' show formatNearestAvailableDayLabel;
 import 'doctor_stats_strip.dart';
 
 class DoctorProfileHeader extends StatelessWidget {
-  const DoctorProfileHeader({super.key, required this.doctor});
+  const DoctorProfileHeader({super.key, required this.doctor, this.onChatTap, this.offer});
 
   final DoctorProfileModel doctor;
+  final VoidCallback? onChatTap;
+  final AppliedOffer? offer;
 
   @override
   Widget build(BuildContext context) {
@@ -74,10 +80,25 @@ class DoctorProfileHeader extends StatelessWidget {
                   ],
                 ),
               ),
+              if (onChatTap != null) ...[
+                8.width,
+                CustomTapEffect(
+                  onTap: onChatTap!,
+                  child: Container(
+                    width: 38.r,
+                    height: 38.r,
+                    decoration: BoxDecoration(
+                      color: primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(13.r),
+                    ),
+                    child: Center(child: AppSvgIcon(AppSvgIcons.chatBubble, size: 18.sp, color: primary)),
+                  ),
+                ),
+              ],
             ],
           ),
           14.height,
-          DoctorStatsStrip(doctor: doctor),
+          DoctorStatsStrip(doctor: doctor, offer: offer),
           if (nearestAvailable != null) ...[
             12.height,
             _NearestAvailableBanner(nearestAvailable),

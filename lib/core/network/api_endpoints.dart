@@ -52,6 +52,15 @@ class ApiEndpoints {
   /// Rates a completed appointment (1-5 stars + an optional comment).
   static String appointmentRate(int id) => 'appointments/$id/rate';
 
+  // ─── Chat ─────────────────────────────────────────────────────────────────
+  static const String chatImageUpload = 'chat/upload-image';
+
+  // ─── Offers ───────────────────────────────────────────────────────────────
+  /// Active promotional offers — shown on `OffersScreen` (reached from the
+  /// home screen's services grid) and, where `show_on_home` is true, meant
+  /// to be highlighted on the home screen itself.
+  static const String offers = 'offers';
+
   // ─── Family ───────────────────────────────────────────────────────────────
   /// `GET` lists the account's linked family members; `POST` (multipart,
   /// for the `medical_files[]` attachments) adds a new one.

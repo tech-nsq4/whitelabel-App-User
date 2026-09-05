@@ -69,6 +69,29 @@ $paths
     '<circle cx="7" cy="17.5" r="2"/><circle cx="17.5" cy="17.5" r="2"/><path d="M8 5.5h2.5M9.25 4.25v2.5"/>',
   );
 
+  static final String send = _icon(
+    '<path d="M4 12l16-7.5-6 16-2.5-6.5L4 12z"/><path d="M20 4.5l-8.5 8.5"/>',
+  );
+
+  static final String camera = _icon(
+    '<path d="M4 8.5h3l1.6-2.5h6.8L17 8.5h3a1.5 1.5 0 011.5 1.5v8a1.5 1.5 0 01-1.5 1.5H4A1.5 1.5 0 012.5 18v-8A1.5 1.5 0 014 8.5z"/>'
+    '<circle cx="12" cy="14" r="3.3"/>',
+  );
+
+  static final String galleryImage = _icon(
+    '<rect x="3" y="4.5" width="18" height="15" rx="2"/><circle cx="8.5" cy="9.5" r="1.7"/>'
+    '<path d="M4 16.5l5-5 4 4 3-3 4 4"/>',
+  );
+
+  static final String attach = _icon(
+    '<path d="M16.5 6.5l-7.8 7.8a3 3 0 004.2 4.2l8.1-8.1a5 5 0 00-7.1-7.1l-8.3 8.3a7 7 0 009.9 9.9"/>',
+  );
+
+  static final String giftBox = _icon(
+    '<rect x="3.5" y="9.5" width="17" height="10.5" rx="1.8"/><path d="M3.5 9.5h17M12 9.5V20"/>'
+    '<path d="M8.3 9.5c-1.8 0-2.9-2-1.9-3.5.9-1.4 3.1-1.4 4 .1L12 9.5l1.6-3.4c.9-1.5 3.1-1.5 4-.1 1 1.5-.1 3.5-1.9 3.5"/>',
+  );
+
   static final String flask = _icon(
     '<path d="M9.5 3v6L5 18a2 2 0 001.8 3h10.4A2 2 0 0019 18l-4.5-9V3"/><path d="M8 3h8M7.5 14h9"/>',
   );
@@ -144,6 +167,10 @@ $paths
 
   static final String checkCircle = _icon(
     '<path d="M5 12.5l4.5 4.5L19 7"/>',
+  );
+
+  static final String checkDouble = _icon(
+    '<path d="M1 12.5l4.5 4.5L14 8"/><path d="M8 12.5l4.5 4.5L21 8"/>',
   );
 
   static final String search = _icon(

@@ -43,13 +43,13 @@ class _TelemedScreenState extends State<TelemedScreen> {
   Future<void> _startCall(DoctorModel doctor) async {
     final slot = await showTelemedSlotSheet(context, doctor);
     if (slot == null || !mounted) return;
-    final paid = await showPaymentSheet(
+    final result = await showPaymentSheet(
       context,
       title: 'استشارة فيديو',
       detail: '${doctor.name} · $slot',
       amountLabel: '${doctor.telemedPrice} ريال',
     );
-    if (paid != true || !mounted) return;
+    if (result == null || !mounted) return;
     if (slot == 'الآن') {
       Navigator.push(
         context,

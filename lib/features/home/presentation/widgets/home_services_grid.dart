@@ -11,18 +11,18 @@ import '../../../../core/widgets/app_text.dart';
 import '../../../../core/widgets/custom_tap_effect.dart';
 
 /// Quick-access services grid: book appointment (highlighted), telemed
-/// consultation, and emergency.
+/// consultation, and offers.
 class HomeServicesGrid extends StatelessWidget {
   const HomeServicesGrid({
     super.key,
     this.onBookTap,
     this.onTelemedTap,
-    this.onEmergencyTap,
+    this.onOffersTap,
   });
 
   final VoidCallback? onBookTap;
   final VoidCallback? onTelemedTap;
-  final VoidCallback? onEmergencyTap;
+  final VoidCallback? onOffersTap;
 
   @override
   Widget build(BuildContext context) {
@@ -50,12 +50,11 @@ class HomeServicesGrid extends StatelessWidget {
         10.width,
         Expanded(
           child: _ServiceTile(
-            icon: AppSvgIcons.ambulance,
-            label: LocaleKeys.home_emergency.tr(),
-            subLabel: LocaleKeys.home_emergencySubtitle.tr(),
-            iconColor: AppColors.errorColor.themeColor,
-            showDot: true,
-            onTap: onEmergencyTap,
+            icon: AppSvgIcons.giftBox,
+            label: LocaleKeys.home_offers.tr(),
+            subLabel: LocaleKeys.home_offersSubtitle.tr(),
+            iconColor: AppColors.accentGold.themeColor,
+            onTap: onOffersTap,
           ),
         ),
       ],
@@ -70,7 +69,6 @@ class _ServiceTile extends StatelessWidget {
     required this.subLabel,
     this.filled = false,
     this.iconColor,
-    this.showDot = false,
     this.onTap,
   });
 
@@ -79,7 +77,6 @@ class _ServiceTile extends StatelessWidget {
   final String subLabel;
   final bool filled;
   final Color? iconColor;
-  final bool showDot;
   final VoidCallback? onTap;
 
   @override
@@ -112,45 +109,28 @@ class _ServiceTile extends StatelessWidget {
             ),
           ],
         ),
-        child: Stack(
-          children: [
-            if (showDot)
-              Positioned(
-                top: 0,
-                left: 0,
-                child: Container(
-                  width: 6.r,
-                  height: 6.r,
-                  decoration: BoxDecoration(
-                    color: AppColors.errorColor.themeColor,
-                    shape: BoxShape.circle,
-                  ),
-                ),
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              AppSvgIcon(icon, size: 26.sp, color: fg),
+              6.height,
+              AppText(
+                label,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: labelColor,
+                textAlign: TextAlign.center,
               ),
-            Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  AppSvgIcon(icon, size: 26.sp, color: fg),
-                  6.height,
-                  AppText(
-                    label,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: labelColor,
-                    textAlign: TextAlign.center,
-                  ),
-                  2.height,
-                  AppText(
-                    subLabel,
-                    fontSize: 9.5,
-                    color: subColor,
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+              2.height,
+              AppText(
+                subLabel,
+                fontSize: 9.5,
+                color: subColor,
+                textAlign: TextAlign.center,
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

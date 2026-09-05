@@ -37,6 +37,8 @@ class AppointmentsCubit extends Cubit<AppointmentsState> {
     required DateTime date,
     int? clinicId,
     int? familyMemberId,
+    int? offerId,
+    String? promoCode,
   }) async {
     try {
       return await _repo.createAppointment(
@@ -48,6 +50,8 @@ class AppointmentsCubit extends Cubit<AppointmentsState> {
         date: date,
         clinicId: clinicId,
         familyMemberId: familyMemberId,
+        offerId: offerId,
+        promoCode: promoCode,
       );
     } catch (e) {
       final msg = e is NetworkException ? e.message : e.toString();

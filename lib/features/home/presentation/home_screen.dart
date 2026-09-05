@@ -117,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
               HomeServicesGrid(
                 onBookTap: () => Navigator.pushNamed(context, Routes.book),
                 onTelemedTap: () => Navigator.pushNamed(context, Routes.telemed),
-                onEmergencyTap: () => Navigator.pushNamed(context, Routes.emergency),
+                onOffersTap: () => Navigator.pushNamed(context, Routes.offers),
               ),
               24.height,
               SectionHeader(

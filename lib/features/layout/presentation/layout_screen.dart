@@ -10,6 +10,8 @@ import '../../../core/utils/app_svg_icons.dart';
 import '../../../core/utils/locale_keys.dart';
 import '../../account/presentation/account_screen.dart';
 import '../../booking/logic/appointments_cubit.dart';
+import '../../chat/data/chat_repo.dart';
+import '../../chat/data/models/chat_message_model.dart';
 import '../../family/presentation/family_screen.dart';
 import '../../home/presentation/home_screen.dart';
 import '../../medical_file/presentation/medical_file_screen.dart';
@@ -26,7 +28,7 @@ class LayoutScreen extends StatefulWidget {
   State<LayoutScreen> createState() => _LayoutScreenState();
 }
 
-class _LayoutScreenState extends State<LayoutScreen> {
+class _LayoutScreenState extends State<LayoutScreen> with WidgetsBindingObserver {
   late int _currentIndex;
 
   static final _screens = [
@@ -47,8 +49,30 @@ class _LayoutScreenState extends State<LayoutScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _currentIndex = widget.currentPage;
     _onLogin();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    _setPresence(online: state == AppLifecycleState.resumed);
+  }
+
+  void _setPresence({required bool online}) {
+    if (kIsGuest) return;
+    final repo = getIt<ChatRepo>();
+    if (online) {
+      repo.setOnline(role: ChatSenderRole.user, id: kUserModel!.id);
+    } else {
+      repo.setOffline(role: ChatSenderRole.user, id: kUserModel!.id);
+    }
   }
 
   /// Fires the device-housekeeping/data calls that only make sense for a
@@ -78,6 +102,7 @@ class _LayoutScreenState extends State<LayoutScreen> {
     profileCubit.syncAppLang(getIt<LocalStorage>().getLang());
     getIt<UnreadCountCubit>().getUnreadCount();
     getIt<AppointmentsCubit>().getAppointments();
+    _setPresence(online: true);
   }
 
   @override

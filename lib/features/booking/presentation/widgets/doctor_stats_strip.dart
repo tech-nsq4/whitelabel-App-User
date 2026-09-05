@@ -7,16 +7,21 @@ import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_constants.dart';
 import '../../../../core/utils/locale_keys.dart';
 import '../../../../core/widgets/app_text.dart';
+import '../../../../core/widgets/price_text.dart';
+import '../../../offers/data/models/applied_offer.dart';
 import '../../data/models/doctor_profile_model.dart';
 
 class DoctorStatsStrip extends StatelessWidget {
-  const DoctorStatsStrip({super.key, required this.doctor});
+  const DoctorStatsStrip({super.key, required this.doctor, this.offer});
 
   final DoctorProfileModel doctor;
+  final AppliedOffer? offer;
 
   @override
   Widget build(BuildContext context) {
     final avgRate = doctor.avgRate;
+    final offer = this.offer;
+    final feeDiscount = offer != null && offer.hasClientDiscount ? offer : null;
 
     return Container(
       padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 8.w),
@@ -43,7 +48,20 @@ class DoctorStatsStrip extends StatelessWidget {
           _Divider(),
           Expanded(
             child: _Stat(
-              value: '${doctor.price.toStringAsFixed(0)} ${LocaleKeys.common_currency.tr()}',
+              value: feeDiscount != null
+                  ? null
+                  : '${doctor.price.toStringAsFixed(0)} ${LocaleKeys.common_currency.tr()}',
+              valueWidget: feeDiscount == null
+                  ? null
+                  : PriceText(
+                      amount: feeDiscount.finalPriceFor(doctor.price),
+                      strikeAmount: doctor.price,
+                      isHeading: true,
+                      fontSize: 13.5,
+                      strikeFontSize: 10,
+                      color: AppColors.primaryColor.themeColor,
+                      textAlign: TextAlign.center,
+                    ),
               label: LocaleKeys.booking_feeLabel.tr(),
               valueColor: AppColors.primaryColor.themeColor,
             ),
@@ -55,28 +73,30 @@ class DoctorStatsStrip extends StatelessWidget {
 }
 
 class _Stat extends StatelessWidget {
-  const _Stat({required this.value, required this.label, this.valueColor});
+  const _Stat({this.value, required this.label, this.valueColor, this.valueWidget});
 
-  final String value;
+  final String? value;
   final String label;
   final Color? valueColor;
+  final Widget? valueWidget;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(
-          value,
-          textAlign: TextAlign.center,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            fontFamily: AppFonts.headingFont,
-            fontSize: 13.5.sp,
-            fontWeight: FontWeight.w700,
-            color: valueColor ?? AppColors.textPrimaryColor.themeColor,
-          ),
-        ),
+        valueWidget ??
+            Text(
+              value ?? '',
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontFamily: AppFonts.headingFont,
+                fontSize: 13.5.sp,
+                fontWeight: FontWeight.w700,
+                color: valueColor ?? AppColors.textPrimaryColor.themeColor,
+              ),
+            ),
         3.height,
         AppText(
           label,

@@ -11,9 +11,11 @@ import '../../../../core/utils/locale_keys.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text.dart';
 import '../../../../core/widgets/custom_loading_widget.dart';
+import '../../../../core/widgets/price_text.dart';
 import '../../../../core/widgets/screen_state_layout.dart';
 import '../../../family/data/models/family_member_model.dart';
 import '../../../family/logic/family_cubit.dart';
+import '../../../offers/data/models/applied_offer.dart';
 import '../../data/models/doctor_profile_model.dart';
 import '../../data/models/doctor_time_table_model.dart';
 import '../../logic/time_tables_cubit.dart';
@@ -55,6 +57,7 @@ Future<BookingSlotResult?> showBookingSlotsSheet(
   String? ctaLabel,
   bool showFamilyMemberSelector = true,
   int? clinicId,
+  AppliedOffer? offer,
 }) {
   return showModalBottomSheet<BookingSlotResult>(
     context: context,
@@ -65,6 +68,7 @@ Future<BookingSlotResult?> showBookingSlotsSheet(
       ctaLabel: ctaLabel,
       showFamilyMemberSelector: showFamilyMemberSelector,
       clinicId: clinicId,
+      offer: offer,
     ),
   );
 }
@@ -82,12 +86,14 @@ class BookingSlotsSheet extends StatefulWidget {
     this.ctaLabel,
     this.showFamilyMemberSelector = true,
     this.clinicId,
+    this.offer,
   });
 
   final DoctorProfileModel doctor;
   final String? ctaLabel;
   final bool showFamilyMemberSelector;
   final int? clinicId;
+  final AppliedOffer? offer;
 
   @override
   State<BookingSlotsSheet> createState() => _BookingSlotsSheetState();
@@ -108,6 +114,9 @@ class _BookingSlotsSheetState extends State<BookingSlotsSheet> {
     final now = DateTime.now();
     return DateTime(now.year, now.month, now.day);
   }
+
+  double get _finalPrice =>
+      widget.offer?.finalPriceFor(widget.doctor.price) ?? widget.doctor.price;
 
   @override
   void initState() {
@@ -355,7 +364,9 @@ class _BookingSlotsSheetState extends State<BookingSlotsSheet> {
                                       ? '—'
                                       : '${formatBookingDayLabel(selectedDate, locale)} · ${_selectedSlot!.displayLabel}',
                                   clinicName: widget.doctor.clinicById(_selectedClinicId)?.name,
-                                  priceLabel: '${widget.doctor.price.toStringAsFixed(0)} ${LocaleKeys.common_currency.tr()}',
+                                  priceLabel: formatPriceLabel(_finalPrice),
+                                  strikePriceLabel:
+                                      _finalPrice < widget.doctor.price ? formatPriceLabel(widget.doctor.price) : null,
                                 ),
                               ],
                             ],

@@ -50,7 +50,7 @@ dependencies:
 
   # Media
   image_picker: ^1.1.2
-
+  cloud_firestore: ^6.9.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

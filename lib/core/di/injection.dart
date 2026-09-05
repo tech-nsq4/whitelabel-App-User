@@ -11,6 +11,8 @@ import '../../features/booking/logic/doctors_cubit.dart';
 import '../../features/booking/logic/my_bookings_cubit.dart';
 import '../../features/booking/logic/specializations_cubit.dart';
 import '../../features/booking/logic/time_tables_cubit.dart';
+import '../../features/chat/data/chat_repo.dart';
+import '../../features/chat/logic/chat_cubit.dart';
 import '../../features/family/data/family_repo.dart';
 import '../../features/family/logic/family_cubit.dart';
 import '../../features/lab/data/lab_repo.dart';
@@ -20,6 +22,8 @@ import '../../features/medications/logic/medications_cubit.dart';
 import '../../features/notifications/data/notifications_repo.dart';
 import '../../features/notifications/logic/notifications_cubit.dart';
 import '../../features/notifications/logic/unread_count_cubit.dart';
+import '../../features/offers/data/offers_repo.dart';
+import '../../features/offers/logic/offers_cubit.dart';
 import '../../features/payments/data/payments_repo.dart';
 import '../../features/payments/logic/payments_cubit.dart';
 import '../../features/profile/logic/profile_cubit.dart';
@@ -43,6 +47,8 @@ Future<void> setupDi() async {
   getIt.registerLazySingleton(() => LabRepo(dio: getIt()));
   getIt.registerLazySingleton(() => MedicationsRepo(dio: getIt()));
   getIt.registerLazySingleton(() => PaymentsRepo(dio: getIt()));
+  getIt.registerLazySingleton(() => OffersRepo(dio: getIt()));
+  getIt.registerLazySingleton(() => ChatRepo(dio: getIt()));
 
   // ─── Cubits ───────────────────────────────────────────────────────────────
   getIt.registerFactory(() => AuthCubit(getIt()));
@@ -59,6 +65,8 @@ Future<void> setupDi() async {
   getIt.registerFactory(() => TestHistoryCubit(getIt()));
   getIt.registerFactory(() => MedicationsCubit(getIt()));
   getIt.registerFactory(() => PaymentsCubit(getIt()));
+  getIt.registerFactory(() => OffersCubit(getIt()));
+  getIt.registerFactory(() => ChatCubit(getIt()));
 
   // `AppointmentsCubit` is a singleton (not the usual per-screen factory):
   // `DoctorScreen` refreshes it right after booking and `HomeScreen`'s

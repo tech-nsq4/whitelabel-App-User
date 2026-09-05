@@ -210,8 +210,8 @@
     "book_appointment_subtitle": "Clinic or video",
     "consultation": "Consultation",
     "consultation_subtitle": "Remote",
-    "emergency": "Emergency",
-    "emergency_subtitle": "24/7",
+    "offers": "Offers",
+    "offers_subtitle": "Exclusive discounts",
     "medical_record": "Medical Record",
     "bookings": "My Bookings",
     "bookings_subtitle": "Book and track your appointments",
@@ -269,6 +269,34 @@
       }
     }
   },
+  "chat": {
+    "online": "Online now",
+    "last_seen_today": "Last seen today {time}",
+    "last_seen_date": "Last seen {date} {time}",
+    "offline": "Offline",
+    "input_hint": "Type a message...",
+    "attach_camera": "Camera",
+    "attach_gallery": "Gallery",
+    "attach_location": "Location",
+    "location_message_label": "Shared location",
+    "empty_title": "Start the conversation",
+    "empty_description": "Send a message to reach the doctor directly"
+  },
+  "offers": {
+    "title": "Offers & discounts",
+    "subtitle": "Exclusive offers and discounts on your bookings",
+    "ends_on": "Ends {date}",
+    "permanent": "Ongoing offer",
+    "book_now": "Book now",
+    "book_with_discount": "Book with discount",
+    "empty_title": "No offers right now",
+    "empty_description": "Check back soon for the latest offers and discounts",
+    "targets_pick_doctor": "Choose a doctor to use this offer",
+    "targets_pick_clinic": "Choose a clinic to use this offer",
+    "targets_pick_specialization": "Choose a specialty to use this offer",
+    "targets_empty_title": "Nothing available for this offer",
+    "targets_empty_description": "There are no bookable options for this offer right now"
+  },
   "payments": {
     "title": "Payments",
     "total_paid_label": "TOTAL PAID",
@@ -279,7 +307,14 @@
     "paid": "Paid",
     "pay_now": "Pay now",
     "empty_title": "No invoices yet",
-    "empty_description": "Invoices for your appointments will show up here"
+    "empty_description": "Invoices for your appointments will show up here",
+    "checkout_title": "Payment",
+    "total_label": "Total",
+    "pay_now_action": "Pay now",
+    "promo_code_label": "Promo code",
+    "promo_code_hint": "Enter a promo code (optional)",
+    "method_mada": "mada",
+    "method_wallet": "My Wallet"
   },
   "more": {
     "title": "More",

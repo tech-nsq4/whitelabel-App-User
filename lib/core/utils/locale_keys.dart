@@ -220,8 +220,8 @@ abstract class LocaleKeys {
   static const String home_consultation = 'home.consultation';
   static const String home_consultationSubtitle =
       'home.consultation_subtitle';
-  static const String home_emergency = 'home.emergency';
-  static const String home_emergencySubtitle = 'home.emergency_subtitle';
+  static const String home_offers = 'home.offers';
+  static const String home_offersSubtitle = 'home.offers_subtitle';
   static const String home_medicalRecord = 'home.medical_record';
   static const String home_bookings = 'home.bookings';
   static const String home_bookingsSubtitle = 'home.bookings_subtitle';
@@ -269,6 +269,34 @@ abstract class LocaleKeys {
   static const String notifications_bookingCompletedManagerBody =
       'notifications.booking.completed.manager.body';
 
+  // ─── Chat ─────────────────────────────────────────────────────────────────
+  static const String chat_online = 'chat.online';
+  static const String chat_lastSeenToday = 'chat.last_seen_today';
+  static const String chat_lastSeenDate = 'chat.last_seen_date';
+  static const String chat_offline = 'chat.offline';
+  static const String chat_inputHint = 'chat.input_hint';
+  static const String chat_attachCamera = 'chat.attach_camera';
+  static const String chat_attachGallery = 'chat.attach_gallery';
+  static const String chat_attachLocation = 'chat.attach_location';
+  static const String chat_locationMessageLabel = 'chat.location_message_label';
+  static const String chat_emptyTitle = 'chat.empty_title';
+  static const String chat_emptyDescription = 'chat.empty_description';
+
+  // ─── Offers ───────────────────────────────────────────────────────────────
+  static const String offers_title = 'offers.title';
+  static const String offers_subtitle = 'offers.subtitle';
+  static const String offers_endsOn = 'offers.ends_on';
+  static const String offers_permanent = 'offers.permanent';
+  static const String offers_bookNow = 'offers.book_now';
+  static const String offers_bookWithDiscount = 'offers.book_with_discount';
+  static const String offers_emptyTitle = 'offers.empty_title';
+  static const String offers_emptyDescription = 'offers.empty_description';
+  static const String offers_targetsPickDoctor = 'offers.targets_pick_doctor';
+  static const String offers_targetsPickClinic = 'offers.targets_pick_clinic';
+  static const String offers_targetsPickSpecialization = 'offers.targets_pick_specialization';
+  static const String offers_targetsEmptyTitle = 'offers.targets_empty_title';
+  static const String offers_targetsEmptyDescription = 'offers.targets_empty_description';
+
   // ─── Payments ─────────────────────────────────────────────────────────────
   static const String payments_title = 'payments.title';
   static const String payments_totalPaidLabel = 'payments.total_paid_label';
@@ -280,6 +308,13 @@ abstract class LocaleKeys {
   static const String payments_payNow = 'payments.pay_now';
   static const String payments_emptyTitle = 'payments.empty_title';
   static const String payments_emptyDescription = 'payments.empty_description';
+  static const String payments_checkoutTitle = 'payments.checkout_title';
+  static const String payments_totalLabel = 'payments.total_label';
+  static const String payments_payNowAction = 'payments.pay_now_action';
+  static const String payments_promoCodeLabel = 'payments.promo_code_label';
+  static const String payments_promoCodeHint = 'payments.promo_code_hint';
+  static const String payments_methodMada = 'payments.method_mada';
+  static const String payments_methodWallet = 'payments.method_wallet';
 
   // ─── More ─────────────────────────────────────────────────────────────────
   static const String more_title = 'more.title';

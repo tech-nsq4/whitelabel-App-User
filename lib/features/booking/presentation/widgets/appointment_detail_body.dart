@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../app/router/routes.dart';
 import '../../../../core/extensions/extensions.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/locale_keys.dart';
@@ -40,7 +41,15 @@ class AppointmentDetailBody extends StatelessWidget {
           child: AppointmentStatusBadge(status: appointment.status),
         ),
         14.height,
-        if (doctor != null) DoctorProfileHeader(doctor: doctor),
+        if (doctor != null)
+          DoctorProfileHeader(
+            doctor: doctor,
+            onChatTap: () => Navigator.pushNamed(context, Routes.chat, arguments: {
+              'doctorId': doctor.id,
+              'doctorName': doctor.name,
+              'doctorImage': doctor.image,
+            }),
+          ),
         BookingSummaryCard(
           orderId: appointment.id,
           doctorName: doctor?.name ?? '',

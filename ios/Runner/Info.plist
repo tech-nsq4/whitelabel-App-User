@@ -30,6 +30,8 @@
 	<string>نحتاج موقعك عشان نعرض لك أقرب الأطباء ليك.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>نحتاج الوصول لصورك عشان ترفق الملفات الطبية لفرد العائلة.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>نحتاج الوصول للكاميرا عشان ترسل صورة في المحادثة مع الطبيب.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

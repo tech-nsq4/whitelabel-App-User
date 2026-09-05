@@ -127,6 +127,8 @@ class BookingRepo {
     required DateTime date,
     int? clinicId,
     int? familyMemberId,
+    int? offerId,
+    String? promoCode,
   }) async {
     try {
       final response = await _dio.post(ApiEndpoints.appointments, data: {
@@ -138,6 +140,8 @@ class BookingRepo {
         'date': _formatApiDate(date),
         if (clinicId != null) 'clinic_id': clinicId,
         'family_member_id': familyMemberId,
+        if (offerId != null) 'offer_id': offerId,
+        if (promoCode != null && promoCode.isNotEmpty) 'promo_code': promoCode,
       });
       return AppointmentModel.fromJson(response.data['data'] as Map<String, dynamic>);
     } on DioException catch (e) {

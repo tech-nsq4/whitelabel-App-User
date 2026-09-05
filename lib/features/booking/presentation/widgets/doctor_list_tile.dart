@@ -9,16 +9,19 @@ import '../../../../core/utils/locale_keys.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/app_text.dart';
 import '../../../../core/widgets/image/custom_image.dart';
+import '../../../../core/widgets/price_text.dart';
+import '../../../offers/data/models/applied_offer.dart';
 import '../../data/models/doctor_profile_model.dart';
 import 'booking_slots_sheet.dart' show formatNearestAvailableDayLabel;
 
 /// One doctor row on the final ("pick a doctor") step of [SpecsScreen] —
 /// backed by the real `GET /doctors` record.
 class DoctorListTile extends StatelessWidget {
-  const DoctorListTile({super.key, required this.doctor, required this.onTap});
+  const DoctorListTile({super.key, required this.doctor, required this.onTap, this.offer});
 
   final DoctorProfileModel doctor;
   final VoidCallback onTap;
+  final AppliedOffer? offer;
 
   @override
   Widget build(BuildContext context) {
@@ -98,9 +101,13 @@ class DoctorListTile extends StatelessWidget {
                 1.height,
                 Row(
                   children: [
-                    Text('${doctor.price.toStringAsFixed(0)} ${LocaleKeys.common_currency.tr()}',
-                        style: TextStyle(
-                            fontSize: 12.sp, fontWeight: FontWeight.w700, color: primary)),
+                    PriceText(
+                      amount: offer?.finalPriceFor(doctor.price) ?? doctor.price,
+                      strikeAmount: doctor.price,
+                      fontSize: 12,
+                      strikeFontSize: 10,
+                      color: primary,
+                    ),
                     if (clinicName != null && clinicName.isNotEmpty) ...[
                       6.width,
                       Expanded(

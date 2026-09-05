@@ -15,6 +15,7 @@ class CustomTextField extends StatefulWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.maxLines = 1,
+    this.minLines,
     this.onChanged,
     this.enabled = true,
     this.readOnly = false,
@@ -44,6 +45,7 @@ class CustomTextField extends StatefulWidget {
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final int maxLines;
+  final int? minLines;
   final ValueChanged<String>? onChanged;
   final bool enabled;
   final bool readOnly;
@@ -94,6 +96,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       keyboardType: widget.keyboardType,
       obscureText: widget.isPassword && _obscure,
       maxLines: widget.isPassword ? 1 : widget.maxLines,
+      minLines: widget.isPassword ? null : widget.minLines,
       onChanged: widget.onChanged,
       enabled: widget.enabled,
       readOnly: widget.readOnly,

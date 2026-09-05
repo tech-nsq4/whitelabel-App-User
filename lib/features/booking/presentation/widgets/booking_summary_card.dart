@@ -14,6 +14,7 @@ class BookingSummaryCard extends StatelessWidget {
     required this.whenLabel,
     required this.clinicName,
     required this.priceLabel,
+    this.strikePriceLabel,
     this.patientName,
     this.orderId,
   });
@@ -22,6 +23,7 @@ class BookingSummaryCard extends StatelessWidget {
   final String whenLabel;
   final String? clinicName;
   final String priceLabel;
+  final String? strikePriceLabel;
 
   /// The family member this appointment is for — omitted (row hidden)
   /// when booking for the account holder.
@@ -48,7 +50,7 @@ class BookingSummaryCard extends StatelessWidget {
             _row(LocaleKeys.booking_patientLabel.tr(), patientName!),
           _row(LocaleKeys.booking_appointmentLabel.tr(), whenLabel),
           if (clinicName != null && clinicName!.isNotEmpty) _row(LocaleKeys.booking_branchLabel.tr(), clinicName!),
-          _row(LocaleKeys.booking_priceLabel.tr(), priceLabel),
+          _priceRow(),
         ],
       ),
     );
@@ -64,6 +66,45 @@ class BookingSummaryCard extends StatelessWidget {
           Text(v,
               style: TextStyle(
                   fontSize: 12.sp, fontWeight: FontWeight.w600, color: AppColors.textPrimaryColor.themeColor)),
+        ],
+      ),
+    );
+  }
+
+  Widget _priceRow() {
+    final strike = strikePriceLabel;
+    if (strike == null) return _row(LocaleKeys.booking_priceLabel.tr(), priceLabel);
+
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 3.h),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(LocaleKeys.booking_priceLabel.tr(),
+              style: TextStyle(fontSize: 11.sp, color: AppColors.mutedColor.themeColor)),
+          Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: '$strike  ',
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.mutedColor.themeColor,
+                    decoration: TextDecoration.lineThrough,
+                  ),
+                ),
+                TextSpan(
+                  text: priceLabel,
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.primaryColor.themeColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

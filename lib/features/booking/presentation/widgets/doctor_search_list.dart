@@ -11,6 +11,7 @@ import '../../../../core/utils/app_overlay.dart';
 import '../../../../core/utils/locale_keys.dart';
 import '../../../../core/utils/location_helper.dart';
 import '../../../../core/widgets/screen_state_layout.dart';
+import '../../../offers/data/models/applied_offer.dart';
 import '../../data/models/doctor_profile_model.dart';
 import '../../logic/doctors_cubit.dart';
 import 'doctor_filter_chips.dart';
@@ -24,10 +25,11 @@ import 'specialty_options_list.dart';
 /// or a specific clinic's doctors via [clinicId]). Expects a [DoctorsCubit]
 /// already provided above it.
 class DoctorSearchList extends StatefulWidget {
-  const DoctorSearchList({super.key, this.specializationId, this.clinicId});
+  const DoctorSearchList({super.key, this.specializationId, this.clinicId, this.offer});
 
   final int? specializationId;
   final int? clinicId;
+  final AppliedOffer? offer;
 
   @override
   State<DoctorSearchList> createState() => _DoctorSearchListState();
@@ -134,7 +136,11 @@ class _DoctorSearchListState extends State<DoctorSearchList> {
                     final doc = doctors[i];
                     return DoctorListTile(
                       doctor: doc,
-                      onTap: () => Navigator.pushNamed(context, Routes.doctor, arguments: {'id': doc.id}),
+                      offer: widget.offer,
+                      onTap: () => Navigator.pushNamed(context, Routes.doctor, arguments: {
+                        'id': doc.id,
+                        if (widget.offer != null) 'appliedOffer': widget.offer,
+                      }),
                     );
                   },
                 ),
