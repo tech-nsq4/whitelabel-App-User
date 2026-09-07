@@ -14,6 +14,7 @@ class DoctorsCubit extends Cubit<DoctorsState> {
 
   Future<void> getDoctors({
     int? specializationId,
+    int? subSpecializationId,
     int? clinicId,
     String? name,
     String? sort,
@@ -24,6 +25,7 @@ class DoctorsCubit extends Cubit<DoctorsState> {
     try {
       final doctors = await _repo.getDoctors(
         specializationId: specializationId,
+        subSpecializationId: subSpecializationId,
         clinicId: clinicId,
         name: name,
         sort: sort,

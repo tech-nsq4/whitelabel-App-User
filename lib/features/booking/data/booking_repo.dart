@@ -33,12 +33,14 @@ class BookingRepo {
     }
   }
 
-  /// Doctors, optionally filtered by [specializationId]/[clinicId]/[name] and
-  /// ordered by [sort] (`highest_rated` | `closest_available` | `lowest_price`
-  /// — `closest_available` ranks by distance when [lat]/[lng] are sent,
-  /// otherwise by soonest open slot).
+  /// Doctors, optionally filtered by [specializationId] (a top-level
+  /// specialization), [subSpecializationId] (one of its sub-specialties),
+  /// [clinicId]/[name] and ordered by [sort] (`highest_rated` |
+  /// `closest_available` | `lowest_price` — `closest_available` ranks by
+  /// distance when [lat]/[lng] are sent, otherwise by soonest open slot).
   Future<List<DoctorProfileModel>> getDoctors({
     int? specializationId,
+    int? subSpecializationId,
     int? clinicId,
     String? name,
     String? sort,
@@ -50,6 +52,7 @@ class BookingRepo {
         ApiEndpoints.doctors,
         queryParameters: {
           if (specializationId != null) 'specialization_id': specializationId,
+          if (subSpecializationId != null) 'sub_specialization_id': subSpecializationId,
           if (clinicId != null) 'clinic_id': clinicId,
           if (name != null && name.isNotEmpty) 'name': name,
           if (sort != null && sort.isNotEmpty) 'sort': sort,

@@ -86,7 +86,7 @@ class DoctorClinicModel extends Equatable {
 }
 
 /// A doctor's soonest open slot — `GET /doctors`' `nearest_available`, shown
-/// as a quick "when can I actually see them" hint on [DoctorListTile]
+/// as a quick "when can I actually see them" hint on [DoctorCard]
 /// without needing to open their full schedule first.
 class DoctorNearestAvailableModel extends Equatable {
   final DateTime? date;

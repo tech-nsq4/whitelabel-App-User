@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:317023976449:android:ac7200b9767f4c0d219400",
+        "mobilesdk_app_id": "1:317023976449:android:61c95ecac86b554b219400",
         "android_client_info": {
-          "package_name": "com.example.app_base"
+          "package_name": "com.hazem.white_label_provider"
         }
       },
       "oauth_client": [],
@@ -26,9 +26,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:317023976449:android:61c95ecac86b554b219400",
+        "mobilesdk_app_id": "1:317023976449:android:4511b613f846ca89219400",
         "android_client_info": {
-          "package_name": "com.hazem.white_label_provider"
+          "package_name": "com.whiteLable.user"
         }
       },
       "oauth_client": [],

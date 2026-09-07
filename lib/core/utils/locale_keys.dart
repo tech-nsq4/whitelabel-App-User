@@ -29,6 +29,15 @@ abstract class LocaleKeys {
   static const String auth_otpChangeNumber = 'auth.otp_change_number';
 
   // ─── Booking ──────────────────────────────────────────────────────────────
+  static const String booking_bookTitle = 'booking.book_title';
+  static const String booking_symptomPrompt = 'booking.symptom_prompt';
+  static const String booking_symptomPromptSub = 'booking.symptom_prompt_sub';
+  static const String booking_filterAll = 'booking.filter_all';
+  static const String booking_allDoctors = 'booking.all_doctors';
+  static const String booking_sortTitle = 'booking.sort_title';
+  static const String booking_sortDefault = 'booking.sort_default';
+  static const String booking_bookAction = 'booking.book_action';
+  static const String booking_profileAction = 'booking.profile_action';
   static const String booking_chooseSpecialty = 'booking.choose_specialty';
   static const String booking_subSpecialtiesCount =
       'booking.sub_specialties_count';
@@ -40,7 +49,14 @@ abstract class LocaleKeys {
   static const String booking_feeLabel = 'booking.fee_label';
   static const String booking_nearestAvailable = 'booking.nearest_available';
   static const String booking_nearestAvailableLabel = 'booking.nearest_available_label';
+  static const String booking_nextSlot = 'booking.next_slot';
   static const String booking_doctorProfileTitle = 'booking.doctor_profile_title';
+  static const String booking_overallRatingFrom = 'booking.overall_rating_from';
+  static const String booking_offerOnDoctor = 'booking.offer_on_doctor';
+  static const String booking_reviewsTab = 'booking.reviews_tab';
+  static const String booking_reviewsTitle = 'booking.reviews_title';
+  static const String booking_viewAllReviews = 'booking.view_all_reviews';
+  static const String booking_noClinics = 'booking.no_clinics';
   static const String booking_availableAppointments = 'booking.available_appointments';
   static const String booking_about = 'booking.about';
   static const String booking_clinicInfo = 'booking.clinic_info';

@@ -10,6 +10,8 @@ import '../../../../core/widgets/app_text.dart';
 import '../../../../core/widgets/section_header.dart';
 import '../../data/models/doctor_profile_model.dart';
 
+/// The doctor's specialties + sub-specialties, each with its description —
+/// shown between the "about" card and the tabs on [DoctorScreen].
 class DoctorSpecializationsSection extends StatelessWidget {
   const DoctorSpecializationsSection({super.key, required this.doctor});
 

@@ -185,4 +185,49 @@ $paths
   static final String home2 = _icon(
     '<path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V20h14V9.5"/><path d="M12 11v5M9.5 13.5h5"/>',
   );
+
+  // ─── Specialty glyphs (copied 1:1 from the reference design) ───────────────
+
+  static final String skin = _icon(
+    '<circle cx="12" cy="12" r="9"/><path d="M8 12s1.5-2 4-2 4 2 4 2"/>',
+  );
+
+  static final String tooth = _icon(
+    '<path d="M12 5.5c-2 0-3.5 1-4 2.5-.5 2 .5 4 1 6s0 4-1 5c2 0 3-1 4-3 1 2 2 3 4 3-1-1-1.5-3-1-5s1.5-4 1-6c-.5-1.5-2-2.5-4-2.5z"/>',
+  );
+
+  static final String child = _icon(
+    '<circle cx="12" cy="8" r="4"/><path d="M5 20c0-4 3.1-7 7-7s7 3 7 7"/>',
+  );
+
+  static final String womanCare = _icon(
+    '<path d="M12 3c-3 3-5 6-5 9a5 5 0 0010 0c0-3-2-6-5-9z"/>',
+  );
+
+  static final String bone = _icon(
+    '<path d="M8 4v6m0 4v6M16 4v6m0 4v6M8 10h8M8 14h8"/>',
+  );
+
+  static final String eye = _icon(
+    '<circle cx="12" cy="12" r="3"/><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/>',
+  );
+
+  static final String ent = _icon(
+    '<path d="M12 3a5 5 0 015 5v3a5 5 0 01-10 0V8a5 5 0 015-5z"/><path d="M19 10v1a7 7 0 01-14 0v-1M12 17v4"/>',
+  );
+
+  static final String sortArrows = _icon(
+    '<path d="M6 4v16M2 8l4-4 4 4M18 4v16M14 16l4 4 4-4"/>',
+    strokeWidth: 1.8,
+  );
+
+  static final String filter = _icon(
+    '<path d="M4 4h16l-6 8v6l-4 2v-8L4 4z"/>',
+    strokeWidth: 1.8,
+  );
+
+  static final String brain = _icon(
+    '<path d="M9 4a3 3 0 00-3 3 3 3 0 00-1 5.8V15a3 3 0 003 3h1V4z"/>'
+    '<path d="M15 4a3 3 0 013 3 3 3 0 011 5.8V15a3 3 0 01-3 3h-1V4z"/>',
+  );
 }

@@ -10,9 +10,10 @@ import '../../../../core/widgets/app_svg_icon.dart';
 import '../../../../core/widgets/app_text.dart';
 import '../../../../core/widgets/custom_tap_effect.dart';
 
-/// Quick-access services grid: book appointment (highlighted), telemed
-/// consultation, and offers.
-class HomeServicesGrid extends StatelessWidget {
+/// Quick-access services grid: book appointment, telemed consultation, and
+/// offers. Tapping a tile marks it as the active service (filled style,
+/// matching the design) and fires its action.
+class HomeServicesGrid extends StatefulWidget {
   const HomeServicesGrid({
     super.key,
     this.onBookTap,
@@ -25,38 +26,54 @@ class HomeServicesGrid extends StatelessWidget {
   final VoidCallback? onOffersTap;
 
   @override
+  State<HomeServicesGrid> createState() => _HomeServicesGridState();
+}
+
+class _HomeServicesGridState extends State<HomeServicesGrid> {
+  int _selected = 0;
+
+  void _onTap(int index, VoidCallback? action) {
+    if (_selected != index) setState(() => _selected = index);
+    action?.call();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final tiles = [
+      (
+        AppSvgIcons.calendar,
+        LocaleKeys.home_bookAppointment.tr(),
+        LocaleKeys.home_bookAppointmentSubtitle.tr(),
+        widget.onBookTap,
+      ),
+      (
+        AppSvgIcons.videoCam,
+        LocaleKeys.home_consultation.tr(),
+        LocaleKeys.home_consultationSubtitle.tr(),
+        widget.onTelemedTap,
+      ),
+      (
+        AppSvgIcons.giftBox,
+        LocaleKeys.home_offers.tr(),
+        LocaleKeys.home_offersSubtitle.tr(),
+        widget.onOffersTap,
+      ),
+    ];
+
     return Row(
       children: [
-        Expanded(
-          child: _ServiceTile(
-            icon: AppSvgIcons.calendar,
-            label: LocaleKeys.home_bookAppointment.tr(),
-            subLabel: LocaleKeys.home_bookAppointmentSubtitle.tr(),
-            filled: true,
-            onTap: onBookTap,
+        for (var i = 0; i < tiles.length; i++) ...[
+          if (i > 0) 10.width,
+          Expanded(
+            child: _ServiceTile(
+              icon: tiles[i].$1,
+              label: tiles[i].$2,
+              subLabel: tiles[i].$3,
+              selected: _selected == i,
+              onTap: () => _onTap(i, tiles[i].$4),
+            ),
           ),
-        ),
-        10.width,
-        Expanded(
-          child: _ServiceTile(
-            icon: AppSvgIcons.videoCam,
-            label: LocaleKeys.home_consultation.tr(),
-            subLabel: LocaleKeys.home_consultationSubtitle.tr(),
-            iconColor: AppColors.primaryColor.themeColor,
-            onTap: onTelemedTap,
-          ),
-        ),
-        10.width,
-        Expanded(
-          child: _ServiceTile(
-            icon: AppSvgIcons.giftBox,
-            label: LocaleKeys.home_offers.tr(),
-            subLabel: LocaleKeys.home_offersSubtitle.tr(),
-            iconColor: AppColors.accentGold.themeColor,
-            onTap: onOffersTap,
-          ),
-        ),
+        ],
       ],
     );
   }
@@ -67,37 +84,34 @@ class _ServiceTile extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.subLabel,
-    this.filled = false,
-    this.iconColor,
-    this.onTap,
+    required this.selected,
+    required this.onTap,
   });
 
   final String icon;
   final String label;
   final String subLabel;
-  final bool filled;
-  final Color? iconColor;
-  final VoidCallback? onTap;
+  final bool selected;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final primary = AppColors.primaryColor.themeColor;
-    final fg = filled ? Colors.white : (iconColor ?? primary);
+    final iconColor = selected ? Colors.white : primary;
     final labelColor =
-        filled ? Colors.white : AppColors.textPrimaryColor.themeColor;
-    final subColor = filled
+        selected ? Colors.white : AppColors.textPrimaryColor.themeColor;
+    final subColor = selected
         ? Colors.white.withValues(alpha: 0.7)
         : AppColors.mutedColor.themeColor;
 
     return CustomTapEffect(
-      onTap: onTap ?? () {},
-      isClickable: onTap != null,
+      onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 8.w),
+        padding: EdgeInsets.all(16.r),
         decoration: BoxDecoration(
-          color: filled ? primary : AppColors.cardColor.themeColor,
+          color: selected ? primary : AppColors.cardColor.themeColor,
           borderRadius: BorderRadius.circular(18.r),
-          border: filled
+          border: selected
               ? null
               : Border.all(color: AppColors.dividerColor.themeColor),
           boxShadow: [
@@ -109,28 +123,41 @@ class _ServiceTile extends StatelessWidget {
             ),
           ],
         ),
-        child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              AppSvgIcon(icon, size: 26.sp, color: fg),
-              6.height,
-              AppText(
-                label,
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-                color: labelColor,
-                textAlign: TextAlign.center,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              width: 44.r,
+              height: 44.r,
+              decoration: BoxDecoration(
+                color: selected
+                    ? Colors.white.withValues(alpha: 0.2)
+                    : AppColors.surfaceColor.themeColor,
+                borderRadius: BorderRadius.circular(12.r),
               ),
-              2.height,
-              AppText(
-                subLabel,
-                fontSize: 9.5,
-                color: subColor,
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
+              alignment: Alignment.center,
+              child: AppSvgIcon(icon, size: 20.sp, color: iconColor),
+            ),
+            8.height,
+            AppText(
+              label,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: labelColor,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            2.height,
+            AppText(
+              subLabel,
+              fontSize: 9.5,
+              color: subColor,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
         ),
       ),
     );

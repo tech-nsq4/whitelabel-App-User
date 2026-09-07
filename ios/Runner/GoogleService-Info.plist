@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.appBase</string>
+	<string>com.whiteLable.user</string>
 	<key>PROJECT_ID</key>
 	<string>white-label-app-605ad</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:317023976449:ios:175ce79cdf5e610d219400</string>
+	<string>1:317023976449:ios:e6f52578ab0f064f219400</string>
 </dict>
 </plist>

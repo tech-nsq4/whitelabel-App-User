@@ -13,6 +13,7 @@ import '../../features/auth/presentation/otp_screen.dart';
 import '../../features/auth/presentation/register_screen.dart';
 import '../../features/profile/presentation/complete_profile_screen.dart';
 import '../../features/booking/presentation/appointment_detail_screen.dart';
+import '../../features/booking/presentation/book_options_screen.dart';
 import '../../features/booking/presentation/book_screen.dart';
 import '../../features/booking/presentation/branches_screen.dart';
 import '../../features/booking/presentation/doctor_screen.dart';
@@ -22,6 +23,7 @@ import '../../features/booking/presentation/specs_screen.dart';
 import '../../features/booking/presentation/symptom_checker_screen.dart';
 import '../../features/booking/presentation/test_result_detail_screen.dart';
 import '../../features/booking/data/models/appointment_model.dart' show TestRequestModel;
+import '../../features/booking/data/models/specialization_model.dart';
 import '../../features/chat/presentation/chat_screen.dart';
 import '../../features/emergency/presentation/em_ambulance_screen.dart';
 import '../../features/emergency/presentation/em_checkin_screen.dart';
@@ -176,8 +178,14 @@ class RouteGenerator {
       case Routes.book:
         return _pageRoute(const BookScreen());
 
+      case Routes.bookOptions:
+        return _pageRoute(const BookOptionsScreen());
+
       case Routes.specs:
-        return _pageRoute(SpecsScreen(initialSpecialty: arguments?['initialSpecialty'] as String?));
+        return _pageRoute(SpecsScreen(
+          specialization: arguments?['specialization'] as SpecializationModel?,
+          initialSpecialty: arguments?['initialSpecialty'] as String?,
+        ));
 
       case Routes.doctorSearch:
         return _pageRoute(DoctorSearchScreen(

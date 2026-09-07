@@ -27,8 +27,8 @@ class ChatInputBar extends StatefulWidget {
   });
 
   final ValueChanged<String> onSendText;
-  final ValueChanged<File> onSendImage;
-  final void Function(double lat, double lng) onSendLocation;
+  final Future<void> Function(File file) onSendImage;
+  final Future<void> Function(double lat, double lng) onSendLocation;
 
   @override
   State<ChatInputBar> createState() => _ChatInputBarState();
@@ -45,6 +45,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
   }
 
   void _submitText() {
+    if (_busy) return;
     final text = _controller.text.trim();
     if (text.isEmpty) return;
     widget.onSendText(text);
@@ -64,11 +65,11 @@ class _ChatInputBarState extends State<ChatInputBar> {
             source: action == ChatAttachAction.camera ? ImageSource.camera : ImageSource.gallery,
             imageQuality: 80,
           );
-          if (picked != null) widget.onSendImage(File(picked.path));
+          if (picked != null) await widget.onSendImage(File(picked.path));
         case ChatAttachAction.location:
           final position = await LocationHelper.getCurrentPosition();
           if (position != null) {
-            widget.onSendLocation(position.latitude, position.longitude);
+            await widget.onSendLocation(position.latitude, position.longitude);
           } else if (mounted) {
             AppOverlay.showError(LocaleKeys.booking_locationUnavailable.tr());
           }
@@ -104,9 +105,11 @@ class _ChatInputBarState extends State<ChatInputBar> {
                   borderRadius: BorderRadius.circular(13.r),
                 ),
                 child: Center(
-                  child: _busy
-                      ? CustomLoadingWidget(size: 18.h, color: primary)
-                      : AppSvgIcon(AppSvgIcons.attach, size: 18.sp, color: primary),
+                  child: AppSvgIcon(
+                    AppSvgIcons.attach,
+                    size: 18.sp,
+                    color: _busy ? primary.withValues(alpha: 0.4) : primary,
+                  ),
                 ),
               ),
             ),
@@ -125,16 +128,18 @@ class _ChatInputBarState extends State<ChatInputBar> {
             8.width,
             CustomTapEffect(
               onTap: _submitText,
-              isClickable: _controller.text.trim().isNotEmpty,
+              isClickable: !_busy && _controller.text.trim().isNotEmpty,
               child: Container(
                 width: 40.r,
                 height: 40.r,
                 decoration: BoxDecoration(color: primary, borderRadius: BorderRadius.circular(13.r)),
                 child: Center(
-                  child: Transform.flip(
-                    flipX: Directionality.of(context) == ui.TextDirection.rtl,
-                    child: AppSvgIcon(AppSvgIcons.send, size: 18.sp, color: Colors.white),
-                  ),
+                  child: _busy
+                      ? CustomLoadingWidget(size: 18.h, color: Colors.white)
+                      : Transform.flip(
+                          flipX: Directionality.of(context) == ui.TextDirection.rtl,
+                          child: AppSvgIcon(AppSvgIcons.send, size: 18.sp, color: Colors.white),
+                        ),
                 ),
               ),
             ),

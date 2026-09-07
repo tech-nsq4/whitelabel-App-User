@@ -15,6 +15,7 @@ class AppCard extends StatelessWidget {
     this.color,
     this.borderColor,
     this.margin,
+    this.clipContent = false,
   });
 
   final Widget child;
@@ -24,11 +25,16 @@ class AppCard extends StatelessWidget {
   final Color? borderColor;
   final EdgeInsetsGeometry? margin;
 
+  /// Clip the child to the card's rounded corners — for cards whose content
+  /// runs edge to edge (dividers, image headers, full-width footers).
+  final bool clipContent;
+
   @override
   Widget build(BuildContext context) {
     final card = Container(
       margin: margin,
       padding: padding ?? EdgeInsets.all(15.r),
+      clipBehavior: clipContent ? Clip.antiAlias : Clip.none,
       decoration: BoxDecoration(
         color: color ?? AppColors.cardColor.themeColor,
         borderRadius: BorderRadius.circular(18.r),

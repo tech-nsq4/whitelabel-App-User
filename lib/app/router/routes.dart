@@ -44,6 +44,7 @@ class Routes {
   static const String emCheckin = '/emergency/checkin';
 
   static const String book = '/book';
+  static const String bookOptions = '/book-options';
   static const String symptomChecker = '/symptom-checker';
   static const String specs = '/specs';
   static const String doctorSearch = '/doctor-search';

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../app/router/routes.dart';
+import '../../../booking/presentation/widgets/doctor_card.dart';
 import '../../../booking/presentation/widgets/doctor_clinic_card.dart';
-import '../../../booking/presentation/widgets/doctor_list_tile.dart';
 import '../../../booking/presentation/widgets/specialty_option_tile.dart';
 import '../../../booking/presentation/widgets/specialty_options_list.dart';
 import '../../data/models/offer_model.dart';
@@ -25,7 +25,7 @@ class OfferTargetsList extends StatelessWidget {
           itemCount: offer.doctors.length,
           itemBuilder: (context, i) {
             final doctor = offer.doctors[i];
-            return DoctorListTile(
+            return DoctorCard(
               doctor: doctor,
               offer: applied,
               onTap: () => Navigator.pushNamed(context, Routes.doctor, arguments: {

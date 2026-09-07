@@ -1,18 +1,26 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../app/router/routes.dart';
+import '../../../core/di/injection.dart';
 import '../../../core/extensions/extensions.dart';
-import '../../../core/utils/app_colors.dart';
-import '../../../core/utils/app_svg_icons.dart';
 import '../../../core/utils/locale_keys.dart';
-import '../../../core/widgets/app_card.dart';
-import '../../../core/widgets/app_svg_icon.dart';
-import '../../../core/widgets/app_text.dart';
-import '../../../core/widgets/list_row_tile.dart';
 import '../../../core/widgets/screen_header.dart';
+import '../../../core/widgets/screen_state_layout.dart';
+import '../data/models/specialization_model.dart';
+import '../logic/specializations_cubit.dart';
+import 'widgets/search_bar_field.dart';
+import 'widgets/specialty_grid.dart';
+import 'widgets/symptom_prompt_banner.dart';
 
+/// Booking entry point — the specialty grid. `GET /specializations` backs it;
+/// picking a tile hands off to [SpecsScreen] (the doctors list, scoped to
+/// that specialty). The old "how do you want to book" chooser lives on at
+/// [Routes.bookOptions].
 class BookScreen extends StatefulWidget {
   const BookScreen({super.key});
 
@@ -21,135 +29,89 @@ class BookScreen extends StatefulWidget {
 }
 
 class _BookScreenState extends State<BookScreen> {
-  int _tab = 0;
+  late final SpecializationsCubit _cubit = getIt<SpecializationsCubit>();
+  final _searchController = TextEditingController();
+  Timer? _searchDebounce;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetch();
+  }
+
+  @override
+  void dispose() {
+    _searchDebounce?.cancel();
+    _searchController.dispose();
+    _cubit.close();
+    super.dispose();
+  }
+
+  void _fetch() {
+    _cubit.getSpecializations(name: _searchController.text.trim());
+  }
+
+  void _onSearchChanged(String _) {
+    _searchDebounce?.cancel();
+    _searchDebounce = Timer(const Duration(milliseconds: 400), _fetch);
+  }
+
+  void _openSpecialty(SpecializationModel specialization) {
+    Navigator.pushNamed(context, Routes.specs, arguments: {
+      'specialization': specialization,
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: ListView(
-          padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 24.h),
-          children: [
-            const ScreenHeader(title: 'حجز موعد', subtitle: 'اختر الطريقة التي تناسبك'),
-            Container(
-              padding: EdgeInsets.all(4.r),
-              decoration: BoxDecoration(
-                color: AppColors.surfaceColor.themeColor,
-                borderRadius: BorderRadius.circular(14.r),
-              ),
-              child: Row(
-                children: [
-                  Expanded(child: _segment('في العيادة', 0)),
-                  Expanded(child: _segment('بالفيديو', 1)),
-                ],
-              ),
+    return BlocProvider.value(
+      value: _cubit,
+      child: Scaffold(
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 0),
+            child: Column(
+              children: [
+                ScreenHeader(
+                  title: LocaleKeys.booking_bookTitle.tr(),
+                  subtitle: LocaleKeys.booking_chooseSpecialty.tr(),
+                ),
+                SearchBarField(
+                  controller: _searchController,
+                  onChanged: _onSearchChanged,
+                  hint: LocaleKeys.booking_searchSpecialtyHint.tr(),
+                ),
+                12.height,
+                SymptomPromptBanner(
+                  onTap: () => Navigator.pushNamed(context, Routes.symptomChecker),
+                ),
+                14.height,
+                Expanded(
+                  child: BlocBuilder<SpecializationsCubit, SpecializationsState>(
+                    builder: (context, state) {
+                      final specializations = state is SpecializationsSuccess
+                          ? state.specializations
+                          : const <SpecializationModel>[];
+                      return CustomScreenStateLayout(
+                        isLoading:
+                            state is SpecializationsLoading || state is SpecializationsInitial,
+                        error: state is SpecializationsError
+                            ? ErrorModel(code: ErrorEnum.other, errorMessage: state.message)
+                            : null,
+                        onRetry: _fetch,
+                        isEmpty: state is SpecializationsSuccess && specializations.isEmpty,
+                        builder: (context) => SpecialtyGrid(
+                          specializations: specializations,
+                          onSelect: _openSpecialty,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
-            20.height,
-            Text('ابحث عن موعدك',
-                style: TextStyle(
-                    fontSize: 10.sp,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 1.2,
-                    color: AppColors.mutedColor.themeColor)),
-            10.height,
-            AppCard(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              margin: EdgeInsets.only(bottom: 18.h),
-              child: Column(
-                children: [
-                  ListRowTile(
-                    icon: AppSvgIcons.stethoscope,
-                    title: 'حسب التخصص',
-                    subtitle: 'باطنة · جلدية · أسنان · أطفال',
-                    onTap: () => Navigator.pushNamed(context, Routes.specs),
-                  ),
-                  ListRowTile(
-                    icon: AppSvgIcons.account,
-                    title: LocaleKeys.booking_byDoctor.tr(),
-                    subtitle: LocaleKeys.booking_byDoctorSubtitle.tr(),
-                    onTap: () => Navigator.pushNamed(context, Routes.doctorSearch),
-                  ),
-                  ListRowTile(
-                    icon: AppSvgIcons.mapPin,
-                    title: 'حسب الفرع',
-                    showDivider: false,
-                    subtitle: 'العلا · المرجس · الماسين',
-                    onTap: () => Navigator.pushNamed(context, Routes.branches),
-                  ),
-                ],
-              ),
-            ),
-            AppCard(
-              padding: EdgeInsets.all(16.r),
-              color: AppColors.textPrimaryColor.themeColor,
-              borderColor: Colors.transparent,
-              onTap: () => Navigator.pushNamed(context, Routes.symptomChecker),
-              child: Row(
-                children: [
-                  Container(
-                    width: 42.r,
-                    height: 42.r,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(13.r),
-                    ),
-                    child: Center(
-                      child: Icon(Icons.auto_awesome_rounded,
-                          color: AppColors.accentGold.themeColor, size: 20.sp),
-                    ),
-                  ),
-                  13.width,
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        AppText('لست متأكدًا من التخصص؟',
-                            isHeading: true, fontSize: 13.5, color: Colors.white),
-                        3.height,
-                        AppText('صف أعراضك ونرشدك للطبيب المناسب',
-                            fontSize: 11, color: Colors.white.withValues(alpha: 0.6)),
-                      ],
-                    ),
-                  ),
-                  AppSvgIcon(AppSvgIcons.chevronRow,
-                      size: 16.sp, color: Colors.white.withValues(alpha: 0.45)),
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
-    );
-  }
-
-  Widget _segment(String label, int index) {
-    final active = _tab == index;
-    return GestureDetector(
-      onTap: () {
-        setState(() => _tab = index);
-        if (index == 1) Navigator.pushNamed(context, Routes.telemed);
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 10.h),
-        decoration: BoxDecoration(
-          color: active ? AppColors.cardColor.themeColor : Colors.transparent,
-          borderRadius: BorderRadius.circular(11.r),
-          boxShadow: active
-              ? [
-                  BoxShadow(
-                      color: AppColors.textPrimaryColor.themeColor.withValues(alpha: 0.06),
-                      blurRadius: 6)
-                ]
-              : null,
-        ),
-        child: Text(label,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontSize: 12.5.sp,
-                fontWeight: active ? FontWeight.w600 : FontWeight.w500,
-                color: active
-                    ? AppColors.textPrimaryColor.themeColor
-                    : AppColors.mutedColor.themeColor)),
       ),
     );
   }

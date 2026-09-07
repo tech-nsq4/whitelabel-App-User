@@ -4,16 +4,10 @@ class ApiEndpoints {
   static const String baseUrl = 'https://white-label.nsq4.sa/api/user/';
 
   // ─── Auth ─────────────────────────────────────────────────────────────────
-  /// Requests an OTP for a phone number — shared by both login and register.
   static const String sendOtp = 'auth/otp';
-
-  /// Verifies the OTP and logs the user in (creating the account first if
-  /// it doesn't exist yet — see `is_new_user` on the [sendOtp] response).
   static const String verifyOtp = 'auth/login';
-
   static const String logout = 'auth/logout';
   static const String profile = 'profile';
-
   // ─── Booking ──────────────────────────────────────────────────────────────
   /// The specialties tree (with nested sub-specializations) shown on
   /// `SpecsScreen`.
@@ -53,7 +47,7 @@ class ApiEndpoints {
   static String appointmentRate(int id) => 'appointments/$id/rate';
 
   // ─── Chat ─────────────────────────────────────────────────────────────────
-  static const String chatImageUpload = 'chat/upload-image';
+  static const String chatImageUpload = 'chat/images';
 
   // ─── Offers ───────────────────────────────────────────────────────────────
   /// Active promotional offers — shown on `OffersScreen` (reached from the

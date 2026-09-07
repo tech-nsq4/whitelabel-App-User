@@ -37,20 +37,20 @@ class _DoctorSearchScreenState extends State<DoctorSearchScreen> {
       value: _cubit,
       child: Scaffold(
         body: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 0),
-            child: Column(
-              children: [
-                ScreenHeader(title: widget.title ?? LocaleKeys.booking_byDoctor.tr()),
-                Expanded(
-                  child: DoctorSearchList(
-                    clinicId: widget.clinicId,
-                    specializationId: widget.specializationId,
-                    offer: widget.offer,
-                  ),
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 0),
+                child: ScreenHeader(title: widget.title ?? LocaleKeys.booking_byDoctor.tr()),
+              ),
+              Expanded(
+                child: DoctorSearchList(
+                  clinicId: widget.clinicId,
+                  specializationId: widget.specializationId,
+                  offer: widget.offer,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

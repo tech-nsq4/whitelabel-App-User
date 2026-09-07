@@ -110,4 +110,17 @@ class AppColors {
     lightColor: Color(0xFFC9A227),
     darkColor: Color(0xFFC9A227),
   );
+
+  /// Decorative accent palette for specialty tiles / chips — cycled by index
+  /// when a specialty has no keyword-mapped colour of its own.
+  static const List<ColorModel> specialtyAccents = [
+    primaryColor,
+    ColorModel(lightColor: Color(0xFFC4426F), darkColor: Color(0xFFD9769A)),
+    ColorModel(lightColor: Color(0xFF2C6DAA), darkColor: Color(0xFF6AA3D4)),
+    ColorModel(lightColor: Color(0xFFC9A227), darkColor: Color(0xFFDCC069)),
+    ColorModel(lightColor: Color(0xFF8B2252), darkColor: Color(0xFFBE6A90)),
+    ColorModel(lightColor: Color(0xFF6941C6), darkColor: Color(0xFF9E82DD)),
+    ColorModel(lightColor: Color(0xFF0C4A6E), darkColor: Color(0xFF4E88AC)),
+    ColorModel(lightColor: Color(0xFFA97612), darkColor: Color(0xFFCB9E45)),
+  ];
 }

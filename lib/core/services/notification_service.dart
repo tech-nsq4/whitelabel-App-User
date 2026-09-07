@@ -35,6 +35,8 @@ class NotificationService {
         sound: true,
       );
     }
+    final res =await FirebaseMessaging.instance.getToken();
+    print('FCM token: $res');
     await _requestPermissions();
     await _initPlugin();
     await _createAndroidChannel();

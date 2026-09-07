@@ -20,8 +20,8 @@ enum BookingStatusFilter {
   final String? apiValue;
 }
 
-/// Horizontally-scrollable status tabs on `MyBookingsScreen` — same pill
-/// look as [DoctorFilterChips], one per [BookingStatusFilter].
+/// Horizontally-scrollable status tabs on `MyBookingsScreen` — one pill per
+/// [BookingStatusFilter].
 class BookingStatusTabs extends StatelessWidget {
   const BookingStatusTabs({super.key, required this.selected, required this.onSelect});
 

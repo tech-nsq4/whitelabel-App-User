@@ -78,8 +78,8 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  void _sendImage(File file) {
-    _cubit.sendImage(
+  Future<void> _sendImage(File file) {
+    return _cubit.sendImage(
       chatId: _chatId,
       doctorId: widget.doctorId,
       userId: _userId,
@@ -92,8 +92,8 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  void _sendLocation(double lat, double lng) {
-    _cubit.sendLocation(
+  Future<void> _sendLocation(double lat, double lng) {
+    return _cubit.sendLocation(
       chatId: _chatId,
       doctorId: widget.doctorId,
       userId: _userId,

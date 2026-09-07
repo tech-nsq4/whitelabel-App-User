@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBhe2Kuu2-nhd36SGUaaxXbWKX3GK-tkIM',
-    appId: '1:317023976449:android:ac7200b9767f4c0d219400',
+    appId: '1:317023976449:android:4511b613f846ca89219400',
     messagingSenderId: '317023976449',
     projectId: 'white-label-app-605ad',
     storageBucket: 'white-label-app-605ad.firebasestorage.app',
@@ -59,10 +59,10 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDruWJj75cHcQzLWJxMIOGcKvnmLDToXfk',
-    appId: '1:317023976449:ios:175ce79cdf5e610d219400',
+    appId: '1:317023976449:ios:e6f52578ab0f064f219400',
     messagingSenderId: '317023976449',
     projectId: 'white-label-app-605ad',
     storageBucket: 'white-label-app-605ad.firebasestorage.app',
-    iosBundleId: 'com.example.appBase',
+    iosBundleId: 'com.whiteLable.user',
   );
 }
