@@ -12,16 +12,18 @@ import '../../../offers/data/models/applied_offer.dart';
 import '../../data/models/doctor_profile_model.dart';
 
 class DoctorStatsStrip extends StatelessWidget {
-  const DoctorStatsStrip({super.key, required this.doctor, this.offer});
+  const DoctorStatsStrip({super.key, required this.doctor, this.offer, this.paidPrice});
 
   final DoctorProfileModel doctor;
   final AppliedOffer? offer;
+  final double? paidPrice;
 
   @override
   Widget build(BuildContext context) {
     final avgRate = doctor.avgRate;
     final offer = this.offer;
     final feeDiscount = offer != null && offer.hasClientDiscount ? offer : null;
+    final paid = paidPrice ?? feeDiscount?.finalPriceFor(doctor.price) ?? doctor.price;
 
     return Container(
       padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 8.w),
@@ -48,20 +50,15 @@ class DoctorStatsStrip extends StatelessWidget {
           _Divider(),
           Expanded(
             child: _Stat(
-              value: feeDiscount != null
-                  ? null
-                  : '${doctor.price.toStringAsFixed(0)} ${LocaleKeys.common_currency.tr()}',
-              valueWidget: feeDiscount == null
-                  ? null
-                  : PriceText(
-                      amount: feeDiscount.finalPriceFor(doctor.price),
-                      strikeAmount: doctor.price,
-                      isHeading: true,
-                      fontSize: 13.5,
-                      strikeFontSize: 10,
-                      color: AppColors.primaryColor.themeColor,
-                      textAlign: TextAlign.center,
-                    ),
+              valueWidget: PriceText(
+                amount: paid,
+                strikeAmount: paid < doctor.price ? doctor.price : null,
+                isHeading: true,
+                fontSize: 13.5,
+                strikeFontSize: 10,
+                color: AppColors.primaryColor.themeColor,
+                textAlign: TextAlign.center,
+              ),
               label: LocaleKeys.booking_feeLabel.tr(),
               valueColor: AppColors.primaryColor.themeColor,
             ),

@@ -1,5 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:vivacare_white_label/core/extensions/extensions.dart';
+import 'package:viva_connect_user/core/extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -12,12 +12,15 @@ import '../../../core/utils/app_images.dart';
 import '../../../core/utils/locale_keys.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/app_text.dart';
+import '../data/models/splash_item_model.dart';
 import 'widgets/onboarding_dots_indicator.dart';
 import 'widgets/onboarding_illustration.dart';
 import 'widgets/onboarding_slide_data.dart';
 
 class OnBoardingScreen extends StatefulWidget {
-  const OnBoardingScreen({super.key});
+  const OnBoardingScreen({super.key, this.splashes});
+
+  final List<SplashItemModel>? splashes;
 
   @override
   State<OnBoardingScreen> createState() => _OnBoardingScreenState();
@@ -29,6 +32,17 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   List<OnboardingSlideData> _slides = [];
 
   List<OnboardingSlideData> _buildSlides() {
+    final apiSlides = widget.splashes;
+    if (apiSlides != null && apiSlides.isNotEmpty) {
+      return apiSlides
+          .map((splash) => OnboardingSlideData(
+                imageUrl: splash.image,
+                title: splash.title,
+                subtitle: splash.description,
+              ))
+          .toList();
+    }
+
     return [
       OnboardingSlideData(
         illustration: OnboardingIllustrationType.welcome,
@@ -114,7 +128,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   itemBuilder: (_, i) => Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      OnboardingIllustration(illustration: slides[i].illustration),
+                      OnboardingIllustration(slide: slides[i]),
                       32.height,
                       OnboardingDotsIndicator(
                         count: slides.length,

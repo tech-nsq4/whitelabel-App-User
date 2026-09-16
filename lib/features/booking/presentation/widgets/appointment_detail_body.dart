@@ -6,7 +6,9 @@ import '../../../../app/router/routes.dart';
 import '../../../../core/extensions/extensions.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/locale_keys.dart';
+import '../../../../core/widgets/price_text.dart';
 import '../../data/models/appointment_model.dart';
+import 'appointment_discount_card.dart';
 import 'appointment_status_badge.dart';
 import 'booking_slots_sheet.dart' show formatBookingDayLabel;
 import 'booking_summary_card.dart';
@@ -32,6 +34,14 @@ class AppointmentDetailBody extends StatelessWidget {
     final clinic = doctor?.clinic;
     final date = appointment.date;
     final whenLabel = date == null ? '—' : '${formatBookingDayLabel(date, locale)} · ${appointment.timeLabel}';
+    final priceLabel = appointment.finalPrice != null
+        ? formatPriceLabel(appointment.finalPrice!)
+        : doctor == null
+            ? '—'
+            : formatPriceLabel(doctor.price);
+    final strikePriceLabel = appointment.hasDiscount && appointment.originalPrice != null
+        ? formatPriceLabel(appointment.originalPrice!)
+        : null;
 
     return ListView(
       padding: EdgeInsets.only(top: 6.h, bottom: 24.h),
@@ -44,6 +54,7 @@ class AppointmentDetailBody extends StatelessWidget {
         if (doctor != null)
           DoctorProfileHeader(
             doctor: doctor,
+            paidPrice: appointment.finalPrice,
             onChatTap: () => Navigator.pushNamed(context, Routes.chat, arguments: {
               'doctorId': doctor.id,
               'doctorName': doctor.name,
@@ -56,9 +67,13 @@ class AppointmentDetailBody extends StatelessWidget {
           patientName: appointment.familyMember?.name,
           whenLabel: whenLabel,
           clinicName: clinic?.name,
-          priceLabel:
-              doctor == null ? '—' : '${doctor.price.toStringAsFixed(0)} ${LocaleKeys.common_currency.tr()}',
+          priceLabel: priceLabel,
+          strikePriceLabel: strikePriceLabel,
         ),
+        if (appointment.hasDiscount) ...[
+          14.height,
+          AppointmentDiscountCard(appointment: appointment),
+        ],
         if (clinic != null) ...[
           14.height,
           Text(LocaleKeys.booking_clinicInfo.tr(),
@@ -68,7 +83,7 @@ class AppointmentDetailBody extends StatelessWidget {
                   letterSpacing: 1.2,
                   color: AppColors.mutedColor.themeColor)),
           10.height,
-          DoctorClinicCard(clinic: clinic),
+          DoctorClinicCard(clinic: clinic, showFavorite: false),
         ],
         if (appointment.status == 'completed') ...[
           if (appointment.prescriptionImage != null || appointment.prescriptions.isNotEmpty) ...[

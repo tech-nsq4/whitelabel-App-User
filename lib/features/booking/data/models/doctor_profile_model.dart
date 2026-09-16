@@ -61,6 +61,7 @@ class DoctorClinicModel extends Equatable {
   final double? lat;
   final double? lng;
   final DoctorLocationModel? location;
+  final bool isFavorite;
 
   const DoctorClinicModel({
     required this.id,
@@ -69,6 +70,7 @@ class DoctorClinicModel extends Equatable {
     this.lat,
     this.lng,
     this.location,
+    this.isFavorite = false,
   });
 
   factory DoctorClinicModel.fromJson(Map<String, dynamic> json) => DoctorClinicModel(
@@ -79,10 +81,11 @@ class DoctorClinicModel extends Equatable {
         lng: (json['lng'] as num?)?.toDouble(),
         location:
             json['location'] == null ? null : DoctorLocationModel.fromJson(json['location'] as Map<String, dynamic>),
+        isFavorite: json['is_favorite'] as bool? ?? false,
       );
 
   @override
-  List<Object?> get props => [id, name, address, lat, lng, location];
+  List<Object?> get props => [id, name, address, lat, lng, location, isFavorite];
 }
 
 /// A doctor's soonest open slot — `GET /doctors`' `nearest_available`, shown

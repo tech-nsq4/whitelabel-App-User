@@ -34,8 +34,8 @@ class HomeHeader extends StatelessWidget {
           badgeCount: notificationCount,
           onTap: onNotificationsTap,
         ),
-        9.width,
-        _HeaderIconButton(icon: AppSvgIcons.card, onTap: onCardTap),
+        // 9.width,
+        // _HeaderIconButton(icon: AppSvgIcons.card, onTap: onCardTap),
       ],
     );
   }

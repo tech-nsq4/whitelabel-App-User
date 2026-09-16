@@ -1,6 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:vivacare_white_label/core/extensions/extensions.dart';
-import 'package:vivacare_white_label/core/widgets/app_text.dart';
+import 'package:viva_connect_user/core/extensions/extensions.dart';
+import 'package:viva_connect_user/core/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

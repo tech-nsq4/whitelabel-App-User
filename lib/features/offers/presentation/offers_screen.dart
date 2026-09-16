@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../app/router/routes.dart';
 import '../../../core/di/injection.dart';
 import '../../../core/utils/locale_keys.dart';
 import '../../../core/widgets/screen_header.dart';
 import '../../../core/widgets/screen_state_layout.dart';
+import 'offer_navigation.dart';
 import 'widgets/offer_card.dart';
 import '../data/models/offer_model.dart';
 import '../logic/offers_cubit.dart';
@@ -34,73 +34,7 @@ class _OffersScreenState extends State<OffersScreen> {
     super.dispose();
   }
 
-  void _book(OfferModel offer) {
-    final target = offer.booking;
-
-    switch (offer.scope) {
-      case 'doctors':
-        {
-          final doctors = offer.doctors;
-          if (doctors.length > 1) {
-            _openTargets(offer);
-          } else if (doctors.length == 1) {
-            _openDoctor(offer, doctors.first.id);
-          } else if (target.doctorId != null) {
-            _openDoctor(offer, target.doctorId!);
-          } else {
-            _openSearch(offer);
-          }
-        }
-      case 'clinics':
-        {
-          final clinics = offer.clinics;
-          if (clinics.length > 1) {
-            _openTargets(offer);
-          } else if (clinics.length == 1) {
-            _openSearch(offer, clinicId: clinics.first.id);
-          } else if (target.clinicId != null) {
-            _openSearch(offer, clinicId: target.clinicId);
-          } else {
-            _openSearch(offer);
-          }
-        }
-      case 'specializations':
-        {
-          final specializations = offer.specializations;
-          if (specializations.length > 1) {
-            _openTargets(offer);
-          } else if (specializations.length == 1) {
-            _openSearch(offer, specializationId: specializations.first.id);
-          } else if (target.specializationId != null) {
-            _openSearch(offer, specializationId: target.specializationId);
-          } else {
-            _openSearch(offer);
-          }
-        }
-      default:
-        _openSearch(offer);
-    }
-  }
-
-  void _openTargets(OfferModel offer) {
-    Navigator.pushNamed(context, Routes.offerTargets, arguments: {'offer': offer});
-  }
-
-  void _openDoctor(OfferModel offer, int doctorId) {
-    Navigator.pushNamed(context, Routes.doctor, arguments: {
-      'id': doctorId,
-      'appliedOffer': offer.appliedOffer,
-    });
-  }
-
-  void _openSearch(OfferModel offer, {int? clinicId, int? specializationId}) {
-    Navigator.pushNamed(context, Routes.doctorSearch, arguments: {
-      if (clinicId != null) 'clinicId': clinicId,
-      if (specializationId != null) 'specializationId': specializationId,
-      'title': offer.name,
-      'appliedOffer': offer.appliedOffer,
-    });
-  }
+  void _book(OfferModel offer) => openOfferBooking(context, offer);
 
   @override
   Widget build(BuildContext context) {

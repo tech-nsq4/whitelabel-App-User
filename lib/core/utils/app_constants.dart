@@ -1,10 +1,10 @@
-import 'package:vivacare_white_label/features/auth/data/models/user_model.dart';
+import 'package:viva_connect_user/features/auth/data/models/user_model.dart';
 
 class AppConstants {
   AppConstants._();
 
   // ─── App ──────────────────────────────────────────────────────────────────
-  static const String appName = 'White Label User';
+  static const String appName = 'Viva Connect User';
 
   // ─── Pagination ───────────────────────────────────────────────────────────
   static const int pageSize = 15;

@@ -135,7 +135,25 @@ class AppointmentModel extends Equatable {
   final String? comment;
   final DateTime? ratedAt;
 
+  final bool hasDiscount;
+  final String? discountSource; // "promo_code" | "offer"
+  final int? offerId;
+  final String? promoCode;
+  final double? originalPrice;
+  final double? discountAmount;
+  final double? finalPrice;
+
   bool get isRated => rate != null;
+
+  bool get isPromoDiscount => discountSource == 'promo_code';
+  bool get isOfferDiscount => discountSource == 'offer';
+
+  int? get discountPercent {
+    final original = originalPrice;
+    final amount = discountAmount;
+    if (original == null || amount == null || original <= 0) return null;
+    return (amount / original * 100).round();
+  }
 
   const AppointmentModel({
     required this.id,
@@ -159,6 +177,13 @@ class AppointmentModel extends Equatable {
     this.rate,
     this.comment,
     this.ratedAt,
+    this.hasDiscount = false,
+    this.discountSource,
+    this.offerId,
+    this.promoCode,
+    this.originalPrice,
+    this.discountAmount,
+    this.finalPrice,
   });
 
   /// [date] + [times] combined into one [DateTime] — used to sort/filter
@@ -212,6 +237,13 @@ class AppointmentModel extends Equatable {
         rate: json['rate'] as int?,
         comment: json['comment'] as String?,
         ratedAt: json['rated_at'] == null ? null : DateTime.tryParse(json['rated_at'] as String),
+        hasDiscount: json['has_discount'] as bool? ?? false,
+        discountSource: json['discount_source'] as String?,
+        offerId: json['offer_id'] as int?,
+        promoCode: json['promo_code'] as String?,
+        originalPrice: (json['original_price'] as num?)?.toDouble(),
+        discountAmount: (json['discount_amount'] as num?)?.toDouble(),
+        finalPrice: (json['final_price'] as num?)?.toDouble(),
       );
 
   @override
@@ -237,5 +269,12 @@ class AppointmentModel extends Equatable {
         rate,
         comment,
         ratedAt,
+        hasDiscount,
+        discountSource,
+        offerId,
+        promoCode,
+        originalPrice,
+        discountAmount,
+        finalPrice,
       ];
 }

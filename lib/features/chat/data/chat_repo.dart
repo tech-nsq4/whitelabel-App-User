@@ -117,6 +117,24 @@ class ChatRepo {
       lastMessageType: ChatMessageType.text,
       lastMessageText: text,
     );
+    await _notifyRecipient(doctorId: doctorId, title: userName, body: text);
+  }
+
+  Future<void> _notifyRecipient({
+    required int doctorId,
+    required String title,
+    required String body,
+  }) async {
+    try {
+      await _dio.post(ApiEndpoints.chatNotifications, data: {
+        'id': doctorId,
+        'title': title,
+        'body': body,
+        'type': 'doctor',
+      });
+    } on DioException {
+      return;
+    }
   }
 
   Future<String> uploadImage(File file) async {
@@ -192,5 +210,23 @@ class ChatRepo {
       senderRole: senderRole,
       lastMessageType: ChatMessageType.location,
     );
+  }
+
+  Future<void> deleteMessages({required String chatId, required List<String> messageIds}) async {
+    final batch = _firestore.batch();
+    for (final id in messageIds) {
+      batch.delete(_messagesCol(chatId).doc(id));
+    }
+    await batch.commit();
+  }
+
+  Future<void> refreshLastMessage({required String chatId, ChatMessageModel? latest}) {
+    return _chatDoc(chatId).set({
+      'last_message_type': latest?.type.name,
+      'last_message_text': latest?.text,
+      'last_sender_role': latest?.senderRole.name,
+      'last_message_at':
+          latest?.createdAt == null ? null : Timestamp.fromDate(latest!.createdAt!),
+    }, SetOptions(merge: true));
   }
 }

@@ -1,15 +1,20 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../app/router/routes.dart';
 import '../../../core/extensions/extensions.dart';
 import '../../../core/utils/app_colors.dart';
+import '../../../core/utils/app_constants.dart';
 import '../../../core/utils/app_svg_icons.dart';
+import '../../../core/utils/locale_keys.dart';
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/app_text.dart';
 import '../../../core/widgets/guest_login_dialog.dart';
 import '../../../core/widgets/list_row_tile.dart';
 import '../../home/presentation/widgets/ai_assistant_banner.dart';
+import '../../profile/logic/profile_cubit.dart';
 
 class MedicalFileScreen extends StatelessWidget {
   const MedicalFileScreen({super.key});
@@ -28,18 +33,29 @@ class MedicalFileScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('سجلي الطبي',
-                          style: TextStyle(
-                              fontSize: 10.sp,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1.2,
-                              color: AppColors.mutedColor.themeColor)),
-                      3.height,
-                      AppText('أسرة العتيبي',
-                          isHeading: true,
-                          fontSize: 19,
+                      AppText('سجلي الطبي',
+                          fontSize: 10,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.textPrimaryColor.themeColor),
+                          letterSpacing: 1.2,
+                          color: AppColors.mutedColor.themeColor),
+                      3.height,
+                      BlocBuilder<ProfileCubit, ProfileState>(
+                        builder: (context, state) {
+                          final resolved = state is ProfileSuccess
+                              ? state.user.name
+                              : kUserModel?.name;
+                          final name = resolved?.trim() ?? '';
+                          return AppText(
+                            name.isNotEmpty ? name : LocaleKeys.home_welcome.tr(),
+                            isHeading: true,
+                            fontSize: 19,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textPrimaryColor.themeColor,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -55,7 +71,9 @@ class MedicalFileScreen extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                          content: Text('تمت مشاركة السجل مع الطبيب — صالح 24 ساعة')),
+                          content: AppText(
+                              'تمت مشاركة السجل مع الطبيب — صالح 24 ساعة',
+                              color: Colors.white)),
                     ),
                     icon: Icon(Icons.ios_share_rounded,
                         size: 17.sp, color: AppColors.textPrimaryColor.themeColor),
@@ -106,12 +124,12 @@ class MedicalFileScreen extends StatelessWidget {
                     subtitle: 'ركبة اليمنى · 5 يونيو',
                     onTap: () => pushNamedOrRequireLogin(context, Routes.xrayClinics),
                   ),
-                  ListRowTile(
-                    icon: AppSvgIcons.document,
-                    title: 'الوصفات',
-                    subtitle: 'وصفة سارية · رمز للصيدلية',
-                    onTap: () => pushNamedOrRequireLogin(context, Routes.phClinics),
-                  ),
+                  // ListRowTile(
+                  //   icon: AppSvgIcons.document,
+                  //   title: 'الوصفات',
+                  //   subtitle: 'وصفة سارية · رمز للصيدلية',
+                  //   onTap: () => pushNamedOrRequireLogin(context, Routes.phClinics),
+                  // ),
                   ListRowTile(
                     icon: AppSvgIcons.pill,
                     title: 'الأدوية',
@@ -141,51 +159,51 @@ class MedicalFileScreen extends StatelessWidget {
                     subtitle: 'فاتورة واحدة غير مدفوعة',
                     iconBg: AppColors.warningColor.themeColor.withValues(alpha: 0.12),
                     iconColor: AppColors.warningColor.themeColor,
-                    trailing: AppChip(
-                      label: '180 ريال',
-                      background: AppColors.warningColor.themeColor.withValues(alpha: 0.12),
-                      color: AppColors.warningColor.themeColor,
-                    ),
+                    // trailing: AppChip(
+                    //   label: '180 ريال',
+                    //   background: AppColors.warningColor.themeColor.withValues(alpha: 0.12),
+                    //   color: AppColors.warningColor.themeColor,
+                    // ),
                     onTap: () => pushNamedOrRequireLogin(context, Routes.payments),
                   ),
-                  ListRowTile(
-                    icon: AppSvgIcons.card,
-                    title: 'محفظتي',
-                    subtitle: '240 ريال + نقاط ولاء',
-                    showDivider: false,
-                    onTap: () => pushNamedOrRequireLogin(context, Routes.payments),
-                  ),
+                  // ListRowTile(
+                  //   icon: AppSvgIcons.card,
+                  //   title: 'محفظتي',
+                  //   subtitle: '240 ريال + نقاط ولاء',
+                  //   showDivider: false,
+                  //   onTap: () => pushNamedOrRequireLogin(context, Routes.payments),
+                  // ),
                 ],
               ),
             ),
-            _SectionTitle('صحتي'),
-            10.height,
-            AppCard(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: Column(
-                children: [
-                  ListRowTile(
-                    icon: AppSvgIcons.vaccine,
-                    title: 'الحساسية والتطعيمات',
-                    subtitle: 'حساسية البنسلين · تطعيم مستحق',
-                    onTap: () => pushNamedOrRequireLogin(context, Routes.immunity),
-                  ),
-                  ListRowTile(
-                    icon: AppSvgIcons.document,
-                    title: 'التقارير والإجازات',
-                    subtitle: 'إجازة موثقة · إصدار تقرير',
-                    onTap: () => pushNamedOrRequireLogin(context, Routes.reports),
-                  ),
-                  ListRowTile(
-                    icon: AppSvgIcons.chatBubble,
-                    title: 'اسأل طبيبك',
-                    subtitle: 'استفسار مجاني · رد خلال 24 ساعة',
-                    showDivider: false,
-                    onTap: () => pushNamedOrRequireLogin(context, Routes.askDoctor),
-                  ),
-                ],
-              ),
-            ),
+            // _SectionTitle('صحتي'),
+            // 10.height,
+            // AppCard(
+            //   padding: EdgeInsets.symmetric(horizontal: 16.w),
+            //   child: Column(
+            //     children: [
+            //       ListRowTile(
+            //         icon: AppSvgIcons.vaccine,
+            //         title: 'الحساسية والتطعيمات',
+            //         subtitle: 'حساسية البنسلين · تطعيم مستحق',
+            //         onTap: () => pushNamedOrRequireLogin(context, Routes.immunity),
+            //       ),
+            //       ListRowTile(
+            //         icon: AppSvgIcons.document,
+            //         title: 'التقارير والإجازات',
+            //         subtitle: 'إجازة موثقة · إصدار تقرير',
+            //         onTap: () => pushNamedOrRequireLogin(context, Routes.reports),
+            //       ),
+            //       ListRowTile(
+            //         icon: AppSvgIcons.chatBubble,
+            //         title: 'اسأل طبيبك',
+            //         subtitle: 'استفسار مجاني · رد خلال 24 ساعة',
+            //         showDivider: false,
+            //         onTap: () => pushNamedOrRequireLogin(context, Routes.askDoctor),
+            //       ),
+            //     ],
+            //   ),
+            // ),
             50.height,
           ],
         ),
@@ -200,14 +218,12 @@ class _SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
+    return AppText(
       text,
-      style: TextStyle(
-        fontSize: 10.sp,
-        fontWeight: FontWeight.w600,
-        letterSpacing: 1.4,
-        color: AppColors.mutedColor.themeColor,
-      ),
+      fontSize: 10,
+      fontWeight: FontWeight.w600,
+      letterSpacing: 1.4,
+      color: AppColors.mutedColor.themeColor,
     );
   }
 }

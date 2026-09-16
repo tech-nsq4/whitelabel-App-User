@@ -11,43 +11,52 @@ import '../../../../core/widgets/app_text.dart';
 
 /// Shown on `NotificationsScreen` instead of the list when the account has
 /// no notifications yet — mirrors the booking feature's empty-state cards
-/// (`NoBookingsView`/`NoSlotsView`).
+/// (`NoBookingsView`/`NoSlotsView`). Fills the viewport and always scrolls
+/// so it stays pull-to-refreshable.
 class NoNotificationsView extends StatelessWidget {
   const NoNotificationsView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 36.h, horizontal: 12.w),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 64.w,
-              height: 64.w,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.mutedColor.themeColor.withValues(alpha: 0.12),
-              ),
-              child: Center(
-                child: AppSvgIcon(AppSvgIcons.bell, size: 26.sp, color: AppColors.mutedColor.themeColor),
-              ),
+    return LayoutBuilder(
+      builder: (context, constraints) => SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: constraints.maxHeight),
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 36.h, horizontal: 12.w),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 64.w,
+                  height: 64.w,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.mutedColor.themeColor.withValues(alpha: 0.12),
+                  ),
+                  child: Center(
+                    child: AppSvgIcon(AppSvgIcons.bell,
+                        size: 26.sp, color: AppColors.mutedColor.themeColor),
+                  ),
+                ),
+                16.height,
+                AppText(LocaleKeys.notifications_emptyTitle.tr(),
+                    isHeading: true,
+                    fontSize: 15,
+                    textAlign: TextAlign.center,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimaryColor.themeColor),
+                6.height,
+                AppText(LocaleKeys.notifications_emptyDescription.tr(),
+                    fontSize: 11.5,
+                    textAlign: TextAlign.center,
+                    color: AppColors.mutedColor.themeColor,
+                    height: 1.6),
+              ],
             ),
-            16.height,
-            AppText(LocaleKeys.notifications_emptyTitle.tr(),
-                isHeading: true,
-                fontSize: 15,
-                textAlign: TextAlign.center,
-                fontWeight: FontWeight.w700,
-                color: AppColors.textPrimaryColor.themeColor),
-            6.height,
-            AppText(LocaleKeys.notifications_emptyDescription.tr(),
-                fontSize: 11.5,
-                textAlign: TextAlign.center,
-                color: AppColors.mutedColor.themeColor,
-                height: 1.6),
-          ],
+          ),
         ),
       ),
     );

@@ -4,7 +4,9 @@ import '../../../core/network/api_endpoints.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../core/network/network_exceptions.dart';
 import 'models/appointment_model.dart';
+import 'models/appointment_quote_model.dart';
 import 'models/doctor_profile_model.dart';
+import 'models/doctor_review_model.dart';
 import 'models/doctor_time_table_model.dart';
 import 'models/specialization_model.dart';
 
@@ -79,6 +81,16 @@ class BookingRepo {
     }
   }
 
+  Future<List<DoctorReviewModel>> getDoctorReviews(int doctorId) async {
+    try {
+      final response = await _dio.get(ApiEndpoints.doctorReviews(doctorId));
+      final data = response.data['data'] as List<dynamic>;
+      return data.map((e) => DoctorReviewModel.fromJson(e as Map<String, dynamic>)).toList();
+    } on DioException catch (e) {
+      throw NetworkException.fromDioException(e);
+    }
+  }
+
   /// The clinics/branches list shown on `BranchesScreen` — reuses
   /// [DoctorClinicModel] since `/branches` returns the exact same shape as
   /// a doctor's `clinic`. [name] filters the list server-side by branch name.
@@ -92,6 +104,34 @@ class BookingRepo {
       );
       final data = response.data['data'] as List<dynamic>;
       return data.map((e) => DoctorClinicModel.fromJson(e as Map<String, dynamic>)).toList();
+    } on DioException catch (e) {
+      throw NetworkException.fromDioException(e);
+    }
+  }
+
+  /// The account's favorite clinics — same shape as [getBranches], shown on
+  /// `FavoritesScreen` and backing the heart toggle's state on `BranchCard`.
+  Future<List<DoctorClinicModel>> getFavoriteBranches() async {
+    try {
+      final response = await _dio.get(ApiEndpoints.favoriteBranches);
+      final data = response.data['data'] as List<dynamic>;
+      return data.map((e) => DoctorClinicModel.fromJson(e as Map<String, dynamic>)).toList();
+    } on DioException catch (e) {
+      throw NetworkException.fromDioException(e);
+    }
+  }
+
+  Future<void> addFavoriteBranch(int clinicId) async {
+    try {
+      await _dio.post(ApiEndpoints.favoriteBranch(clinicId));
+    } on DioException catch (e) {
+      throw NetworkException.fromDioException(e);
+    }
+  }
+
+  Future<void> removeFavoriteBranch(int clinicId) async {
+    try {
+      await _dio.delete(ApiEndpoints.favoriteBranch(clinicId));
     } on DioException catch (e) {
       throw NetworkException.fromDioException(e);
     }
@@ -147,6 +187,25 @@ class BookingRepo {
         if (promoCode != null && promoCode.isNotEmpty) 'promo_code': promoCode,
       });
       return AppointmentModel.fromJson(response.data['data'] as Map<String, dynamic>);
+    } on DioException catch (e) {
+      throw NetworkException.fromDioException(e);
+    }
+  }
+
+  Future<AppointmentQuoteModel> getAppointmentQuote({
+    required int doctorId,
+    required DateTime date,
+    int? clinicId,
+    String? promoCode,
+  }) async {
+    try {
+      final response = await _dio.post(ApiEndpoints.appointmentQuote, data: {
+        'doctor_id': doctorId,
+        'date': _formatApiDate(date),
+        if (clinicId != null) 'clinic_id': clinicId,
+        if (promoCode != null && promoCode.isNotEmpty) 'promo_code': promoCode,
+      });
+      return AppointmentQuoteModel.fromJson(response.data['data'] as Map<String, dynamic>);
     } on DioException catch (e) {
       throw NetworkException.fromDioException(e);
     }

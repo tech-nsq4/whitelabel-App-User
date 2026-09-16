@@ -1,4 +1,4 @@
-import 'package:vivacare_white_label/app/router/navigation_services.dart';
+import 'package:viva_connect_user/app/router/navigation_services.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../core/di/injection.dart';
 import '../core/utils/app_constants.dart';
 import '../features/auth/logic/auth_cubit.dart';
+import '../features/booking/logic/favorites_cubit.dart';
 import '../features/profile/logic/profile_cubit.dart';
 import 'router/app_router.dart';
 import 'router/routes.dart';
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<AuthCubit>(create: (_) => getIt<AuthCubit>()),
         BlocProvider<ProfileCubit>(create: (_) => getIt<ProfileCubit>()),
+        BlocProvider<FavoritesCubit>(create: (_) => getIt<FavoritesCubit>()),
       ],
       child: ScreenUtilInit(
           designSize: const Size(375, 812),

@@ -10,6 +10,7 @@ class AppText extends StatelessWidget {
   final TextAlign? textAlign;
   final int? maxLines;
   final double? height;
+  final double? letterSpacing;
   final TextOverflow? overflow;
 
   /// Use the display font (Readex Pro) instead of the body font — for
@@ -26,6 +27,7 @@ class AppText extends StatelessWidget {
     this.color,
     this.textAlign,
     this.maxLines,
+    this.letterSpacing,
     this.overflow,
     this.isHeading = false,
   });
@@ -39,6 +41,7 @@ class AppText extends StatelessWidget {
       overflow: overflow,
       style: TextStyle(
         height: height,
+        letterSpacing: letterSpacing,
         fontFamily: isHeading ? AppFonts.headingFont : AppFonts.bodyFont,
         fontSize: fontSize ?? 14,
         fontWeight: fontWeight ?? FontWeight.w400,

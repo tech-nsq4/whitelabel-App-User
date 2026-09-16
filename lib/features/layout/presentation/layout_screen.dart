@@ -10,6 +10,7 @@ import '../../../core/utils/app_svg_icons.dart';
 import '../../../core/utils/locale_keys.dart';
 import '../../account/presentation/account_screen.dart';
 import '../../booking/logic/appointments_cubit.dart';
+import '../../booking/logic/favorites_cubit.dart';
 import '../../chat/data/chat_repo.dart';
 import '../../chat/data/models/chat_message_model.dart';
 import '../../family/presentation/family_screen.dart';
@@ -102,6 +103,7 @@ class _LayoutScreenState extends State<LayoutScreen> with WidgetsBindingObserver
     profileCubit.syncAppLang(getIt<LocalStorage>().getLang());
     getIt<UnreadCountCubit>().getUnreadCount();
     getIt<AppointmentsCubit>().getAppointments();
+    getIt<FavoritesCubit>().load();
     _setPresence(online: true);
   }
 

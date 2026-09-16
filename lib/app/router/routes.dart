@@ -61,9 +61,11 @@ class Routes {
   static const String profile = '/profile';
   static const String settings = '/settings';
   static const String privacy = '/privacy';
+  static const String contentPage = '/content-page';
   static const String feedback = '/feedback';
   static const String contact = '/contact';
   static const String branches = '/branches';
+  static const String favorites = '/favorites';
 
   static const String aiAssistant = '/ai-assistant';
   static const String aiPlan = '/ai-plan';

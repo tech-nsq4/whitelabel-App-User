@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../core/utils/app_svg_icons.dart';
+import '../../core/widgets/app_text.dart';
 import '../../features/account/presentation/contact_screen.dart';
 import '../../features/account/presentation/feedback_screen.dart';
 import '../../features/account/presentation/privacy_screen.dart';
@@ -18,6 +20,7 @@ import '../../features/booking/presentation/book_screen.dart';
 import '../../features/booking/presentation/branches_screen.dart';
 import '../../features/booking/presentation/doctor_screen.dart';
 import '../../features/booking/presentation/doctor_search_screen.dart';
+import '../../features/booking/presentation/favorites_screen.dart';
 import '../../features/booking/presentation/my_bookings_screen.dart';
 import '../../features/booking/presentation/specs_screen.dart';
 import '../../features/booking/presentation/symptom_checker_screen.dart';
@@ -44,14 +47,16 @@ import '../../features/offers/data/models/applied_offer.dart';
 import '../../features/offers/data/models/offer_model.dart';
 import '../../features/offers/presentation/offer_targets_screen.dart';
 import '../../features/offers/presentation/offers_screen.dart';
+import '../../features/onboarding/data/models/splash_item_model.dart';
 import '../../features/onboarding/presentation/on_boarding_screen.dart';
+import '../../features/pages/presentation/content_page_screen.dart';
 import '../../features/payments/presentation/payments_screen.dart';
 import '../../features/pharmacy/presentation/ph_appts_screen.dart';
 import '../../features/pharmacy/presentation/ph_clinics_screen.dart';
 import '../../features/reports/presentation/reports_screen.dart';
 import '../../features/services/presentation/services_screen.dart';
 import '../../features/splash/presentation/splash_screen.dart';
-import '../../features/telemed/presentation/telemed_screen.dart';
+import '../../features/telemed/presentation/telemed_coming_soon_screen.dart';
 import '../../features/visits/presentation/visit_detail_screen.dart';
 import '../../features/visits/presentation/visit_list_screen.dart';
 import '../../features/visits/presentation/visits_screen.dart';
@@ -69,7 +74,9 @@ class RouteGenerator {
         return _pageRoute(const SplashScreen());
 
       case Routes.onBoardingScreen:
-        return _pageRoute(const OnBoardingScreen());
+        return _pageRoute(OnBoardingScreen(
+          splashes: arguments?['splashes'] as List<SplashItemModel>?,
+        ));
 
       case Routes.loginScreen:
         return _pageRoute(LoginScreen(
@@ -155,7 +162,7 @@ class RouteGenerator {
         return _pageRoute(const AskDoctorScreen());
 
       case Routes.telemed:
-        return _pageRoute(const TelemedScreen());
+        return _pageRoute(const TelemedComingSoonScreen());
 
       case Routes.emergency:
         return _pageRoute(const EmergencyScreen());
@@ -232,6 +239,13 @@ class RouteGenerator {
       case Routes.settings:
         return _pageRoute(const SettingsScreen());
 
+      case Routes.contentPage:
+        return _pageRoute(ContentPageScreen(
+          slug: arguments?['slug'] as String,
+          fallbackTitle: arguments?['title'] as String?,
+          icon: arguments?['icon'] as String? ?? AppSvgIcons.document,
+        ));
+
       case Routes.privacy:
         return _pageRoute(const PrivacyScreen());
 
@@ -243,6 +257,9 @@ class RouteGenerator {
 
       case Routes.branches:
         return _pageRoute(const BranchesScreen());
+
+      case Routes.favorites:
+        return _pageRoute(const FavoritesScreen());
 
       case Routes.aiAssistant:
         return _pageRoute(const AiAssistantScreen());
@@ -266,7 +283,7 @@ class _UndefinedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Center(child: Text('Page not found')),
+      body: Center(child: AppText('Page not found')),
     );
   }
 }

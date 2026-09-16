@@ -1,16 +1,21 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/extensions/extensions.dart';
 import '../../../../core/utils/app_colors.dart';
+import '../../../../core/utils/app_constants.dart';
 import '../../../../core/utils/app_overlay.dart';
 import '../../../../core/utils/helper_methods.dart';
 import '../../../../core/utils/locale_keys.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/app_text.dart';
+import '../../../../core/widgets/custom_tap_effect.dart';
+import '../../../../core/widgets/guest_login_dialog.dart';
 import '../../data/models/doctor_profile_model.dart';
+import '../../logic/favorites_cubit.dart';
 
 /// One clinic on [BranchesScreen] — address/area, "Directions" (opens Maps
 /// with the clinic's real coordinates) and "View Doctors" (→
@@ -27,6 +32,15 @@ class BranchCard extends StatelessWidget {
     } catch (_) {
       AppOverlay.showError(LocaleKeys.error_generic.tr());
     }
+  }
+
+  Future<void> _toggleFavorite(BuildContext context) async {
+    if (kIsGuest) {
+      final loggedIn = await requireGuestLogin(context);
+      if (!loggedIn || !context.mounted) return;
+    }
+    if (!context.mounted) return;
+    context.read<FavoritesCubit>().toggle(branch);
   }
 
   @override
@@ -63,6 +77,23 @@ class BranchCard extends StatelessWidget {
                     ],
                   ],
                 ),
+              ),
+              6.width,
+              BlocSelector<FavoritesCubit, FavoritesState, bool>(
+                selector: (state) =>
+                    state is FavoritesSuccess ? state.contains(branch.id) : branch.isFavorite,
+                builder: (context, isFavorite) {
+                  return CustomTapEffect(
+                    onTap: () => _toggleFavorite(context),
+                    child: Icon(
+                      isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                      size: 20.sp,
+                      color: isFavorite
+                          ? AppColors.errorColor.themeColor
+                          : AppColors.mutedColor.themeColor,
+                    ),
+                  );
+                },
               ),
             ],
           ),

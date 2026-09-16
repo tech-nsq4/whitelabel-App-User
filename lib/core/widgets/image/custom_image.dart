@@ -1,4 +1,4 @@
-import 'package:vivacare_white_label/core/utils/app_colors.dart';
+import 'package:viva_connect_user/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 

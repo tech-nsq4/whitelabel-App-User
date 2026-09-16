@@ -181,6 +181,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                         error: state is AppointmentDetailError
                             ? ErrorModel(code: ErrorEnum.other, errorMessage: state.message)
                             : null,
+                        onRefresh: () => _cubit.getAppointment(widget.appointmentId),
                         onRetry: () => _cubit.getAppointment(widget.appointmentId),
                         builder: (context) => AppointmentDetailBody(appointment: appointment!),
                       ),

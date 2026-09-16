@@ -45,18 +45,21 @@ class _HomeServicesGridState extends State<HomeServicesGrid> {
         LocaleKeys.home_bookAppointment.tr(),
         LocaleKeys.home_bookAppointmentSubtitle.tr(),
         widget.onBookTap,
+        false,
       ),
       (
         AppSvgIcons.videoCam,
         LocaleKeys.home_consultation.tr(),
         LocaleKeys.home_consultationSubtitle.tr(),
         widget.onTelemedTap,
+        true,
       ),
       (
         AppSvgIcons.giftBox,
         LocaleKeys.home_offers.tr(),
         LocaleKeys.home_offersSubtitle.tr(),
         widget.onOffersTap,
+        false,
       ),
     ];
 
@@ -70,6 +73,7 @@ class _HomeServicesGridState extends State<HomeServicesGrid> {
               label: tiles[i].$2,
               subLabel: tiles[i].$3,
               selected: _selected == i,
+              comingSoon: tiles[i].$5,
               onTap: () => _onTap(i, tiles[i].$4),
             ),
           ),
@@ -86,12 +90,14 @@ class _ServiceTile extends StatelessWidget {
     required this.subLabel,
     required this.selected,
     required this.onTap,
+    this.comingSoon = false,
   });
 
   final String icon;
   final String label;
   final String subLabel;
   final bool selected;
+  final bool comingSoon;
   final VoidCallback onTap;
 
   @override
@@ -148,15 +154,39 @@ class _ServiceTile extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            2.height,
-            AppText(
-              subLabel,
-              fontSize: 9.5,
-              color: subColor,
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
+            if (comingSoon)
+              Container(
+                margin: EdgeInsets.only(top: 5.h),
+                padding: EdgeInsetsDirectional.only(
+                    start: 7.w, end: 7.w, top: 2.h, bottom: 2.h),
+                decoration: BoxDecoration(
+                  color: selected
+                      ? Colors.white.withValues(alpha: 0.22)
+                      : AppColors.secondaryColor.themeColor
+                          .withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(99),
+                ),
+                child: AppText(
+                  LocaleKeys.comingSoon_badge.tr(),
+                  fontSize: 8.5,
+                  fontWeight: FontWeight.w700,
+                  color: selected
+                      ? Colors.white
+                      : AppColors.secondaryColor.themeColor,
+                ),
+              )
+            else ...[
+              2.height,
+              AppText(
+                subLabel,
+                fontSize: 9.5,
+                color: subColor,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                fontWeight: FontWeight.w500,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
           ],
         ),
       ),

@@ -111,6 +111,32 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
+  Future<void> deleteMessages({
+    required String chatId,
+    required Set<String> messageIds,
+    required ChatSenderRole myRole,
+  }) async {
+    final current = state;
+    if (current is! ChatSuccess) return;
+
+    final ownIds = current.messages
+        .where((message) => messageIds.contains(message.id) && message.senderRole == myRole)
+        .map((message) => message.id)
+        .toList();
+    if (ownIds.isEmpty) return;
+
+    try {
+      await _repo.deleteMessages(chatId: chatId, messageIds: ownIds);
+      final remaining = current.messages.where((message) => !ownIds.contains(message.id)).toList();
+      await _repo.refreshLastMessage(
+        chatId: chatId,
+        latest: remaining.isEmpty ? null : remaining.first,
+      );
+    } catch (e) {
+      AppOverlay.showError('$e');
+    }
+  }
+
   @override
   Future<void> close() {
     _subscription?.cancel();

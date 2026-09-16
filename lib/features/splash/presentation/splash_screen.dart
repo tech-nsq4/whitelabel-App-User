@@ -2,14 +2,16 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gif/gif.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../app/router/routes.dart';
 import '../../../core/di/injection.dart';
 import '../../../core/storage/local_storage.dart';
 import '../../../core/utils/app_colors.dart';
-import '../../../core/utils/app_images.dart';
+import '../../onboarding/data/models/splash_item_model.dart';
+import '../../onboarding/logic/onboarding_cubit.dart';
 import '../../profile/logic/profile_cubit.dart';
+import 'widgets/splash_logo_animation.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -18,23 +20,23 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
-    with TickerProviderStateMixin {
-  late final GifController _gifController;
+class _SplashScreenState extends State<SplashScreen> {
+  final _onboardingCubit = getIt<OnboardingCubit>();
+  Future<void>? _splashesRequest;
   Timer? _minTimer;
   bool _navigated = false;
 
   @override
   void initState() {
     super.initState();
-    _gifController = GifController(vsync: this);
-    _minTimer = Timer(const Duration(seconds: 2), _navigate);
+    _splashesRequest = _onboardingCubit.getSplashes();
+    _minTimer = Timer(const Duration(milliseconds: 3100), _navigate);
   }
 
   @override
   void dispose() {
     _minTimer?.cancel();
-    _gifController.dispose();
+    _onboardingCubit.close();
     super.dispose();
   }
 
@@ -44,14 +46,23 @@ class _SplashScreenState extends State<SplashScreen>
 
     final storage = getIt<LocalStorage>();
     if (!storage.isLoggedIn) {
+      await _splashesRequest;
+      if (!mounted) return;
+
+      final splashState = _onboardingCubit.state;
+      final splashes = splashState is OnboardingSuccess
+          ? splashState.splashes
+          : const <SplashItemModel>[];
+
       Navigator.pushNamedAndRemoveUntil(
-          context, Routes.onBoardingScreen, (_) => false);
+        context,
+        Routes.onBoardingScreen,
+        (_) => false,
+        arguments: {'splashes': splashes},
+      );
       return;
     }
 
-    // Logged in — check whether the profile still needs completing before
-    // deciding where to land, so a half-finished signup keeps resuming here
-    // instead of slipping into the app.
     final profileCubit = context.read<ProfileCubit>();
     await profileCubit.getProfile();
     if (!mounted) return;
@@ -68,15 +79,11 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffF1EEE6),
-      body: SizedBox.expand(
-        child: Gif(
-          controller: _gifController,
-          autostart: Autostart.loop,
-          image: const AssetImage(AppImages.introGif),
-          fit: BoxFit.cover,
-          width: double.infinity,
-          height: double.infinity,
+      backgroundColor: AppColors.backgroundColor.themeColor,
+      body: Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 32.w),
+          child: const SplashLogoAnimation(),
         ),
       ),
     );

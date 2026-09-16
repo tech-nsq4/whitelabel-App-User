@@ -1,7 +1,3 @@
-/// The visual theme each onboarding page is illustrated with.
-///
-/// Mapped to a concrete [Widget] by `OnboardingIllustration` — kept as an
-/// enum here so the slide data stays presentation-agnostic.
 enum OnboardingIllustrationType {
   welcome,
   telemed,
@@ -9,17 +5,19 @@ enum OnboardingIllustrationType {
   family,
 }
 
-/// One page of the onboarding flow: what it looks like + what it says.
 class OnboardingSlideData {
   const OnboardingSlideData({
-    required this.illustration,
+    this.illustration = OnboardingIllustrationType.welcome,
+    this.imageUrl,
     required this.title,
     required this.subtitle,
   });
 
   final OnboardingIllustrationType illustration;
+  final String? imageUrl;
   final String title;
   final String subtitle;
 
   bool get hasText => title.isNotEmpty;
+  bool get hasImage => imageUrl != null && imageUrl!.isNotEmpty;
 }

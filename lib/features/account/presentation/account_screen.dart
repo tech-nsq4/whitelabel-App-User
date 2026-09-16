@@ -8,9 +8,9 @@ import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/app_svg_icons.dart';
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/app_text.dart';
+import '../../../core/widgets/guest_login_dialog.dart';
 import '../../../core/widgets/list_row_tile.dart';
 import '../../auth/logic/auth_cubit.dart';
-import '../../home/presentation/widgets/health_card_modal.dart';
 import '../../profile/logic/profile_cubit.dart';
 import 'widgets/account_profile_header.dart';
 
@@ -32,64 +32,28 @@ class AccountScreen extends StatelessWidget {
               child: Column(
                 children: [
                   ListRowTile(
-                    icon: AppSvgIcons.card,
-                    title: 'البطاقة الصحية',
-                    subtitle: 'عرض رمز الدخول السريع',
-                    onTap: () => showHealthCardModal(context),
+                    icon: AppSvgIcons.star,
+                    title: 'المفضلة',
+                    subtitle: 'الفروع المحفوظة',
+                    onTap: () => pushNamedOrRequireLogin(context, Routes.favorites),
                   ),
-                  ListRowTile(
-                    icon: AppSvgIcons.family,
-                    title: 'الحسابات المرتبطة',
-                    subtitle: '3 أفراد',
-                    onTap: () => Navigator.pushNamed(context, Routes.family),
-                  ),
-                  ListRowTile(
-                    icon: AppSvgIcons.mapPin,
-                    title: 'الفرع المفضل',
-                    subtitle: 'العلا الرئيسي · 2.3 كم',
-                    showDivider: false,
-                    onTap: () => Navigator.pushNamed(context, Routes.branches),
-                  ),
-                ],
-              ),
-            ),
-            AppCard(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              margin: EdgeInsets.only(bottom: 16.h),
-              child: Column(
-                children: [
                   ListRowTile(
                     icon: AppSvgIcons.bell,
                     title: 'التنبيهات',
                     subtitle: 'تذكير المواعيد والنتائج',
                     onTap: () => Navigator.pushNamed(context, Routes.notifications),
                   ),
-                  ListRowTile(
-                    icon: AppSvgIcons.shieldLock,
-                    title: 'الخصوصية والصلاحيات',
-                    subtitle: 'من يرى سجلك',
-                    onTap: () => Navigator.pushNamed(context, Routes.privacy),
-                  ),
+                  // ListRowTile(
+                  //   icon: AppSvgIcons.shieldLock,
+                  //   title: 'الخصوصية والصلاحيات',
+                  //   subtitle: 'من يرى سجلك',
+                  //   onTap: () => Navigator.pushNamed(context, Routes.privacy),
+                  // ),
                   ListRowTile(
                     icon: AppSvgIcons.settingsGear,
                     title: 'الإعدادات',
                     subtitle: 'اللغة والمظهر',
-                    showDivider: false,
                     onTap: () => Navigator.pushNamed(context, Routes.settings),
-                  ),
-                ],
-              ),
-            ),
-            AppCard(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              margin: EdgeInsets.only(bottom: 16.h),
-              child: Column(
-                children: [
-                  ListRowTile(
-                    icon: AppSvgIcons.stethoscope,
-                    title: 'رأيك يهمنا',
-                    subtitle: 'قيّم تجربتك',
-                    onTap: () => Navigator.pushNamed(context, Routes.feedback),
                   ),
                   ListRowTile(
                     icon: AppSvgIcons.chatBubble,

@@ -85,7 +85,7 @@ class _DoctorProfileBodyState extends State<DoctorProfileBody> {
             if (_tab == 0)
               ..._clinicsTab()
             else
-              DoctorReviewsTab(avgRate: doctor.avgRate),
+              DoctorReviewsTab(doctorId: doctor.id, avgRate: doctor.avgRate),
           ],
         ),
         Positioned(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../utils/app_colors.dart';
 import 'app_text.dart';
@@ -25,14 +24,12 @@ class SectionHeader extends StatelessWidget {
       textBaseline: TextBaseline.alphabetic,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
+        AppText(
           title,
-          style: TextStyle(
-            fontSize: 10.sp,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 1.4,
-            color: AppColors.mutedColor.themeColor,
-          ),
+          fontSize: 10,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 1.4,
+          color: AppColors.mutedColor.themeColor,
         ),
         if (actionLabel != null)
           GestureDetector(

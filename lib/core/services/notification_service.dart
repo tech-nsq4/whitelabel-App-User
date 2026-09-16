@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+import '../utils/app_colors.dart';
+
 /// Registered via `FirebaseMessaging.onBackgroundMessage` in `main.dart`.
 /// Must be a top-level/static function (`@pragma('vm:entry-point')`) since
 /// it runs in its own isolate when the app is backgrounded/terminated.
@@ -15,6 +17,7 @@ Future<void> firebaseBackgroundMessageHandler(RemoteMessage message) async {
 const _channelId = 'vivacare_default';
 const _channelName = 'Vivacare';
 const _channelDesc = 'Vivacare notifications';
+const _androidNotificationIcon = 'ic_stat_notification';
 
 /// Wires up FCM (push receiving) + `flutter_local_notifications` (foreground
 /// display, since Android/iOS don't show a system banner for a message that
@@ -58,7 +61,7 @@ class NotificationService {
   }
 
   static Future<void> _initPlugin() async {
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings = AndroidInitializationSettings(_androidNotificationIcon);
     const iosSettings = DarwinInitializationSettings(
       requestAlertPermission: false,
       requestBadgePermission: false,
@@ -90,13 +93,15 @@ class NotificationService {
       if (notification == null) return;
       _plugin.show(
         notification.hashCode, notification.title, notification.body,
-        const NotificationDetails(
+        NotificationDetails(
           android: AndroidNotificationDetails(
             _channelId, _channelName,
             channelDescription: _channelDesc,
             importance: Importance.high,
             priority: Priority.high,
             playSound: true,
+            icon: _androidNotificationIcon,
+            color: AppColors.primaryColor.light,
           ),
         ),
       );

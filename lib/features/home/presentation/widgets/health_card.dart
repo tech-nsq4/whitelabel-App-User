@@ -26,7 +26,6 @@ class HealthCard extends StatelessWidget {
       onTap: onTap ?? () {},
       isClickable: onTap != null,
       child: Container(
-        // padding: EdgeInsets.fromLTRB(20.w, 19.h, 20.w, 17.h),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(22.r),
           gradient: LinearGradient(

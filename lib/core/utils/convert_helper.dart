@@ -1,4 +1,4 @@
-import 'package:vivacare_white_label/app/router/navigation_services.dart';
+import 'package:viva_connect_user/app/router/navigation_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 

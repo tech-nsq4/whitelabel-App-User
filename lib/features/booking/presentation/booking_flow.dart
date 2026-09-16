@@ -58,6 +58,9 @@ Future<void> startDoctorBooking(
     amountLabel: formatPriceLabel(finalPrice),
     strikeAmountLabel: discounted ? formatPriceLabel(price) : null,
     promoCodeEnabled: true,
+    doctorId: doctor.id,
+    clinicId: slot.clinicId,
+    date: slot.date,
   );
   if (result == null || !context.mounted) return;
 

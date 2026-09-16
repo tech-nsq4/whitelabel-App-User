@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:vivacare_white_label/core/extensions/extensions.dart';
+import 'package:viva_connect_user/core/extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -14,7 +14,6 @@ class CustomImageSlider extends StatefulWidget {
   final ValueChanged<int>? _onTap;
   final double _height;
   final double? _width;
-  final double? _imageWidth;
   final double _radius;
   final EdgeInsetsGeometry? _margin;
   final double _viewportFraction;
@@ -28,8 +27,7 @@ class CustomImageSlider extends StatefulWidget {
     required List<String> sliders,
     ValueChanged<int>? onTap,
     double height = 199,
-    double imageWidth = 199,
-    double width = 199,
+    double? width,
     EdgeInsetsGeometry? margin,
     double radius = 12,
     double viewportFraction = 0.88,
@@ -38,7 +36,6 @@ class CustomImageSlider extends StatefulWidget {
         _onTap = onTap,
         _radius = radius,
         _width = width,
-        _imageWidth = imageWidth,
         _margin = margin,
         _viewportFraction = viewportFraction,
         _itemHorizontalPadding = itemHorizontalPadding,
@@ -170,11 +167,6 @@ class _CustomImageSliderState extends State<CustomImageSlider> {
   Widget build(BuildContext context) {
     if (widget._sliders.isEmpty) return const SizedBox.shrink();
 
-    final screenW = MediaQuery.sizeOf(context).width;
-    final singleW = widget._imageWidth == double.infinity
-        ? screenW
-        : (widget._imageWidth ?? screenW);
-
     return Container(
       margin: widget._margin,
       width: widget._width ?? double.infinity,
@@ -188,7 +180,7 @@ class _CustomImageSliderState extends State<CustomImageSlider> {
                   onTap: () => widget._onTap?.call(0),
                   child: CustomImage(
                     image: widget._sliders.first,
-                    width: singleW,
+                    width: double.infinity,
                     height: widget._height,
                     fit: BoxFit.fill,
                     radius: 0,

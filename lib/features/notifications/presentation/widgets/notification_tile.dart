@@ -38,6 +38,8 @@ class NotificationTile extends StatelessWidget {
     'accepted': AppSvgIcons.checkCircle,
     'started': AppSvgIcons.stethoscope,
     'completed': AppSvgIcons.checkCircle,
+    'rescheduled': AppSvgIcons.calendar,
+    'offer': AppSvgIcons.giftBox,
   };
 
   String get _icon => _icons[notification.type] ?? AppSvgIcons.bell;
@@ -50,7 +52,10 @@ class NotificationTile extends StatelessWidget {
       case 'started':
         return AppColors.secondaryColor.themeColor;
       case 'booked':
+      case 'rescheduled':
         return AppColors.accentGold.themeColor;
+      case 'offer':
+        return AppColors.primaryColor.themeColor;
       default:
         return AppColors.mutedColor.themeColor;
     }

@@ -1,7 +1,7 @@
-import 'package:vivacare_white_label/core/extensions/extensions.dart';
-import 'package:vivacare_white_label/core/utils/app_colors.dart';
-import 'package:vivacare_white_label/core/widgets/app_text.dart';
-import 'package:vivacare_white_label/core/widgets/custom_loading_widget.dart';
+import 'package:viva_connect_user/core/extensions/extensions.dart';
+import 'package:viva_connect_user/core/utils/app_colors.dart';
+import 'package:viva_connect_user/core/widgets/app_text.dart';
+import 'package:viva_connect_user/core/widgets/custom_loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

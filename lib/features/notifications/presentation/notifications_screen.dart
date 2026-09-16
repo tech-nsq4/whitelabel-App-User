@@ -12,19 +12,14 @@ import '../../../core/utils/locale_keys.dart';
 import '../../../core/widgets/app_text.dart';
 import '../../../core/widgets/screen_header.dart';
 import '../../../core/widgets/screen_state_layout.dart';
+import '../../offers/presentation/offer_navigation.dart';
 import '../data/models/notification_model.dart';
 import '../logic/notifications_cubit.dart';
 import '../logic/unread_count_cubit.dart';
 import 'widgets/no_notifications_view.dart';
 import 'widgets/notification_tile.dart';
 
-/// Notifications feed, backed by `GET /notifications` — reached from the
-/// bell icon on `HomeHeader`. Each row is appointment-related; tapping one
-/// marks it read (silently, in the background) and, if it has an
-/// `appointment_id`, opens `AppointmentDetailScreen` for it. The header
-/// action marks every notification read at once. Both refresh the
-/// app-wide `UnreadCountCubit` singleton so the home screen's bell badge
-/// stays in sync.
+
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
 
@@ -55,15 +50,30 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     if (ok) unawaited(_unreadCountCubit.getUnreadCount());
   }
 
+  Future<void> _refresh() async {
+    await _cubit.getNotifications(silent: true);
+    unawaited(_unreadCountCubit.getUnreadCount());
+  }
+
   void _onTapNotification(NotificationModel notification) {
     if (!notification.isRead) {
       unawaited(_cubit.markAsRead(notification.id).then((ok) {
         if (ok) _unreadCountCubit.getUnreadCount();
       }));
     }
+    _openTarget(notification);
+  }
+
+  void _openTarget(NotificationModel notification) {
     final appointmentId = notification.appointmentId;
     if (appointmentId != null) {
-      Navigator.pushNamed(context, Routes.appointmentDetail, arguments: {'id': appointmentId});
+      Navigator.pushNamed(context, Routes.appointmentDetail,
+          arguments: {'id': appointmentId});
+      return;
+    }
+    final offerId = notification.offerId;
+    if (offerId != null) {
+      unawaited(openOfferById(context, offerId));
     }
   }
 
@@ -103,10 +113,15 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                             ? ErrorModel(code: ErrorEnum.other, errorMessage: state.message)
                             : null,
                         onRetry: () => _cubit.getNotifications(),
+                        onRefresh: _refresh,
                         isEmpty: notifications.isEmpty,
-                        noDataBuilder: (_) => const NoNotificationsView(),
+                        noDataBuilder: (_) => RefreshIndicator(
+                          onRefresh: _refresh,
+                          child: const NoNotificationsView(),
+                        ),
                         builder: (context) => ListView.builder(
                           padding: EdgeInsets.only(bottom: 24.h),
+                          physics: const AlwaysScrollableScrollPhysics(),
                           itemCount: notifications.length,
                           itemBuilder: (context, index) {
                             final notification = notifications[index];

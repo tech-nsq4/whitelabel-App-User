@@ -16,11 +16,24 @@ import '../../data/models/chat_message_model.dart';
 import 'chat_location_map.dart';
 
 class ChatMessageBubble extends StatelessWidget {
-  const ChatMessageBubble({super.key, required this.message, required this.isMine, this.isRead = false});
+  const ChatMessageBubble({
+    super.key,
+    required this.message,
+    required this.isMine,
+    this.isRead = false,
+    this.selectionMode = false,
+    this.selected = false,
+    this.onTap,
+    this.onLongPress,
+  });
 
   final ChatMessageModel message;
   final bool isMine;
   final bool isRead;
+  final bool selectionMode;
+  final bool selected;
+  final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +41,7 @@ class ChatMessageBubble extends StatelessWidget {
     final textColor = isMine ? Colors.white : AppColors.textPrimaryColor.themeColor;
     final radius = Radius.circular(16.r);
 
-    return Align(
+    final bubble = Align(
       alignment: isMine ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
       child: Container(
         constraints: BoxConstraints(maxWidth: 0.72.sw),
@@ -75,6 +88,34 @@ class ChatMessageBubble extends StatelessWidget {
                 ],
               ),
             ),
+          ],
+        ),
+      ),
+    );
+
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: selectionMode ? onTap : null,
+      onLongPress: onLongPress,
+      child: Container(
+        color: selected
+            ? AppColors.primaryColor.themeColor.withValues(alpha: 0.10)
+            : Colors.transparent,
+        padding: EdgeInsets.symmetric(vertical: 2.h),
+        child: Row(
+          children: [
+            if (selectionMode && onLongPress != null) ...[
+              SizedBox(width: 6.w),
+              Icon(
+                selected ? Icons.check_circle_rounded : Icons.circle_outlined,
+                size: 22.sp,
+                color: selected
+                    ? AppColors.primaryColor.themeColor
+                    : AppColors.mutedColor.themeColor,
+              ),
+              SizedBox(width: 8.w),
+            ],
+            Expanded(child: IgnorePointer(ignoring: selectionMode, child: bubble)),
           ],
         ),
       ),

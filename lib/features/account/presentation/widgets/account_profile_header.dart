@@ -11,7 +11,7 @@ import '../../../../core/utils/locale_keys.dart';
 import '../../../../core/widgets/app_text.dart';
 import '../../../profile/logic/profile_cubit.dart';
 
-/// The avatar + name/phone + edit-button row at the top of [AccountScreen].
+/// The avatar + name/phone/email + edit-button row at the top of [AccountScreen].
 /// Reflects the live [ProfileCubit] state so it refreshes as soon as the
 /// user saves changes on [Routes.profile], without needing a manual reload.
 class AccountProfileHeader extends StatelessWidget {
@@ -33,6 +33,8 @@ class AccountProfileHeader extends StatelessWidget {
             : (hasName ? user.name!.trim() : user.phone);
         final subtitle =
             isGuest ? LocaleKeys.profile_guestSubtitle.tr() : user.phone;
+        final email = isGuest ? null : user.email?.trim();
+        final hasEmail = email != null && email.isNotEmpty;
 
         return Row(
           children: [
@@ -45,14 +47,16 @@ class AccountProfileHeader extends StatelessWidget {
               ),
               alignment: Alignment.center,
               child: hasName
-                  ? Text(
+                  ? Padding(
+                    padding: 10.paddingBottom,
+                    child: AppText(
                       displayName[0],
-                      style: TextStyle(
-                          fontFamily: AppFonts.headingFont,
-                          fontSize: 22.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white),
-                    )
+                      isHeading: true,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  )
                   : Icon(Icons.person_rounded, color: Colors.white, size: 26.sp),
             ),
             14.width,
@@ -67,12 +71,33 @@ class AccountProfileHeader extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       color: AppColors.textPrimaryColor.themeColor),
-                  2.height,
+                  3.height,
                   AppText(subtitle,
                       fontSize: 13,
+                      height: 1,
+
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       color: AppColors.mutedColor.themeColor),
+                  if (hasEmail) ...[
+                    3.height,
+                    Row(
+                      children: [
+                        Icon(Icons.mail_outline_rounded,
+                            size: 12.sp,
+                            color: AppColors.mutedColor.themeColor),
+                        5.width,
+                        Expanded(
+                          child: AppText(email,
+                              fontSize: 12,
+                              maxLines: 1,
+                              height: 1,
+                              overflow: TextOverflow.ellipsis,
+                              color: AppColors.mutedColor.themeColor),
+                        ),
+                      ],
+                    ),
+                  ],
                 ],
               ),
             ),

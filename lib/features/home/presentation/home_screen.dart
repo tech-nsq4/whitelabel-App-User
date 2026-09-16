@@ -13,8 +13,8 @@ import '../../../core/widgets/section_header.dart';
 import '../../booking/logic/appointments_cubit.dart';
 import '../../notifications/logic/unread_count_cubit.dart';
 import 'widgets/ai_assistant_banner.dart';
-import 'widgets/health_card.dart';
 import 'widgets/health_card_modal.dart';
+import 'widgets/home_banners_slider.dart';
 import 'widgets/home_header.dart';
 import 'widgets/home_services_grid.dart';
 import 'widgets/medical_record_list.dart';
@@ -66,8 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
               22.height,
-              HealthCard(onTap: () => showHealthCardModal(context)),
-              22.height,
+              const HomeBannersSlider(),
               AiAssistantBanner(
                 onTap: () => Navigator.pushNamed(context, Routes.aiAssistant),
               ),

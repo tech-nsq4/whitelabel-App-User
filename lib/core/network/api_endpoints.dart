@@ -1,7 +1,11 @@
 class ApiEndpoints {
   ApiEndpoints._();
 
-  static const String baseUrl = 'https://white-label.nsq4.sa/api/user/';
+  static const String rootUrl = 'https://white-label.nsq4.sa/api/';
+  static const String baseUrl = '${rootUrl}user/';
+
+  // ─── Onboarding ───────────────────────────────────────────────────────────
+  static const String splashes = 'splashes';
 
   // ─── Auth ─────────────────────────────────────────────────────────────────
   static const String sendOtp = 'auth/otp';
@@ -27,10 +31,16 @@ class ApiEndpoints {
   /// picker on `BookingSlotsSheet`.
   static String doctorTimeTables(int doctorId) => 'doctors/$doctorId/time-tables';
 
+  /// A doctor's patient reviews (1-5 stars + an optional comment), shown on
+  /// `DoctorScreen`'s "reviews" tab.
+  static String doctorReviews(int doctorId) => 'doctors/$doctorId/reviews';
+
   /// `GET` lists the current user's booked appointments (powers the home
   /// screen's "upcoming appointment" card); `POST` books a new one from
   /// `BookingSlotsSheet`.
   static const String appointments = 'appointments';
+
+  static const String appointmentQuote = 'appointments/quote';
 
   /// A single appointment's full details, shown on `AppointmentDetailScreen`.
   static String appointmentDetails(int id) => 'appointments/$id';
@@ -48,12 +58,33 @@ class ApiEndpoints {
 
   // ─── Chat ─────────────────────────────────────────────────────────────────
   static const String chatImageUpload = 'chat/images';
+  static const String chatNotifications = '${rootUrl}chat/notifications';
 
   // ─── Offers ───────────────────────────────────────────────────────────────
   /// Active promotional offers — shown on `OffersScreen` (reached from the
   /// home screen's services grid) and, where `show_on_home` is true, meant
   /// to be highlighted on the home screen itself.
   static const String offers = 'offers';
+
+  /// A single offer's full record (same shape as one element of [offers]) —
+  /// fetched when a home banner with `type: "offer"` is tapped, so its
+  /// booking flow has the real `scope`/`doctors`/`clinics`/`specializations`.
+  static String offerDetails(int id) => 'offers/$id';
+
+  // ─── Banners ──────────────────────────────────────────────────────────────
+  /// The home screen's promotional carousel. Each item carries a `type`
+  /// (`offer` / `doctor` / `clinic` / `none`) plus a `target_id` that the app
+  /// resolves to the matching screen when the banner is tapped.
+  static const String banners = 'banners';
+
+  // ─── Favorites ────────────────────────────────────────────────────────────
+  /// `GET` lists the account's favorite clinics/branches (same shape as
+  /// [branches], each with `is_favorite`). Shown on `FavoritesScreen`.
+  static const String favoriteBranches = 'favorite-branches';
+
+  /// `POST` adds the clinic to favorites, `DELETE` removes it — fired by the
+  /// heart toggle on `BranchCard`.
+  static String favoriteBranch(int clinicId) => 'favorite-branches/$clinicId';
 
   // ─── Family ───────────────────────────────────────────────────────────────
   /// `GET` lists the account's linked family members; `POST` (multipart,
@@ -100,10 +131,29 @@ class ApiEndpoints {
   /// (one per paid/pending appointment), shown on `PaymentsScreen`.
   static const String payments = 'payments';
 
+  // ─── Contact ──────────────────────────────────────────────────────────────
+  /// The org's public contact channels (`phone` / `whatsapp_number` /
+  /// `email`) shown on `ContactScreen` — must be reachable for guests too.
+  static const String contactInfo = 'contact-info';
+
+  /// `POST` sends a contact-form message (`name` / `email` / `subject` /
+  /// `message`).
+  static const String contactMessages = 'contact-messages';
+
   // ─── Device ───────────────────────────────────────────────────────────────
   /// Registers/refreshes this device's push-notification token.
   static const String fcmToken = 'fcm-token';
 
   /// Syncs the app's active UI language with the backend.
   static const String appLang = 'app-lang';
+
+  // ─── Static pages ─────────────────────────────────────────────────────────
+  /// A CMS content page by slug (e.g. `terms-and-conditions`,
+  /// `privacy-policy`). `data.translations.{title,description}.{ar,en}` carry
+  /// the localized copy — the top-level `title`/`description` are not
+  /// reliably localized, so resolve from `translations`.
+  static String page(String slug) => 'pages/$slug';
+
+  static const String pageTermsSlug = 'terms-and-conditions';
+  static const String pagePrivacySlug = 'privacy-policy';
 }

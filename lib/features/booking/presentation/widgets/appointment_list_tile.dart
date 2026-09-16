@@ -7,6 +7,7 @@ import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_constants.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/app_text.dart';
+import '../../../../core/widgets/star_rating.dart';
 import '../../data/models/appointment_model.dart';
 import 'appointment_detail_actions.dart';
 import 'appointment_status_badge.dart';
@@ -94,6 +95,21 @@ class AppointmentListTile extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
+                    if (doctor?.avgRate != null) ...[
+                      3.height,
+                      Row(
+                        children: [
+                          StarRating(value: doctor!.avgRate!, size: 11, spacing: 1.5),
+                          4.width,
+                          AppText(
+                            doctor.avgRate!.toStringAsFixed(1),
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.textPrimaryColor.themeColor,
+                          ),
+                        ],
+                      ),
+                    ],
                     if (subtitle.isNotEmpty) ...[
                       3.height,
                       AppText(

@@ -187,6 +187,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                     14.height,
                     Expanded(
                       child: CustomScreenStateLayout(
+                        onRefresh: () => _cubit.getAppointments(status: _filter.apiValue),
                         isLoading: state is MyBookingsLoading || state is MyBookingsInitial,
                         error: state is MyBookingsError
                             ? ErrorModel(code: ErrorEnum.other, errorMessage: state.message)

@@ -27,4 +27,26 @@ class HelperMethods {
       throw 'Could not launch $url';
     }
   }
+
+  static Future<void> openDialer(String phone) async {
+    final uri = Uri(scheme: 'tel', path: phone.replaceAll(' ', ''));
+    if (!await launchUrl(uri)) {
+      throw 'Could not open the dialer';
+    }
+  }
+
+  static Future<void> openWhatsApp(String number) async {
+    final digits = number.replaceAll(RegExp(r'[^0-9]'), '');
+    final uri = Uri.parse('https://wa.me/$digits');
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      throw 'Could not open WhatsApp';
+    }
+  }
+
+  static Future<void> openEmail(String email) async {
+    final uri = Uri(scheme: 'mailto', path: email);
+    if (!await launchUrl(uri)) {
+      throw 'Could not open the mail app';
+    }
+  }
 }

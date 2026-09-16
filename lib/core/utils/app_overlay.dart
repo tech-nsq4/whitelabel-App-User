@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:vivacare_white_label/core/extensions/extensions.dart';
+import 'package:viva_connect_user/core/extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../app/router/navigation_services.dart';
+import '../widgets/app_text.dart';
 import 'app_colors.dart';
-import 'app_constants.dart';
 
 // ── Public API ────────────────────────────────────────────────────────────────
 
@@ -121,7 +121,9 @@ class _AppBannerState extends State<_AppBanner>
   @override
   Widget build(BuildContext context) {
     final isError = widget.type == _BannerType.error;
-    final bg = isError ? const Color(0xFFB71C1C) : AppColors.successColor.light;
+    final bg = isError
+        ? AppColors.errorBannerColor.themeColor
+        : AppColors.primaryColor.themeColor;
     final icon = isError
         ? Icons.error_outline_rounded
         : Icons.check_circle_outline_rounded;
@@ -160,15 +162,12 @@ class _AppBannerState extends State<_AppBanner>
                       Icon(icon, color: Colors.white, size: 22.sp),
                       12.width,
                       Expanded(
-                        child: Text(
+                        child: AppText(
                           widget.message,
-                          style: TextStyle(
-                            fontFamily: AppFonts.bodyFont,
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                            height: 1.4,
-                          ),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                          height: 1.4,
                         ),
                       ),
                       8.width,

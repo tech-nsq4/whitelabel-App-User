@@ -6,6 +6,9 @@ abstract class LocaleKeys {
   // ─── App ─────────────────────────────────────────────────────────────────
   static const String app_name = 'app_name';
 
+  // ─── Splash ──────────────────────────────────────────────────────────────
+  static const String splash_tagline = 'splash.tagline';
+
   // ─── Auth ─────────────────────────────────────────────────────────────────
   static const String auth_tagline = 'auth.tagline';
   static const String auth_login = 'auth.login';
@@ -56,6 +59,7 @@ abstract class LocaleKeys {
   static const String booking_reviewsTab = 'booking.reviews_tab';
   static const String booking_reviewsTitle = 'booking.reviews_title';
   static const String booking_viewAllReviews = 'booking.view_all_reviews';
+  static const String booking_noReviews = 'booking.no_reviews';
   static const String booking_noClinics = 'booking.no_clinics';
   static const String booking_availableAppointments = 'booking.available_appointments';
   static const String booking_about = 'booking.about';
@@ -80,6 +84,10 @@ abstract class LocaleKeys {
   static const String booking_branchesCount = 'booking.branches_count';
   static const String booking_viewDoctors = 'booking.view_doctors';
   static const String booking_directions = 'booking.directions';
+  static const String booking_favoritesTitle = 'booking.favorites_title';
+  static const String booking_favoritesCount = 'booking.favorites_count';
+  static const String booking_favoritesEmptyTitle = 'booking.favorites_empty_title';
+  static const String booking_favoritesEmptyDesc = 'booking.favorites_empty_desc';
   static const String booking_chooseDateTime = 'booking.choose_date_time';
   static const String booking_calendarLegend = 'booking.calendar_legend';
   static const String booking_availableSlotsCount = 'booking.available_slots_count';
@@ -132,6 +140,18 @@ abstract class LocaleKeys {
   static const String booking_rateSubmit = 'booking.rate_submit';
   static const String booking_rateSuccess = 'booking.rate_success';
   static const String booking_yourRatingTitle = 'booking.your_rating_title';
+  static const String booking_rateExcellent = 'booking.rate_excellent';
+  static const String booking_rateVeryGood = 'booking.rate_very_good';
+  static const String booking_rateGood = 'booking.rate_good';
+  static const String booking_rateFair = 'booking.rate_fair';
+  static const String booking_ratePoor = 'booking.rate_poor';
+  static const String booking_discountAppliedTitle = 'booking.discount_applied_title';
+  static const String booking_discountPromoLabel = 'booking.discount_promo_label';
+  static const String booking_discountOfferLabel = 'booking.discount_offer_label';
+  static const String booking_discountOriginalPrice = 'booking.discount_original_price';
+  static const String booking_discountValueLabel = 'booking.discount_value_label';
+  static const String booking_discountTotalAfter = 'booking.discount_total_after';
+  static const String booking_discountSavedBadge = 'booking.discount_saved_badge';
   static const String booking_reportLabel = 'booking.report_label';
   static const String booking_descriptionLabel = 'booking.description_label';
   static const String booking_requestDateLabel = 'booking.request_date_label';
@@ -161,6 +181,23 @@ abstract class LocaleKeys {
   static const String common_tapToZoom = 'common.tap_to_zoom';
   static const String common_noDataTitle = 'common.no_data_title';
   static const String common_noDataDesc = 'common.no_data_desc';
+
+  // ─── Coming Soon ──────────────────────────────────────────────────────────
+  static const String comingSoon_badge = 'coming_soon.badge';
+  static const String comingSoon_title = 'coming_soon.title';
+  static const String comingSoon_whatsComing = 'coming_soon.whats_coming';
+  static const String comingSoon_notifyMe = 'coming_soon.notify_me';
+  static const String comingSoon_notifyDone = 'coming_soon.notify_done';
+  static const String comingSoon_backHome = 'coming_soon.back_home';
+  static const String comingSoon_telemedTitle = 'coming_soon.telemed_title';
+  static const String comingSoon_telemedDescription =
+      'coming_soon.telemed_description';
+  static const String comingSoon_telemedHighlight1 =
+      'coming_soon.telemed_highlight_1';
+  static const String comingSoon_telemedHighlight2 =
+      'coming_soon.telemed_highlight_2';
+  static const String comingSoon_telemedHighlight3 =
+      'coming_soon.telemed_highlight_3';
 
   // ─── Family ───────────────────────────────────────────────────────────────
   static const String family_title = 'family.title';
@@ -297,6 +334,10 @@ abstract class LocaleKeys {
   static const String chat_locationMessageLabel = 'chat.location_message_label';
   static const String chat_emptyTitle = 'chat.empty_title';
   static const String chat_emptyDescription = 'chat.empty_description';
+  static const String chat_selectedCount = 'chat.selected_count';
+  static const String chat_deleteConfirmTitle = 'chat.delete_confirm_title';
+  static const String chat_deleteConfirmMessage = 'chat.delete_confirm_message';
+  static const String chat_deleteConfirmAction = 'chat.delete_confirm_action';
 
   // ─── Offers ───────────────────────────────────────────────────────────────
   static const String offers_title = 'offers.title';
@@ -329,6 +370,8 @@ abstract class LocaleKeys {
   static const String payments_payNowAction = 'payments.pay_now_action';
   static const String payments_promoCodeLabel = 'payments.promo_code_label';
   static const String payments_promoCodeHint = 'payments.promo_code_hint';
+  static const String payments_promoApply = 'payments.promo_apply';
+  static const String payments_promoInvalid = 'payments.promo_invalid';
   static const String payments_methodMada = 'payments.method_mada';
   static const String payments_methodWallet = 'payments.method_wallet';
 
@@ -351,18 +394,52 @@ abstract class LocaleKeys {
   static const String profile_updateSuccess = 'profile.update_success';
 
   // ─── Settings ─────────────────────────────────────────────────────────────
+  static const String settings_title = 'settings.title';
+  static const String settings_sectionGeneral = 'settings.section_general';
+  static const String settings_sectionAbout = 'settings.section_about';
+  static const String settings_sectionAccount = 'settings.section_account';
+  static const String settings_language = 'settings.language';
   static const String settings_changeLanguage = 'settings.change_language';
   static const String settings_changeLanguageSubtitle =
       'settings.change_language_subtitle';
   static const String settings_languageTitle = 'settings.language_title';
   static const String settings_arabic = 'settings.arabic';
   static const String settings_english = 'settings.english';
+  static const String settings_terms = 'settings.terms';
+  static const String settings_termsSubtitle = 'settings.terms_subtitle';
+  static const String settings_privacy = 'settings.privacy';
+  static const String settings_privacySubtitle = 'settings.privacy_subtitle';
+  static const String settings_deleteAccount = 'settings.delete_account';
+  static const String settings_deleteAccountSubtitle =
+      'settings.delete_account_subtitle';
+  static const String settings_deleteAccountMessage =
+      'settings.delete_account_message';
+  static const String settings_deleteAccountSent =
+      'settings.delete_account_sent';
   static const String settings_logout = 'settings.logout';
   static const String settings_logoutSubtitle = 'settings.logout_subtitle';
   static const String settings_logoutDialogTitle =
       'settings.logout_dialog_title';
   static const String settings_logoutDialogMessage =
       'settings.logout_dialog_message';
+
+  // ─── Contact ──────────────────────────────────────────────────────────────
+  static const String contact_title = 'contact.title';
+  static const String contact_subtitle = 'contact.subtitle';
+  static const String contact_call = 'contact.call';
+  static const String contact_whatsapp = 'contact.whatsapp';
+  static const String contact_branches = 'contact.branches';
+  static const String contact_channelsTitle = 'contact.channels_title';
+  static const String contact_phoneLabel = 'contact.phone_label';
+  static const String contact_whatsappLabel = 'contact.whatsapp_label';
+  static const String contact_emailLabel = 'contact.email_label';
+  static const String contact_formTitle = 'contact.form_title';
+  static const String contact_name = 'contact.name';
+  static const String contact_email = 'contact.email';
+  static const String contact_subject = 'contact.subject';
+  static const String contact_message = 'contact.message';
+  static const String contact_send = 'contact.send';
+  static const String contact_messageSent = 'contact.message_sent';
 
   // ─── Errors ───────────────────────────────────────────────────────────────
   static const String error_unauthorized = 'error.unauthorized';

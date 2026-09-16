@@ -19,4 +19,13 @@ class OffersRepo {
       throw NetworkException.fromDioException(e);
     }
   }
+
+  Future<OfferModel> getOffer(int id) async {
+    try {
+      final response = await _dio.get(ApiEndpoints.offerDetails(id));
+      return OfferModel.fromJson(response.data['data'] as Map<String, dynamic>);
+    } on DioException catch (e) {
+      throw NetworkException.fromDioException(e);
+    }
+  }
 }

@@ -54,7 +54,7 @@ class NajdiPatternPainter extends CustomPainter {
 class QrMockPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = const Color(0xFF0A1F1B);
+    final paint = Paint()..color = const Color(0xFF0A1424);
     final unit = size.width / 21;
 
     void finder(double gx, double gy) {

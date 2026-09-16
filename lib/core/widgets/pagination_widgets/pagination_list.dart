@@ -1,5 +1,5 @@
-import 'package:vivacare_white_label/core/widgets/app_text.dart';
-import 'package:vivacare_white_label/core/widgets/custom_loading_widget.dart';
+import 'package:viva_connect_user/core/widgets/app_text.dart';
+import 'package:viva_connect_user/core/widgets/custom_loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show ScrollDirection;
 

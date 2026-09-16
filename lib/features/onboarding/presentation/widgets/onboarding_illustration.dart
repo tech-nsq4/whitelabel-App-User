@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/utils/app_colors.dart';
+import '../../../../core/widgets/image/custom_image.dart';
 import 'onboarding_slide_data.dart';
 
-/// A self-drawn (no image assets) illustration for one onboarding page:
-/// a soft color blob with a lead icon in the middle and two small "orbiting"
-/// accent icons — themed per [OnboardingIllustrationType] using [AppColors]
-/// so it stays consistent (and correct in dark mode) with the rest of the app.
 class OnboardingIllustration extends StatelessWidget {
-  const OnboardingIllustration({super.key, required this.illustration});
+  const OnboardingIllustration({super.key, required this.slide});
 
-  final OnboardingIllustrationType illustration;
+  final OnboardingSlideData slide;
+
+  OnboardingIllustrationType get illustration => slide.illustration;
 
   _IllustrationStyle _styleFor(OnboardingIllustrationType type) {
     switch (type) {
@@ -48,6 +47,18 @@ class OnboardingIllustration extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (slide.hasImage) {
+      return Center(
+        child: CustomImage(
+          image: slide.imageUrl!,
+          width: 260.w,
+          height: 260.w,
+          radius: 24.r,
+          fit: BoxFit.cover,
+        ),
+      );
+    }
+
     final style = _styleFor(illustration);
 
     return Center(

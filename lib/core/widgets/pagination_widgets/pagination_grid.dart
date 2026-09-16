@@ -1,4 +1,4 @@
-import 'package:vivacare_white_label/core/widgets/custom_loading_widget.dart';
+import 'package:viva_connect_user/core/widgets/custom_loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

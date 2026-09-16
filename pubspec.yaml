@@ -1,4 +1,4 @@
-name: vivacare_white_label
+name: viva_connect_user
 description: "Reusable Flutter base template."
 publish_to: 'none'
 version: 1.0.0+1
@@ -59,7 +59,7 @@ dev_dependencies:
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/images/logo.jpeg"
+  image_path: "assets/images/logo.png"
 
 flutter:
   uses-material-design: true

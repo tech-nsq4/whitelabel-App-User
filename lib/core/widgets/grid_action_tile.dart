@@ -72,21 +72,24 @@ class GridActionTile extends StatelessWidget {
                   ),
                 ),
               ),
-            Column(
-              children: [
-                AppSvgIcon(icon, size: 24.sp, color: fg),
-                9.height,
-                AppText(label,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: labelColor,
-                    textAlign: TextAlign.center),
-                if (subLabel != null) ...[
-                  2.height,
-                  AppText(subLabel!,
-                      fontSize: 9.5, color: subColor, textAlign: TextAlign.center),
+            Center(
+              child: Column(
+                 crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  AppSvgIcon(icon, size: 24.sp, color: fg),
+                  9.height,
+                  AppText(label,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: labelColor,
+                      textAlign: TextAlign.center),
+                  if (subLabel != null) ...[
+                    2.height,
+                    AppText(subLabel!,
+                        fontSize: 9.5, color: subColor, textAlign: TextAlign.center),
+                  ],
                 ],
-              ],
+              ),
             ),
           ],
         ),

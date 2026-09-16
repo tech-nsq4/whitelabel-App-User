@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/di/injection.dart';
 import '../../../core/utils/app_constants.dart';
 import '../../../core/utils/locale_keys.dart';
+import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/screen_state_layout.dart';
 import '../data/chat_repo.dart';
 import '../data/models/chat_message_model.dart';
@@ -15,6 +16,7 @@ import '../logic/chat_cubit.dart';
 import 'widgets/chat_header.dart';
 import 'widgets/chat_input_bar.dart';
 import 'widgets/chat_message_bubble.dart';
+import 'widgets/chat_selection_bar.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({
@@ -38,6 +40,7 @@ class _ChatScreenState extends State<ChatScreen> {
   late final int _userId;
   late final String _userName;
   String? _lastMarkedReadMessageId;
+  final Set<String> _selectedIds = {};
 
   @override
   void initState() {
@@ -107,20 +110,69 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  void _toggleSelected(String id) {
+    setState(() {
+      if (!_selectedIds.remove(id)) _selectedIds.add(id);
+    });
+  }
+
+  void _startSelection(String id) {
+    setState(() => _selectedIds.add(id));
+  }
+
+  void _clearSelection() {
+    setState(_selectedIds.clear);
+  }
+
+  Future<void> _confirmDeleteSelected() async {
+    final ids = Set<String>.from(_selectedIds);
+    if (ids.isEmpty) return;
+
+    final confirmed = await showConfirmDialog(
+      context,
+      icon: Icons.delete_outline_rounded,
+      title: LocaleKeys.chat_deleteConfirmTitle.tr(),
+      message: LocaleKeys.chat_deleteConfirmMessage.tr(namedArgs: {'count': '${ids.length}'}),
+      confirmLabel: LocaleKeys.chat_deleteConfirmAction.tr(),
+      cancelLabel: LocaleKeys.common_cancel.tr(),
+    );
+    if (!confirmed) return;
+
+    await _cubit.deleteMessages(
+      chatId: _chatId,
+      messageIds: ids,
+      myRole: ChatSenderRole.user,
+    );
+    if (mounted) _clearSelection();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final selectionMode = _selectedIds.isNotEmpty;
+
     return BlocProvider.value(
       value: _cubit,
-      child: Scaffold(
-        body: Column(
-          children: [
-            ChatHeader(
-              name: widget.doctorName,
-              image: widget.doctorImage,
-              presenceRole: ChatSenderRole.doctor,
-              presenceId: widget.doctorId,
-            ),
-            Expanded(
+      child: PopScope(
+        canPop: !selectionMode,
+        onPopInvokedWithResult: (didPop, _) {
+          if (!didPop) _clearSelection();
+        },
+        child: Scaffold(
+          body: Column(
+            children: [
+              selectionMode
+                  ? ChatSelectionBar(
+                      count: _selectedIds.length,
+                      onClose: _clearSelection,
+                      onDelete: _confirmDeleteSelected,
+                    )
+                  : ChatHeader(
+                      name: widget.doctorName,
+                      image: widget.doctorImage,
+                      presenceRole: ChatSenderRole.doctor,
+                      presenceId: widget.doctorId,
+                    ),
+              Expanded(
               child: StreamBuilder<ChatReadStateModel>(
                 stream: getIt<ChatRepo>().watchReadState(_chatId),
                 builder: (context, readSnapshot) {
@@ -156,7 +208,15 @@ class _ChatScreenState extends State<ChatScreen> {
                                 message.createdAt != null &&
                                 otherLastReadAt != null &&
                                 !message.createdAt!.isAfter(otherLastReadAt);
-                            return ChatMessageBubble(message: message, isMine: isMine, isRead: isRead);
+                            return ChatMessageBubble(
+                              message: message,
+                              isMine: isMine,
+                              isRead: isRead,
+                              selectionMode: selectionMode,
+                              selected: _selectedIds.contains(message.id),
+                              onTap: isMine ? () => _toggleSelected(message.id) : null,
+                              onLongPress: isMine ? () => _startSelection(message.id) : null,
+                            );
                           },
                         ),
                       );
@@ -165,12 +225,14 @@ class _ChatScreenState extends State<ChatScreen> {
                 },
               ),
             ),
-            ChatInputBar(
-              onSendText: _sendText,
-              onSendImage: _sendImage,
-              onSendLocation: _sendLocation,
-            ),
-          ],
+              if (!selectionMode)
+                ChatInputBar(
+                  onSendText: _sendText,
+                  onSendImage: _sendImage,
+                  onSendLocation: _sendLocation,
+                ),
+            ],
+          ),
         ),
       ),
     );

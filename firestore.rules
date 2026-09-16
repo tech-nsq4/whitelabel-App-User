@@ -6,8 +6,8 @@ service cloud.firestore {
       allow read, write: if true;
 
       match /messages/{messageId} {
-        allow read, create: if true;
-        allow update, delete: if false;
+        allow read, create, delete: if true;
+        allow update: if false;
       }
     }
 

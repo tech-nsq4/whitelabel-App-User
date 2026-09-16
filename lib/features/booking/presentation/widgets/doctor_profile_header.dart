@@ -11,6 +11,7 @@ import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/app_svg_icon.dart';
 import '../../../../core/widgets/app_text.dart';
 import '../../../../core/widgets/custom_tap_effect.dart';
+import '../../../../core/widgets/star_rating.dart';
 import '../../../../core/widgets/image/custom_image.dart';
 import '../../../offers/data/models/applied_offer.dart';
 import '../../data/models/doctor_profile_model.dart';
@@ -18,11 +19,18 @@ import 'booking_slots_sheet.dart' show formatNearestAvailableDayLabel;
 import 'doctor_stats_strip.dart';
 
 class DoctorProfileHeader extends StatelessWidget {
-  const DoctorProfileHeader({super.key, required this.doctor, this.onChatTap, this.offer});
+  const DoctorProfileHeader({
+    super.key,
+    required this.doctor,
+    this.onChatTap,
+    this.offer,
+    this.paidPrice,
+  });
 
   final DoctorProfileModel doctor;
   final VoidCallback? onChatTap;
   final AppliedOffer? offer;
+  final double? paidPrice;
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +85,19 @@ class DoctorProfileHeader extends StatelessWidget {
                       AppText(doctor.specialtyLabel,
                           fontSize: 12, fontWeight: FontWeight.w600, color: primary, maxLines: 2),
                     ],
+                    if (doctor.avgRate != null) ...[
+                      6.height,
+                      Row(
+                        children: [
+                          StarRating(value: doctor.avgRate!, size: 13, spacing: 1.5),
+                          5.width,
+                          AppText(doctor.avgRate!.toStringAsFixed(1),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.textPrimaryColor.themeColor),
+                        ],
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -98,7 +119,7 @@ class DoctorProfileHeader extends StatelessWidget {
             ],
           ),
           14.height,
-          DoctorStatsStrip(doctor: doctor, offer: offer),
+          DoctorStatsStrip(doctor: doctor, offer: offer, paidPrice: paidPrice),
           if (nearestAvailable != null) ...[
             12.height,
             _NearestAvailableBanner(nearestAvailable),

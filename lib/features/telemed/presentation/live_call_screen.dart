@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../core/extensions/extensions.dart';
 import '../../../core/utils/app_colors.dart';
-import '../../../core/utils/app_constants.dart';
+import '../../../core/widgets/app_text.dart';
 import '../../booking/data/models/doctor_model.dart';
 
 class LiveCallScreen extends StatefulWidget {
@@ -44,7 +44,7 @@ class _LiveCallScreenState extends State<LiveCallScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF08120F),
+      backgroundColor: const Color(0xFF0A1420),
       body: Stack(
         children: [
           Positioned.fill(
@@ -53,7 +53,7 @@ class _LiveCallScreenState extends State<LiveCallScreen> {
                 gradient: RadialGradient(
                   center: Alignment.topCenter,
                   radius: 1.1,
-                  colors: [const Color(0xFF123A32), const Color(0xFF08120F)],
+                  colors: [const Color(0xFF12314A), const Color(0xFF0A1420)],
                 ),
               ),
             ),
@@ -77,24 +77,21 @@ class _LiveCallScreenState extends State<LiveCallScreen> {
                     ],
                   ),
                   alignment: Alignment.center,
-                  child: Text(widget.doctor.avatarLetter,
-                      style: TextStyle(
-                          fontFamily: AppFonts.headingFont,
-                          fontSize: 38.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white)),
+                  child: AppText(widget.doctor.avatarLetter,
+                      isHeading: true,
+                      fontSize: 38,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white),
                 ),
                 16.height,
-                Text(widget.doctor.name,
-                    style: TextStyle(
-                        fontFamily: AppFonts.headingFont,
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white)),
+                AppText(widget.doctor.name,
+                    isHeading: true,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white),
                 4.height,
-                Text(widget.doctor.specialty,
-                    style: TextStyle(
-                        fontSize: 12.sp, color: Colors.white.withValues(alpha: 0.5))),
+                AppText(widget.doctor.specialty,
+                    fontSize: 12, color: Colors.white.withValues(alpha: 0.5)),
               ],
             ),
           ),
@@ -112,8 +109,8 @@ class _LiveCallScreenState extends State<LiveCallScreen> {
                       color: AppColors.errorColor.themeColor,
                       borderRadius: BorderRadius.circular(99),
                     ),
-                    child: Text('مباشر',
-                        style: TextStyle(fontSize: 10.sp, color: Colors.white, fontWeight: FontWeight.w600)),
+                    child: AppText('مباشر',
+                        fontSize: 10, color: Colors.white, fontWeight: FontWeight.w600),
                   ),
                   8.width,
                   Container(
@@ -122,8 +119,7 @@ class _LiveCallScreenState extends State<LiveCallScreen> {
                       color: Colors.white.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(99),
                     ),
-                    child: Text(_elapsed,
-                        style: const TextStyle(color: Colors.white, fontSize: 11)),
+                    child: AppText(_elapsed, color: Colors.white, fontSize: 11),
                   ),
                 ]),
               ],

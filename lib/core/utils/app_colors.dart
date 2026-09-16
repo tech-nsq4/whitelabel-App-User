@@ -1,4 +1,4 @@
-import 'package:vivacare_white_label/app/router/navigation_services.dart';
+import 'package:viva_connect_user/app/router/navigation_services.dart';
 import 'package:flutter/material.dart';
 
 class ColorModel {
@@ -25,25 +25,36 @@ extension ColorTheme on ColorModel {
 class AppColors {
   AppColors._();
 
-  // ─── Brand (deep emerald) ───────────────────────────────────────────────
+  // ─── Brand (primary blue) ───────────────────────────────────────────────
   static const ColorModel primaryColor = ColorModel(
-    lightColor: Color(0xFF0F6B5C),
-    darkColor: Color(0xFF1A8B77),
+    lightColor: Color(0xFF113C7A),
+    darkColor: Color(0xFF3B6FB0),
   );
 
   static const ColorModel primaryLightColor = ColorModel(
-    lightColor: Color(0xFF1A8B77),
-    darkColor: Color(0xFF1A8B77),
+    lightColor: Color(0xFF5388BA),
+    darkColor: Color(0xFF5388BA),
   );
 
   static const ColorModel primaryDarkColor = ColorModel(
-    lightColor: Color(0xFF0A4F44),
-    darkColor: Color(0xFF0A4F44),
+    lightColor: Color(0xFF174882),
+    darkColor: Color(0xFF174882),
   );
 
+  // ─── Secondary (turquoise) ──────────────────────────────────────────────
   static const ColorModel secondaryColor = ColorModel(
-    lightColor: Color(0xff1B5583),
-    darkColor: Color(0xff1B5583),
+    lightColor: Color(0xFF00A0A1),
+    darkColor: Color(0xFF1CBEBF),
+  );
+
+  static const ColorModel secondaryLightColor = ColorModel(
+    lightColor: Color(0xFF00A1A1),
+    darkColor: Color(0xFF00A1A1),
+  );
+
+  static const ColorModel secondaryDarkColor = ColorModel(
+    lightColor: Color(0xFF006A6A),
+    darkColor: Color(0xFF006A6A),
   );
 
   // ─── Surfaces ────────────────────────────────────────────────────────────
@@ -93,6 +104,11 @@ class AppColors {
   static const ColorModel errorColor = ColorModel(
     lightColor: Color(0xFFB3402F),
     darkColor: Color(0xFFEF5350),
+  );
+
+  static const ColorModel errorBannerColor = ColorModel(
+    lightColor: Color(0xFFB71C1C),
+    darkColor: Color(0xFFB71C1C),
   );
 
   static const ColorModel successColor = ColorModel(

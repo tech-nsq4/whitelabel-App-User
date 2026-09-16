@@ -15,10 +15,12 @@ class ListRowTile extends StatelessWidget {
   const ListRowTile({
     super.key,
     this.icon,
+    this.iconData,
     required this.title,
     this.subtitle,
     this.iconBg,
     this.iconColor,
+    this.titleColor,
     this.trailing,
     this.showChevron = true,
     this.showDivider = true,
@@ -26,10 +28,12 @@ class ListRowTile extends StatelessWidget {
   });
 
   final String? icon;
+  final IconData? iconData;
   final String title;
   final String? subtitle;
   final Color? iconBg;
   final Color? iconColor;
+  final Color? titleColor;
   final Widget? trailing;
   final bool showChevron;
   final bool showDivider;
@@ -54,7 +58,7 @@ class ListRowTile extends StatelessWidget {
         ),
         child: Row(
           children: [
-            if (icon != null) ...[
+            if (icon != null || iconData != null) ...[
               Container(
                 width: 42.r,
                 height: 42.r,
@@ -63,8 +67,11 @@ class ListRowTile extends StatelessWidget {
                   borderRadius: BorderRadius.circular(13.r),
                 ),
                 child: Center(
-                  child:
-                      AppSvgIcon(icon!, size: 19.sp, color: iconColor ?? primary),
+                  child: iconData != null
+                      ? Icon(iconData,
+                          size: 20.sp, color: iconColor ?? primary)
+                      : AppSvgIcon(icon!,
+                          size: 19.sp, color: iconColor ?? primary),
                 ),
               ),
               13.width,
@@ -77,7 +84,7 @@ class ListRowTile extends StatelessWidget {
                     title,
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimaryColor.themeColor,
+                    color: titleColor ?? AppColors.textPrimaryColor.themeColor,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -131,13 +138,11 @@ class AppChip extends StatelessWidget {
             AppColors.primaryColor.themeColor.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(99),
       ),
-      child: Text(
+      child: AppText(
         label,
-        style: TextStyle(
-          fontSize: 10.5.sp,
-          fontWeight: FontWeight.w600,
-          color: color ?? AppColors.primaryColor.themeColor,
-        ),
+        fontSize: 10.5,
+        fontWeight: FontWeight.w600,
+        color: color ?? AppColors.primaryColor.themeColor,
       ),
     );
   }
