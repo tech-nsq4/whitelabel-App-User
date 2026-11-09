@@ -33,6 +33,7 @@ class Routes {
   static const String immunity = '/immunity';
   static const String askDoctor = '/ask-doctor';
   static const String homeCare = '/home-care';
+  static const String locationPicker = '/location-picker';
 
   static const String telemed = '/telemed';
   static const String liveCall = '/live-call';
@@ -50,6 +51,7 @@ class Routes {
   static const String doctorSearch = '/doctor-search';
   static const String doctor = '/doctor';
   static const String appointmentDetail = '/appointment-detail';
+  static const String videoCall = '/video-call';
   static const String myBookings = '/my-bookings';
   static const String chat = '/chat';
   static const String testResultDetail = '/test-result-detail';

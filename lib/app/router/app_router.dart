@@ -26,6 +26,7 @@ import '../../features/booking/presentation/specs_screen.dart';
 import '../../features/booking/presentation/symptom_checker_screen.dart';
 import '../../features/booking/presentation/test_result_detail_screen.dart';
 import '../../features/booking/data/models/appointment_model.dart' show TestRequestModel;
+import '../../features/booking/data/models/consultation_type.dart';
 import '../../features/booking/data/models/specialization_model.dart';
 import '../../features/chat/presentation/chat_screen.dart';
 import '../../features/emergency/presentation/em_ambulance_screen.dart';
@@ -36,7 +37,10 @@ import '../../features/emergency/presentation/emergency_screen.dart';
 import '../../features/family/data/models/family_member_model.dart';
 import '../../features/family/logic/family_cubit.dart';
 import '../../features/family/presentation/member_screen.dart';
-import '../../features/homecare/presentation/homecare_screen.dart';
+import '../../features/home_visit/data/models/home_visit_area_model.dart';
+import '../../features/home_visit/presentation/home_visit_screen.dart';
+import '../../features/location_picker/data/models/picked_location.dart';
+import '../../features/location_picker/presentation/location_picker_screen.dart';
 import '../../features/immunity/presentation/immunity_screen.dart';
 import '../../features/lab/logic/test_history_cubit.dart' show TestHistoryType;
 import '../../features/lab/presentation/test_history_screen.dart';
@@ -56,7 +60,7 @@ import '../../features/pharmacy/presentation/ph_clinics_screen.dart';
 import '../../features/reports/presentation/reports_screen.dart';
 import '../../features/services/presentation/services_screen.dart';
 import '../../features/splash/presentation/splash_screen.dart';
-import '../../features/telemed/presentation/telemed_coming_soon_screen.dart';
+import '../../features/video_call/presentation/video_call_screen.dart';
 import '../../features/visits/presentation/visit_detail_screen.dart';
 import '../../features/visits/presentation/visit_list_screen.dart';
 import '../../features/visits/presentation/visits_screen.dart';
@@ -162,7 +166,7 @@ class RouteGenerator {
         return _pageRoute(const AskDoctorScreen());
 
       case Routes.telemed:
-        return _pageRoute(const TelemedComingSoonScreen());
+        return _pageRoute(const SpecsScreen(onlineOnly: true));
 
       case Routes.emergency:
         return _pageRoute(const EmergencyScreen());
@@ -180,7 +184,12 @@ class RouteGenerator {
         return _pageRoute(const EmCheckinScreen());
 
       case Routes.homeCare:
-        return _pageRoute(const HomeCareScreen());
+        return _pageRoute(const HomeVisitScreen());
+
+      case Routes.locationPicker:
+        return _pageRoute(LocationPickerScreen(
+          initialLocation: arguments?['initialLocation'] as PickedLocation?,
+        ));
 
       case Routes.book:
         return _pageRoute(const BookScreen());
@@ -206,10 +215,21 @@ class RouteGenerator {
         return _pageRoute(DoctorScreen(
           doctorId: arguments?['id'] as int,
           offer: arguments?['appliedOffer'] as AppliedOffer?,
+          consultationType: arguments?['consultationType'] as ConsultationType? ??
+              ConsultationType.clinic,
+          homeVisitArea: arguments?['homeVisitArea'] as HomeVisitAreaModel?,
         ));
 
       case Routes.appointmentDetail:
         return _pageRoute(AppointmentDetailScreen(appointmentId: arguments?['id'] as int));
+
+      case Routes.videoCall:
+        return _pageRoute(VideoCallScreen(
+          roomId: arguments?['roomId'] as String,
+          userId: arguments?['userId'] as String,
+          userName: arguments?['userName'] as String,
+          appointmentId: arguments?['appointmentId'] as int?,
+        ));
 
       case Routes.myBookings:
         return _pageRoute(const MyBookingsScreen());

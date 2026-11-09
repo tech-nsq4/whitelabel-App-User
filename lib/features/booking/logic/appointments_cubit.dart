@@ -5,6 +5,8 @@ import '../../../core/network/network_exceptions.dart';
 import '../../../core/utils/app_overlay.dart';
 import '../data/booking_repo.dart';
 import '../data/models/appointment_model.dart';
+import '../data/models/consultation_type.dart';
+import '../../home_visit/data/models/home_visit_address.dart';
 
 part 'appointments_state.dart';
 
@@ -39,6 +41,9 @@ class AppointmentsCubit extends Cubit<AppointmentsState> {
     int? familyMemberId,
     int? offerId,
     String? promoCode,
+    ConsultationType type = ConsultationType.clinic,
+    int? areaId,
+    HomeVisitAddress? homeVisitAddress,
   }) async {
     try {
       return await _repo.createAppointment(
@@ -52,6 +57,9 @@ class AppointmentsCubit extends Cubit<AppointmentsState> {
         familyMemberId: familyMemberId,
         offerId: offerId,
         promoCode: promoCode,
+        type: type,
+        areaId: areaId,
+        homeVisitAddress: homeVisitAddress,
       );
     } catch (e) {
       final msg = e is NetworkException ? e.message : e.toString();

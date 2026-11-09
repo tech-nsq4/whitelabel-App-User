@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/network/network_exceptions.dart';
 import '../../../core/utils/app_overlay.dart';
 import '../data/booking_repo.dart';
+import '../data/models/consultation_type.dart';
 import '../data/models/doctor_time_table_model.dart';
 
 part 'time_tables_state.dart';
@@ -23,11 +24,15 @@ class TimeTablesCubit extends Cubit<TimeTablesState> {
   /// back are just the generic weekly template. Builds the calendar itself
   /// (which days have any schedule at all); [refreshDaySlots] is what
   /// confirms real per-date availability once a day is actually picked.
-  Future<void> getTimeTables(int doctorId, {int? clinicId}) async {
+  Future<void> getTimeTables(
+    int doctorId, {
+    int? clinicId,
+    ConsultationType type = ConsultationType.clinic,
+  }) async {
     emit(const TimeTablesLoading());
     try {
-      final timeTables = await _repo.getDoctorTimeTables(doctorId, clinicId: clinicId);
-      emit(TimeTablesSuccess(DoctorAvailability(timeTables)));
+      final timeTables = await _repo.getDoctorTimeTables(doctorId, clinicId: clinicId, type: type);
+      emit(TimeTablesSuccess(DoctorAvailability(timeTables, type: type)));
     } catch (e) {
       final msg = e is NetworkException ? e.message : e.toString();
       emit(TimeTablesError(msg));
@@ -45,15 +50,25 @@ class TimeTablesCubit extends Cubit<TimeTablesState> {
   /// calendar — called every time the user picks a different day, since the
   /// template from [getTimeTables] can't reflect which slots are actually
   /// booked on any one specific date.
-  Future<void> refreshDaySlots(int doctorId, DateTime date, {int? clinicId}) async {
+  Future<void> refreshDaySlots(
+    int doctorId,
+    DateTime date, {
+    int? clinicId,
+    ConsultationType type = ConsultationType.clinic,
+  }) async {
     final availability = _currentAvailability;
     if (availability == null) return; // no calendar loaded yet
     _latestRequestedDate = date;
     emit(TimeTablesDaySlotsLoading(availability, date));
     try {
-      final timeTables = await _repo.getDoctorTimeTables(doctorId, date: date, clinicId: clinicId);
+      final timeTables = await _repo.getDoctorTimeTables(
+        doctorId,
+        date: date,
+        clinicId: clinicId,
+        type: type,
+      );
       if (_latestRequestedDate != date) return; // superseded by a newer pick
-      final daySlots = DoctorAvailability(timeTables).slotsFor(date);
+      final daySlots = DoctorAvailability(timeTables, type: type).slotsFor(date);
       emit(TimeTablesSuccess(availability.withDateOverride(date, daySlots)));
     } catch (e) {
       if (_latestRequestedDate != date) return;

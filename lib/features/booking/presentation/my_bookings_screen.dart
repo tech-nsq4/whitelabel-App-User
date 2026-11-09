@@ -72,6 +72,8 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
       showFamilyMemberSelector: false,
       ctaLabel: LocaleKeys.booking_confirmReschedule.tr(),
       clinicId: doctor.clinic?.id,
+      consultationType: appointment.consultationType,
+      homeVisitArea: appointment.area,
     );
     if (slot == null || !mounted) return;
 
@@ -127,11 +129,25 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
     unawaited(_appointmentsCubit.getAppointments());
   }
 
+  double _bookAgainPrice(AppointmentModel appointment, BookingSlotResult slot) {
+    final doctorPrice = appointment.doctor?.price ?? 0;
+    if (!appointment.isHomeVisit) return doctorPrice;
+    final area = slot.homeVisitArea;
+    if (area != null && area.hasCost) return area.costValue;
+    return appointment.originalPrice ?? doctorPrice;
+  }
+
   Future<void> _bookAgain(AppointmentModel appointment) async {
     final doctor = appointment.doctor;
     if (doctor == null) return;
 
-    final slot = await showBookingSlotsSheet(context, doctor, clinicId: doctor.clinic?.id);
+    final slot = await showBookingSlotsSheet(
+      context,
+      doctor,
+      clinicId: doctor.clinic?.id,
+      consultationType: appointment.consultationType,
+      homeVisitArea: appointment.area,
+    );
     if (slot == null || !mounted) return;
 
     final locale = context.locale.languageCode;
@@ -141,7 +157,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
       context,
       title: doctor.name,
       detail: '${doctor.name} · $when',
-      amountLabel: '${doctor.price.toStringAsFixed(0)} ${LocaleKeys.common_currency.tr()}',
+      amountLabel: '${_bookAgainPrice(appointment, slot).toStringAsFixed(0)} ${LocaleKeys.common_currency.tr()}',
     );
     if (result == null || !mounted) return;
 
@@ -154,6 +170,8 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
       date: slot.date,
       clinicId: slot.clinicId,
       familyMemberId: slot.familyMember?.id,
+      type: appointment.consultationType,
+      areaId: appointment.isHomeVisit ? slot.homeVisitArea?.id ?? appointment.areaId : null,
     );
     if (newAppointment == null || !mounted) return;
 
@@ -164,7 +182,9 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
       context,
       doctor: doctor.name,
       when: when,
-      branch: doctor.clinicById(slot.clinicId)?.name ?? '',
+      branch: appointment.isHomeVisit
+          ? [LocaleKeys.homeVisit_title.tr(), if (appointment.areaName != null) appointment.areaName!].join(' · ')
+          : doctor.clinicById(slot.clinicId)?.name ?? '',
     );
   }
 

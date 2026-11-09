@@ -6,8 +6,10 @@ import '../../../../app/router/routes.dart';
 import '../../../../core/extensions/extensions.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/locale_keys.dart';
+import '../../../../core/widgets/app_text.dart';
 import '../../../../core/widgets/price_text.dart';
 import '../../data/models/appointment_model.dart';
+import '../../data/models/consultation_type.dart';
 import 'appointment_discount_card.dart';
 import 'appointment_status_badge.dart';
 import 'booking_slots_sheet.dart' show formatBookingDayLabel;
@@ -31,7 +33,7 @@ class AppointmentDetailBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final locale = context.locale.languageCode;
     final doctor = appointment.doctor;
-    final clinic = doctor?.clinic;
+    final clinic = appointment.consultationType.isClinic ? doctor?.clinic : null;
     final date = appointment.date;
     final whenLabel = date == null ? '—' : '${formatBookingDayLabel(date, locale)} · ${appointment.timeLabel}';
     final priceLabel = appointment.finalPrice != null
@@ -67,6 +69,12 @@ class AppointmentDetailBody extends StatelessWidget {
           patientName: appointment.familyMember?.name,
           whenLabel: whenLabel,
           clinicName: clinic?.name,
+          visitTypeLabel: switch (appointment.consultationType) {
+            ConsultationType.online => LocaleKeys.videoCall_onlineVisit.tr(),
+            ConsultationType.homeVisit => LocaleKeys.homeVisit_title.tr(),
+            ConsultationType.clinic => null,
+          },
+          areaName: appointment.isHomeVisit ? appointment.areaName : null,
           priceLabel: priceLabel,
           strikePriceLabel: strikePriceLabel,
         ),
@@ -76,46 +84,42 @@ class AppointmentDetailBody extends StatelessWidget {
         ],
         if (clinic != null) ...[
           14.height,
-          Text(LocaleKeys.booking_clinicInfo.tr(),
-              style: TextStyle(
-                  fontSize: 10.sp,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 1.2,
-                  color: AppColors.mutedColor.themeColor)),
+          AppText(LocaleKeys.booking_clinicInfo.tr(),
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 1.2,
+              color: AppColors.mutedColor.themeColor),
           10.height,
           DoctorClinicCard(clinic: clinic, showFavorite: false),
         ],
         if (appointment.status == 'completed') ...[
           if (appointment.prescriptionImage != null || appointment.prescriptions.isNotEmpty) ...[
             14.height,
-            Text(LocaleKeys.booking_prescriptionTitle.tr(),
-                style: TextStyle(
-                    fontSize: 10.sp,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 1.2,
-                    color: AppColors.mutedColor.themeColor)),
+            AppText(LocaleKeys.booking_prescriptionTitle.tr(),
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 1.2,
+              color: AppColors.mutedColor.themeColor),
             10.height,
             PrescriptionCard(appointment: appointment),
           ],
           if (appointment.testRequests.isNotEmpty) ...[
             14.height,
-            Text(LocaleKeys.booking_testResultsTitle.tr(),
-                style: TextStyle(
-                    fontSize: 10.sp,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 1.2,
-                    color: AppColors.mutedColor.themeColor)),
+            AppText(LocaleKeys.booking_testResultsTitle.tr(),
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 1.2,
+              color: AppColors.mutedColor.themeColor),
             10.height,
             TestResultsCard(requests: appointment.testRequests),
           ],
           if (appointment.isRated) ...[
             14.height,
-            Text(LocaleKeys.booking_yourRatingTitle.tr(),
-                style: TextStyle(
-                    fontSize: 10.sp,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 1.2,
-                    color: AppColors.mutedColor.themeColor)),
+            AppText(LocaleKeys.booking_yourRatingTitle.tr(),
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 1.2,
+              color: AppColors.mutedColor.themeColor),
             10.height,
             RatingSummaryCard(rate: appointment.rate!, comment: appointment.comment),
           ],

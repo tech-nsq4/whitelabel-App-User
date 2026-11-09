@@ -15,14 +15,25 @@ import '../../data/models/doctor_profile_model.dart';
 /// [onBook] runs the shared booking flow with no clinic pre-selected — the
 /// slot sheet picks the clinic when the doctor has more than one.
 class DoctorBookBar extends StatelessWidget {
-  const DoctorBookBar({super.key, required this.doctor, required this.onBook, this.offer});
+  const DoctorBookBar({
+    super.key,
+    required this.doctor,
+    required this.onBook,
+    this.offer,
+    this.price,
+    this.priceLabel,
+  });
 
   final DoctorProfileModel doctor;
   final VoidCallback onBook;
   final AppliedOffer? offer;
+  final double? price;
+  final String? priceLabel;
 
   @override
   Widget build(BuildContext context) {
+    final basePrice = price ?? doctor.price;
+
     return Container(
       padding: EdgeInsets.all(12.r),
       decoration: BoxDecoration(
@@ -43,12 +54,12 @@ class DoctorBookBar extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              AppText(LocaleKeys.booking_feeLabel.tr(),
+              AppText(priceLabel ?? LocaleKeys.booking_feeLabel.tr(),
                   fontSize: 9.5, color: AppColors.mutedColor.themeColor),
               2.height,
               PriceText(
-                amount: offer?.finalPriceFor(doctor.price) ?? doctor.price,
-                strikeAmount: doctor.price,
+                amount: offer?.finalPriceFor(basePrice) ?? basePrice,
+                strikeAmount: basePrice,
                 isHeading: true,
                 fontSize: 15,
                 color: AppColors.primaryColor.themeColor,

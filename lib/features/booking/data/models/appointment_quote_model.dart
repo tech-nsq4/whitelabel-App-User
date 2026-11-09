@@ -28,9 +28,9 @@ class AppointmentQuoteModel extends Equatable {
     final offer = json['offer'] as Map<String, dynamic>?;
     final promo = json['promo_code'] as Map<String, dynamic>?;
     return AppointmentQuoteModel(
-      originalPrice: (json['original_price'] as num?)?.toDouble() ?? 0,
-      discountAmount: (json['discount_amount'] as num?)?.toDouble() ?? 0,
-      finalPrice: (json['final_price'] as num?)?.toDouble() ?? 0,
+      originalPrice: double.tryParse('${json['original_price'] ?? 0}') ?? 0,
+      discountAmount: double.tryParse('${json['discount_amount'] ?? 0}') ?? 0,
+      finalPrice: double.tryParse('${json['final_price'] ?? 0}') ?? 0,
       offerId: (offer?['id'] as num?)?.toInt(),
       promoCodeId: (promo?['id'] as num?)?.toInt(),
       promoCode: promo?['code'] as String?,

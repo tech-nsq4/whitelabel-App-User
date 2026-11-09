@@ -1,7 +1,7 @@
 class ApiEndpoints {
   ApiEndpoints._();
 
-  static const String rootUrl = 'https://white-label.nsq4.sa/api/';
+  static const String rootUrl = 'https://white-label.nasaq4.com/api/';
   static const String baseUrl = '${rootUrl}user/';
 
   // ─── Onboarding ───────────────────────────────────────────────────────────
@@ -55,6 +55,12 @@ class ApiEndpoints {
 
   /// Rates a completed appointment (1-5 stars + an optional comment).
   static String appointmentRate(int id) => 'appointments/$id/rate';
+
+  static String appointmentCallJoin(int id) => 'appointments/$id/call/join';
+
+  // ─── Home visit ───────────────────────────────────────────────────────────
+  static const String cities = 'cities';
+  static const String areas = 'areas';
 
   // ─── Chat ─────────────────────────────────────────────────────────────────
   static const String chatImageUpload = 'chat/images';

@@ -17,7 +17,7 @@ void main() async {
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseMessaging.onBackgroundMessage(firebaseBackgroundMessageHandler);
-  await NotificationService.init();
+  // await NotificationService.init();
 
   runApp(
     tr.EasyLocalization(

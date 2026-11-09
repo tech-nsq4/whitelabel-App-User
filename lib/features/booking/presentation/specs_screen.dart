@@ -31,10 +31,16 @@ T? _firstWhereOrNull<T>(Iterable<T> items, bool Function(T) test) {
 /// the symptom checker with an [initialSpecialty] title to resolve once the
 /// list loads (falls back to "الكل" when it doesn't match).
 class SpecsScreen extends StatefulWidget {
-  const SpecsScreen({super.key, this.specialization, this.initialSpecialty});
+  const SpecsScreen({
+    super.key,
+    this.specialization,
+    this.initialSpecialty,
+    this.onlineOnly = false,
+  });
 
   final SpecializationModel? specialization;
   final String? initialSpecialty;
+  final bool onlineOnly;
 
   @override
   State<SpecsScreen> createState() => _SpecsScreenState();
@@ -57,7 +63,7 @@ class _SpecsScreenState extends State<SpecsScreen> {
     super.initState();
     _selected = widget.specialization;
     _ready = widget.specialization != null;
-    _specsCubit.getSpecializations();
+    _specsCubit.getSpecializations(onlineOnly: widget.onlineOnly);
   }
 
   @override
@@ -183,7 +189,11 @@ class _SpecsScreenState extends State<SpecsScreen> {
                     child: BlocBuilder<DoctorsCubit, DoctorsState>(
                       builder: (context, doctorsState) {
                         return ScreenHeader(
-                          title: selected?.title ?? LocaleKeys.booking_allDoctors.tr(),
+                          title: selected?.title ??
+                              (widget.onlineOnly
+                                      ? LocaleKeys.booking_onlineConsultationTitle
+                                      : LocaleKeys.booking_allDoctors)
+                                  .tr(),
                           subtitle: doctorsState is DoctorsSuccess
                               ? LocaleKeys.booking_doctorsCount
                                   .tr(namedArgs: {'count': '${doctorsState.doctors.length}'})
@@ -205,6 +215,7 @@ class _SpecsScreenState extends State<SpecsScreen> {
                             key: ValueKey('spec-${selected?.id ?? 'all'}'),
                             specializationId: selected?.id,
                             subSpecializationId: _subSpecialization?.id,
+                            onlineOnly: widget.onlineOnly,
                             belowSearch: _chipRows(specializations, subs),
                           ),
                   ),

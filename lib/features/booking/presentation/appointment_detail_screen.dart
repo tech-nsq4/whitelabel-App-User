@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../app/router/routes.dart';
 import '../../../core/di/injection.dart';
 import '../../../core/extensions/extensions.dart';
 import '../../../core/utils/app_colors.dart';
+import '../../../core/utils/app_constants.dart';
 import '../../../core/utils/app_overlay.dart';
 import '../../../core/utils/locale_keys.dart';
 import '../../../core/widgets/confirm_dialog.dart';
@@ -19,6 +21,7 @@ import '../logic/appointment_detail_cubit.dart';
 import '../logic/appointments_cubit.dart';
 import 'widgets/appointment_detail_actions.dart';
 import 'widgets/appointment_detail_body.dart';
+import 'widgets/appointment_video_call_card.dart';
 import 'widgets/booking_confirmed_dialog.dart';
 import 'widgets/booking_slots_sheet.dart';
 import 'widgets/rate_appointment_sheet.dart';
@@ -39,20 +42,49 @@ class AppointmentDetailScreen extends StatefulWidget {
 class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   late final AppointmentDetailCubit _cubit = getIt<AppointmentDetailCubit>();
   late final AppointmentsCubit _appointmentsCubit = getIt<AppointmentsCubit>();
+  Timer? _callStatusPoll;
+  bool _inCall = false;
 
   @override
   void initState() {
     super.initState();
     _cubit.getAppointment(widget.appointmentId);
+    _callStatusPoll =
+        Timer.periodic(const Duration(seconds: 15), (_) => _pollCallStatus());
   }
 
   @override
   void dispose() {
+    _callStatusPoll?.cancel();
     _cubit.close();
     // `_appointmentsCubit` is the app-wide singleton `HomeScreen`'s
     // "upcoming appointment" card listens to (see `injection.dart`) — don't
     // close it here, it needs to stay alive after this screen is gone.
     super.dispose();
+  }
+
+  void _pollCallStatus() {
+    final state = _cubit.state;
+    if (_inCall ||
+        state is! AppointmentDetailSuccess ||
+        !AppointmentVideoCallCard.isVisible(state.appointment)) {
+      return;
+    }
+    _cubit.refreshSilently(widget.appointmentId);
+  }
+
+  Future<void> _joinVideoCall(AppointmentModel appointment) async {
+    final callId = await _cubit.joinVideoCall(appointment);
+    if (callId == null || !mounted) return;
+    _inCall = true;
+    await Navigator.pushNamed(context, Routes.videoCall, arguments: {
+      'roomId': callId,
+      'userId': 'user_${kUserModel?.id ?? appointment.id}',
+      'userName': kUserModel?.name ?? kUserModel?.phone ?? 'user',
+      'appointmentId': appointment.id,
+    });
+    _inCall = false;
+    if (mounted) _cubit.refreshSilently(widget.appointmentId);
   }
 
   Future<void> _reschedule(AppointmentModel appointment) async {
@@ -65,6 +97,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       showFamilyMemberSelector: false,
       ctaLabel: LocaleKeys.booking_confirmReschedule.tr(),
       clinicId: doctor.clinic?.id,
+      consultationType: appointment.consultationType,
+      homeVisitArea: appointment.area,
     );
     if (slot == null || !mounted) return;
 
@@ -120,11 +154,25 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     unawaited(_appointmentsCubit.getAppointments());
   }
 
+  double _bookAgainPrice(AppointmentModel appointment, BookingSlotResult slot) {
+    final doctorPrice = appointment.doctor?.price ?? 0;
+    if (!appointment.isHomeVisit) return doctorPrice;
+    final area = slot.homeVisitArea;
+    if (area != null && area.hasCost) return area.costValue;
+    return appointment.originalPrice ?? doctorPrice;
+  }
+
   Future<void> _bookAgain(AppointmentModel appointment) async {
     final doctor = appointment.doctor;
     if (doctor == null) return;
 
-    final slot = await showBookingSlotsSheet(context, doctor, clinicId: doctor.clinic?.id);
+    final slot = await showBookingSlotsSheet(
+      context,
+      doctor,
+      clinicId: doctor.clinic?.id,
+      consultationType: appointment.consultationType,
+      homeVisitArea: appointment.area,
+    );
     if (slot == null || !mounted) return;
 
     final locale = context.locale.languageCode;
@@ -134,7 +182,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       context,
       title: doctor.name,
       detail: '${doctor.name} · $when',
-      amountLabel: '${doctor.price.toStringAsFixed(0)} ${LocaleKeys.common_currency.tr()}',
+      amountLabel: '${_bookAgainPrice(appointment, slot).toStringAsFixed(0)} ${LocaleKeys.common_currency.tr()}',
     );
     if (result == null || !mounted) return;
 
@@ -147,6 +195,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       date: slot.date,
       clinicId: slot.clinicId,
       familyMemberId: slot.familyMember?.id,
+      type: appointment.consultationType,
+      areaId: appointment.isHomeVisit ? slot.homeVisitArea?.id ?? appointment.areaId : null,
     );
     if (newAppointment == null || !mounted) return;
 
@@ -156,7 +206,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       context,
       doctor: doctor.name,
       when: when,
-      branch: doctor.clinicById(slot.clinicId)?.name ?? '',
+      branch: appointment.isHomeVisit
+          ? [LocaleKeys.homeVisit_title.tr(), if (appointment.areaName != null) appointment.areaName!].join(' · ')
+          : doctor.clinicById(slot.clinicId)?.name ?? '',
     );
   }
 
@@ -186,6 +238,13 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                         builder: (context) => AppointmentDetailBody(appointment: appointment!),
                       ),
                     ),
+                    if (appointment != null && AppointmentVideoCallCard.isVisible(appointment)) ...[
+                      14.height,
+                      AppointmentVideoCallCard(
+                        appointment: appointment,
+                        onJoin: () => _joinVideoCall(appointment),
+                      ),
+                    ],
                     if (appointment != null && AppointmentDetailActions.hasActions(appointment)) ...[
                       14.height,
                       AppointmentDetailActions(

@@ -3,15 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/network/network_exceptions.dart';
 import '../../../core/utils/app_overlay.dart';
+import '../../video_call/data/video_call_repo.dart';
 import '../data/booking_repo.dart';
 import '../data/models/appointment_model.dart';
 
 part 'appointment_detail_state.dart';
 
 class AppointmentDetailCubit extends Cubit<AppointmentDetailState> {
-  AppointmentDetailCubit(this._repo) : super(const AppointmentDetailInitial());
+  AppointmentDetailCubit(this._repo, this._videoCallRepo)
+      : super(const AppointmentDetailInitial());
 
   final BookingRepo _repo;
+  final VideoCallRepo _videoCallRepo;
 
   Future<void> getAppointment(int id) async {
     emit(const AppointmentDetailLoading());
@@ -21,6 +24,28 @@ class AppointmentDetailCubit extends Cubit<AppointmentDetailState> {
     } catch (e) {
       final msg = e is NetworkException ? e.message : e.toString();
       emit(AppointmentDetailError(msg));
+    }
+  }
+
+  Future<void> refreshSilently(int id) async {
+    if (state is! AppointmentDetailSuccess) return;
+    try {
+      final appointment = await _repo.getAppointmentById(id);
+      if (!isClosed) emit(AppointmentDetailSuccess(appointment));
+    } catch (_) {}
+  }
+
+  Future<String?> joinVideoCall(AppointmentModel appointment) async {
+    final call = appointment.call;
+    if (call == null || !call.isOngoing) return null;
+    if (!call.isWaitingForJoin) return call.callId;
+    try {
+      await _videoCallRepo.joinCall(appointment.id);
+      return call.callId;
+    } catch (e) {
+      final msg = e is NetworkException ? e.message : e.toString();
+      AppOverlay.showError(msg);
+      return null;
     }
   }
 

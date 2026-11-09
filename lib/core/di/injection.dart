@@ -18,6 +18,9 @@ import '../../features/booking/logic/my_bookings_cubit.dart';
 import '../../features/booking/logic/quote_cubit.dart';
 import '../../features/booking/logic/specializations_cubit.dart';
 import '../../features/booking/logic/time_tables_cubit.dart';
+import '../../features/home_visit/data/home_visit_repo.dart';
+import '../../features/home_visit/logic/home_visit_areas_cubit.dart';
+import '../../features/home_visit/logic/home_visit_cities_cubit.dart';
 import '../../features/chat/data/chat_repo.dart';
 import '../../features/chat/logic/chat_cubit.dart';
 import '../../features/family/data/family_repo.dart';
@@ -38,8 +41,12 @@ import '../../features/pages/logic/page_cubit.dart';
 import '../../features/payments/data/payments_repo.dart';
 import '../../features/payments/logic/payments_cubit.dart';
 import '../../features/profile/logic/profile_cubit.dart';
+import '../../features/video_call/data/video_call_repo.dart';
+import '../../features/video_call/logic/video_call_cubit.dart';
 import '../network/dio_client.dart';
 import '../storage/local_storage.dart';
+import '../../features/location_picker/data/location_picker_repo.dart';
+import '../../features/location_picker/logic/location_picker_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -55,6 +62,8 @@ Future<void> setupDi() async {
   getIt.registerLazySingleton(() => AccountRepo(dio: getIt()));
   getIt.registerLazySingleton(() => BannersRepo(dio: getIt()));
   getIt.registerLazySingleton(() => BookingRepo(dio: getIt()));
+  getIt.registerLazySingleton(() => HomeVisitRepo(dio: getIt()));
+  getIt.registerLazySingleton(() => LocationPickerRepo());
   getIt.registerLazySingleton(() => FamilyRepo(dio: getIt()));
   getIt.registerLazySingleton(() => NotificationsRepo(dio: getIt()));
   getIt.registerLazySingleton(() => LabRepo(dio: getIt()));
@@ -63,6 +72,7 @@ Future<void> setupDi() async {
   getIt.registerLazySingleton(() => OffersRepo(dio: getIt()));
   getIt.registerLazySingleton(() => ChatRepo(dio: getIt()));
   getIt.registerLazySingleton(() => PagesRepo(dio: getIt()));
+  getIt.registerLazySingleton(() => VideoCallRepo(dio: getIt()));
   getIt.registerLazySingleton(() => OnboardingRepo(dio: getIt()));
 
   // ─── Cubits ───────────────────────────────────────────────────────────────
@@ -72,12 +82,16 @@ Future<void> setupDi() async {
   getIt.registerFactory(() => ProfileCubit(getIt()));
   getIt.registerFactory(() => SpecializationsCubit(getIt()));
   getIt.registerFactory(() => DoctorsCubit(getIt()));
+  getIt.registerFactory(() => HomeVisitCitiesCubit(getIt()));
+  getIt.registerFactory(() => HomeVisitAreasCubit(getIt()));
+  getIt.registerFactory(() => LocationPickerCubit(getIt()));
   getIt.registerFactory(() => DoctorDetailsCubit(getIt()));
   getIt.registerFactory(() => DoctorReviewsCubit(getIt()));
   getIt.registerFactory(() => FamilyCubit(getIt()));
   getIt.registerFactory(() => BranchesCubit(getIt()));
   getIt.registerFactory(() => TimeTablesCubit(getIt()));
-  getIt.registerFactory(() => AppointmentDetailCubit(getIt()));
+  getIt.registerFactory(() => AppointmentDetailCubit(getIt(), getIt()));
+  getIt.registerFactory(() => VideoCallCubit(getIt()));
   getIt.registerFactory(() => MyBookingsCubit(getIt()));
   getIt.registerFactory(() => QuoteCubit(getIt()));
   getIt.registerFactory(() => NotificationsCubit(getIt()));

@@ -39,7 +39,9 @@ class DioClient {
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
-          options.headers['Accept-Language'] = getIt<LocalStorage>().getLang();
+          final lang = getIt<LocalStorage>().getLang();
+          options.headers['lang'] = lang;
+          options.headers['Accept-Language'] = lang;
           return handler.next(options);
         },
       ),

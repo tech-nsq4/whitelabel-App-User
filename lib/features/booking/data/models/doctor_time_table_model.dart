@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import 'consultation_type.dart';
+
 /// Parses a raw API time string ("09:00 AM"/"04:40 PM") into a 24h
 /// (hour, minute) pair — shared by [TimeTableSlotModel] and
 /// `AppointmentModel`. `null` if [time] doesn't match the expected format.
@@ -38,6 +40,7 @@ class TimeTableSlotModel extends Equatable {
   /// of the raw `times` JSON, so it's `0` until [DoctorTimeTableModel.slotsFor]
   /// stamps it via [withTimeTableId]. Needed for `POST /appointments`.
   final int timeTableId;
+  final int? clinicId;
 
   const TimeTableSlotModel({
     required this.time,
@@ -45,6 +48,7 @@ class TimeTableSlotModel extends Equatable {
     required this.shift,
     required this.scheduleId,
     this.timeTableId = 0,
+    this.clinicId,
   });
 
   factory TimeTableSlotModel.fromJson(Map<String, dynamic> json) => TimeTableSlotModel(
@@ -54,12 +58,13 @@ class TimeTableSlotModel extends Equatable {
         scheduleId: json['schedule_id'] as int? ?? 0,
       );
 
-  TimeTableSlotModel withTimeTableId(int id) => TimeTableSlotModel(
+  TimeTableSlotModel withTimeTableId(int id, {int? clinicId}) => TimeTableSlotModel(
         time: time,
         available: available,
         shift: shift,
         scheduleId: scheduleId,
         timeTableId: id,
+        clinicId: clinicId,
       );
 
   /// [time] ("09:00 AM"/"04:40 PM") as a 24h (hour, minute) pair — used for
@@ -72,7 +77,7 @@ class TimeTableSlotModel extends Equatable {
   String get displayLabel => formatApiTimeArabic(time);
 
   @override
-  List<Object?> get props => [time, available, shift, scheduleId, timeTableId];
+  List<Object?> get props => [time, available, shift, scheduleId, timeTableId, clinicId];
 }
 
 /// One weekday's slots inside a [DoctorTimeTableModel].
@@ -138,7 +143,8 @@ class DoctorTimeTableModel extends Equatable {
   final int id;
   final String name;
   final String? notes;
-  final String type; // "clinic" | ...
+  final String type; // "clinic" | "online"
+  final int? clinicId;
   final String scheduleType; // "all_days" | ...
   final DateTime? startDate;
   final DateTime? endDate;
@@ -151,6 +157,7 @@ class DoctorTimeTableModel extends Equatable {
     required this.name,
     this.notes,
     required this.type,
+    this.clinicId,
     required this.scheduleType,
     this.startDate,
     this.endDate,
@@ -164,6 +171,7 @@ class DoctorTimeTableModel extends Equatable {
         name: json['name'] as String? ?? '',
         notes: json['notes'] as String?,
         type: json['type'] as String? ?? '',
+        clinicId: json['clinic_id'] as int?,
         scheduleType: json['schedule_type'] as String? ?? '',
         startDate: DateTime.tryParse(json['start_date'] as String? ?? ''),
         endDate: DateTime.tryParse(json['end_date'] as String? ?? ''),
@@ -191,22 +199,22 @@ class DoctorTimeTableModel extends Equatable {
     if (!_inRange(date) || _isHoliday(date)) return const [];
     final dayName = _weekdayNames[date.weekday];
     for (final schedule in schedules) {
-      if (schedule.day == dayName) return schedule.times.map((s) => s.withTimeTableId(id)).toList();
+      if (schedule.day == dayName) return schedule.times.map((s) => s.withTimeTableId(id, clinicId: clinicId)).toList();
     }
     return const [];
   }
 
   @override
   List<Object?> get props =>
-      [id, name, notes, type, scheduleType, startDate, endDate, closestDateAfterNoDays, schedules, holidays];
+      [id, name, notes, type, clinicId, scheduleType, startDate, endDate, closestDateAfterNoDays, schedules, holidays];
 }
 
-/// Combines a doctor's `type: "clinic"` time-tables into simple
-/// day/slot lookups for the booking calendar (ignores telemed-type
-/// schedules, if any — that flow has its own separate mock sheet).
 class DoctorAvailability {
-  DoctorAvailability(List<DoctorTimeTableModel> timeTables)
-      : _timeTables = timeTables.where((t) => t.type == 'clinic').toList(),
+  DoctorAvailability(
+    List<DoctorTimeTableModel> timeTables, {
+    ConsultationType type = ConsultationType.clinic,
+  })  : _timeTables =
+            timeTables.where((t) => t.type == type.timeTableValue).toList(),
         _dayOverrides = const {};
 
   DoctorAvailability._(this._timeTables, this._dayOverrides);

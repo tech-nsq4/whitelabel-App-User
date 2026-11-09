@@ -12,10 +12,13 @@ class SpecializationsCubit extends Cubit<SpecializationsState> {
 
   final BookingRepo _repo;
 
-  Future<void> getSpecializations({String? name}) async {
+  Future<void> getSpecializations({String? name, bool onlineOnly = false}) async {
     emit(const SpecializationsLoading());
     try {
-      final specializations = await _repo.getSpecializations(name: name);
+      final specializations = await _repo.getSpecializations(
+        name: name,
+        onlineOnly: onlineOnly,
+      );
       emit(SpecializationsSuccess(specializations));
     } catch (e) {
       final msg = e is NetworkException ? e.message : e.toString();

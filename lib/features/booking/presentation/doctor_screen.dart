@@ -7,17 +7,27 @@ import '../../../core/di/injection.dart';
 import '../../../core/utils/locale_keys.dart';
 import '../../../core/widgets/screen_header.dart';
 import '../../../core/widgets/screen_state_layout.dart';
+import '../../home_visit/data/models/home_visit_area_model.dart';
 import '../../offers/data/models/applied_offer.dart';
+import '../data/models/consultation_type.dart';
 import '../logic/doctor_details_cubit.dart';
 import 'booking_flow.dart';
 import 'widgets/doctor_profile_body.dart';
 
 /// Doctor profile / booking-entry screen, backed by `GET /doctors/{id}`.
 class DoctorScreen extends StatefulWidget {
-  const DoctorScreen({super.key, required this.doctorId, this.offer});
+  const DoctorScreen({
+    super.key,
+    required this.doctorId,
+    this.offer,
+    this.consultationType = ConsultationType.clinic,
+    this.homeVisitArea,
+  });
 
   final int doctorId;
   final AppliedOffer? offer;
+  final ConsultationType consultationType;
+  final HomeVisitAreaModel? homeVisitArea;
 
   @override
   State<DoctorScreen> createState() => _DoctorScreenState();
@@ -63,11 +73,26 @@ class _DoctorScreenState extends State<DoctorScreen> {
                           return DoctorProfileBody(
                             doctor: doctor,
                             offer: widget.offer,
+                            consultationType: widget.consultationType,
+                            homeVisitArea: widget.homeVisitArea,
                             onBook: (clinicId) => startDoctorBooking(
                               context,
                               doctor: doctor,
                               clinicId: clinicId,
                               offer: widget.offer,
+                            ),
+                            onBookOnline: () => startDoctorBooking(
+                              context,
+                              doctor: doctor,
+                              offer: widget.offer,
+                              consultationType: ConsultationType.online,
+                            ),
+                            onBookHomeVisit: () => startDoctorBooking(
+                              context,
+                              doctor: doctor,
+                              offer: widget.offer,
+                              consultationType: ConsultationType.homeVisit,
+                              homeVisitArea: widget.homeVisitArea,
                             ),
                           );
                         },

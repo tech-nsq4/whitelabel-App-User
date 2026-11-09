@@ -11,16 +11,26 @@ import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../core/widgets/price_text.dart';
+import '../../../booking/data/models/consultation_type.dart';
 import '../../../booking/logic/quote_cubit.dart';
+import '../../../home_visit/data/models/home_visit_address.dart';
+import '../../../home_visit/presentation/widgets/home_visit_address_summary.dart';
+import 'payment_total_amount.dart';
 import 'promo_apply_button.dart';
 import 'promo_error_banner.dart';
 import 'promo_quote_card.dart';
 
 class PaymentSheetResult {
-  const PaymentSheetResult({this.promoCode});
+  const PaymentSheetResult({this.promoCode, this.homeVisitAddress});
 
   final String? promoCode;
+  final HomeVisitAddress? homeVisitAddress;
 }
+
+typedef HomeVisitAddressEditor = Future<HomeVisitAddress?> Function(
+  BuildContext context,
+  HomeVisitAddress current,
+);
 
 Future<PaymentSheetResult?> showPaymentSheet(
   BuildContext context, {
@@ -32,6 +42,10 @@ Future<PaymentSheetResult?> showPaymentSheet(
   int? doctorId,
   int? clinicId,
   DateTime? date,
+  ConsultationType? consultationType,
+  int? areaId,
+  HomeVisitAddress? homeVisitAddress,
+  HomeVisitAddressEditor? onEditHomeVisitAddress,
 }) {
   return showModalBottomSheet<PaymentSheetResult>(
     context: context,
@@ -46,6 +60,10 @@ Future<PaymentSheetResult?> showPaymentSheet(
       doctorId: doctorId,
       clinicId: clinicId,
       date: date,
+      consultationType: consultationType,
+      areaId: areaId,
+      homeVisitAddress: homeVisitAddress,
+      onEditHomeVisitAddress: onEditHomeVisitAddress,
     ),
   );
 }
@@ -61,6 +79,10 @@ class PaymentSheet extends StatefulWidget {
     this.doctorId,
     this.clinicId,
     this.date,
+    this.consultationType,
+    this.areaId,
+    this.homeVisitAddress,
+    this.onEditHomeVisitAddress,
   });
 
   final String title;
@@ -71,6 +93,10 @@ class PaymentSheet extends StatefulWidget {
   final int? doctorId;
   final int? clinicId;
   final DateTime? date;
+  final ConsultationType? consultationType;
+  final int? areaId;
+  final HomeVisitAddress? homeVisitAddress;
+  final HomeVisitAddressEditor? onEditHomeVisitAddress;
 
   @override
   State<PaymentSheet> createState() => _PaymentSheetState();
@@ -80,6 +106,7 @@ class _PaymentSheetState extends State<PaymentSheet> {
   int _selected = 0;
   final _promoController = TextEditingController();
   late final QuoteCubit _quoteCubit = getIt<QuoteCubit>();
+  late HomeVisitAddress? _homeVisitAddress = widget.homeVisitAddress;
 
   bool get _canQuotePromo => widget.doctorId != null && widget.date != null;
 
@@ -99,7 +126,18 @@ class _PaymentSheetState extends State<PaymentSheet> {
       date: widget.date!,
       clinicId: widget.clinicId,
       promoCode: code,
+      type: widget.consultationType,
+      areaId: widget.areaId,
     );
+  }
+
+  Future<void> _editHomeVisitAddress() async {
+    final current = _homeVisitAddress;
+    final editor = widget.onEditHomeVisitAddress;
+    if (current == null || editor == null) return;
+    final updated = await editor(context, current);
+    if (updated == null || !mounted) return;
+    setState(() => _homeVisitAddress = updated);
   }
 
   void _onPromoChanged(String _) {
@@ -172,6 +210,19 @@ class _PaymentSheetState extends State<PaymentSheet> {
                           4.height,
                           AppText(widget.detail,
                               fontSize: 11, color: AppColors.mutedColor.themeColor),
+                          if (_homeVisitAddress case final address?) ...[
+                            10.height,
+                            Divider(height: 1, color: AppColors.dividerColor.themeColor),
+                            10.height,
+                            HomeVisitAddressSummary(
+                              address: address,
+                              onEdit: widget.onEditHomeVisitAddress == null
+                                  ? null
+                                  : _editHomeVisitAddress,
+                            ),
+                            10.height,
+                            Divider(height: 1, color: AppColors.dividerColor.themeColor),
+                          ],
                           10.height,
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -180,7 +231,7 @@ class _PaymentSheetState extends State<PaymentSheet> {
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
                                   color: AppColors.textPrimaryColor.themeColor),
-                              _TotalAmount(
+                              PaymentTotalAmount(
                                 amountLabel: amountLabel,
                                 strikeAmountLabel: strikeLabel,
                               ),
@@ -265,7 +316,10 @@ class _PaymentSheetState extends State<PaymentSheet> {
                         final code = _promoController.text.trim();
                         Navigator.pop(
                           context,
-                          PaymentSheetResult(promoCode: code.isEmpty ? null : code),
+                          PaymentSheetResult(
+                            promoCode: code.isEmpty ? null : code,
+                            homeVisitAddress: _homeVisitAddress,
+                          ),
                         );
                       },
                     ),
@@ -275,44 +329,6 @@ class _PaymentSheetState extends State<PaymentSheet> {
             ),
           );
         },
-      ),
-    );
-  }
-}
-
-class _TotalAmount extends StatelessWidget {
-  const _TotalAmount({required this.amountLabel, this.strikeAmountLabel});
-
-  final String amountLabel;
-  final String? strikeAmountLabel;
-
-  @override
-  Widget build(BuildContext context) {
-    final primary = AppColors.primaryColor.themeColor;
-
-    final activeSpan = TextSpan(
-      text: amountLabel,
-      style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w700, color: primary),
-    );
-
-    if (strikeAmountLabel == null) {
-      return Text.rich(activeSpan);
-    }
-
-    return Text.rich(
-      TextSpan(
-        children: [
-          TextSpan(
-            text: '$strikeAmountLabel  ',
-            style: TextStyle(
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w600,
-              color: AppColors.mutedColor.themeColor,
-              decoration: TextDecoration.lineThrough,
-            ),
-          ),
-          activeSpan,
-        ],
       ),
     );
   }

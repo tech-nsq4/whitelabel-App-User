@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../home_visit/data/models/home_visit_area_model.dart';
+import '../../../home_visit/data/models/home_visit_city_model.dart';
 import 'doctor_time_table_model.dart' show formatApiTimeArabic;
 import 'specialization_model.dart';
 
@@ -98,7 +100,7 @@ class DoctorNearestAvailableModel extends Equatable {
   final int scheduleId;
   final int timeTableId;
   final int? clinicId;
-  final String type; // "clinic" | "video"
+  final String type; // "clinic" | "online"
 
   const DoctorNearestAvailableModel({
     this.date,
@@ -144,6 +146,11 @@ class DoctorProfileModel extends Equatable {
   final List<DoctorClinicModel> clinics;
   final DoctorLocationModel? location;
   final DoctorNearestAvailableModel? nearestAvailable;
+  final bool liveAppointment;
+  final bool homeVisit;
+  final int? homeVisitCityId;
+  final HomeVisitCityModel? homeVisitCity;
+  final List<HomeVisitAreaModel> homeVisitAreas;
 
   const DoctorProfileModel({
     required this.id,
@@ -158,7 +165,25 @@ class DoctorProfileModel extends Equatable {
     this.clinics = const [],
     this.location,
     this.nearestAvailable,
+    this.liveAppointment = false,
+    this.homeVisit = false,
+    this.homeVisitCityId,
+    this.homeVisitCity,
+    this.homeVisitAreas = const [],
   });
+
+  bool get offersHomeVisit => homeVisit && homeVisitAreas.isNotEmpty;
+
+  HomeVisitAreaModel? homeVisitAreaById(int? id) {
+    if (id == null) return null;
+    for (final area in homeVisitAreas) {
+      if (area.id == id) return area;
+    }
+    return null;
+  }
+
+  static bool _parseBool(dynamic value) =>
+      value == true || value == 1 || value == '1' || value == 'true';
 
   /// First letter of [name] — used for the fallback avatar when [image] is
   /// missing (e.g. "د" from "د. منى سعيد").
@@ -202,6 +227,11 @@ class DoctorProfileModel extends Equatable {
         nearestAvailable: json['nearest_available'] == null
             ? null
             : DoctorNearestAvailableModel.fromJson(json['nearest_available'] as Map<String, dynamic>),
+        liveAppointment: json['live_appointment'] as bool? ?? false,
+        homeVisit: _parseBool(json['home_visit']),
+        homeVisitCityId: int.tryParse('${json['home_visit_city_id']}'),
+        homeVisitCity: HomeVisitCityModel.maybeFromJson(json['home_visit_city']),
+        homeVisitAreas: HomeVisitAreaModel.listFromJson(json['home_visit_areas']),
       );
 
   @override
@@ -218,5 +248,10 @@ class DoctorProfileModel extends Equatable {
         clinics,
         location,
         nearestAvailable,
+        liveAppointment,
+        homeVisit,
+        homeVisitCityId,
+        homeVisitCity,
+        homeVisitAreas,
       ];
 }

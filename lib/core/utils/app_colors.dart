@@ -127,6 +127,11 @@ class AppColors {
     darkColor: Color(0xFFC9A227),
   );
 
+  static const ColorModel callBackgroundColor = ColorModel(
+    lightColor: Color(0xFF0E1112),
+    darkColor: Color(0xFF0E1112),
+  );
+
   /// Decorative accent palette for specialty tiles / chips — cycled by index
   /// when a specialty has no keyword-mapped colour of its own.
   static const List<ColorModel> specialtyAccents = [

@@ -11,7 +11,9 @@ import '../../../../core/utils/app_overlay.dart';
 import '../../../../core/utils/locale_keys.dart';
 import '../../../../core/utils/location_helper.dart';
 import '../../../../core/widgets/screen_state_layout.dart';
+import '../../../home_visit/data/models/home_visit_area_model.dart';
 import '../../../offers/data/models/applied_offer.dart';
+import '../../data/models/consultation_type.dart';
 import '../../data/models/doctor_profile_model.dart';
 import '../../logic/doctors_cubit.dart';
 import 'doctor_card.dart';
@@ -37,6 +39,10 @@ class DoctorSearchList extends StatefulWidget {
     this.offer,
     this.belowSearch,
     this.contentPadding,
+    this.onlineOnly = false,
+    this.homeVisitOnly = false,
+    this.homeVisitCityId,
+    this.homeVisitArea,
   });
 
   final int? specializationId;
@@ -50,6 +56,16 @@ class DoctorSearchList extends StatefulWidget {
 
   /// Horizontal inset for the search row and the results list (default 20).
   final EdgeInsetsGeometry? contentPadding;
+  final bool onlineOnly;
+  final bool homeVisitOnly;
+  final int? homeVisitCityId;
+  final HomeVisitAreaModel? homeVisitArea;
+
+  ConsultationType get consultationType {
+    if (homeVisitOnly) return ConsultationType.homeVisit;
+    if (onlineOnly) return ConsultationType.online;
+    return ConsultationType.clinic;
+  }
 
   @override
   State<DoctorSearchList> createState() => _DoctorSearchListState();
@@ -73,7 +89,9 @@ class _DoctorSearchListState extends State<DoctorSearchList> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.specializationId != widget.specializationId ||
         oldWidget.subSpecializationId != widget.subSpecializationId ||
-        oldWidget.clinicId != widget.clinicId) {
+        oldWidget.clinicId != widget.clinicId ||
+        oldWidget.homeVisitCityId != widget.homeVisitCityId ||
+        oldWidget.homeVisitArea?.id != widget.homeVisitArea?.id) {
       _fetch();
     }
   }
@@ -94,6 +112,10 @@ class _DoctorSearchListState extends State<DoctorSearchList> {
           sort: _selectedSort?.value,
           lat: _lat,
           lng: _lng,
+          onlineOnly: widget.onlineOnly,
+          homeVisitOnly: widget.homeVisitOnly,
+          homeVisitCityId: widget.homeVisitCityId,
+          homeVisitAreaId: widget.homeVisitArea?.id,
         );
   }
 
@@ -195,9 +217,13 @@ class _DoctorSearchListState extends State<DoctorSearchList> {
                       return DoctorCard(
                         doctor: doc,
                         offer: widget.offer,
+                        consultationType: widget.consultationType,
+                        homeVisitArea: widget.homeVisitArea,
                         onTap: () => Navigator.pushNamed(context, Routes.doctor, arguments: {
                           'id': doc.id,
                           if (widget.offer != null) 'appliedOffer': widget.offer,
+                          if (!widget.consultationType.isClinic) 'consultationType': widget.consultationType,
+                          if (widget.homeVisitArea != null) 'homeVisitArea': widget.homeVisitArea,
                         }),
                       );
                     },

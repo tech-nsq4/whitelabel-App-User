@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/locale_keys.dart';
+import '../../../../core/widgets/app_text.dart';
 
 /// Doctor/appointment/branch/price summary at the bottom of
 /// [BookingSlotsSheet], right above the pay button.
@@ -17,6 +18,8 @@ class BookingSummaryCard extends StatelessWidget {
     this.strikePriceLabel,
     this.patientName,
     this.orderId,
+    this.visitTypeLabel,
+    this.areaName,
   });
 
   final String doctorName;
@@ -32,6 +35,8 @@ class BookingSummaryCard extends StatelessWidget {
   /// The booked [AppointmentModel.id] — `null` (row hidden) on
   /// `BookingSlotsSheet`, where there's no appointment yet.
   final int? orderId;
+  final String? visitTypeLabel;
+  final String? areaName;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +54,8 @@ class BookingSummaryCard extends StatelessWidget {
           if (patientName != null && patientName!.isNotEmpty)
             _row(LocaleKeys.booking_patientLabel.tr(), patientName!),
           _row(LocaleKeys.booking_appointmentLabel.tr(), whenLabel),
+          if (visitTypeLabel != null) _row(LocaleKeys.booking_visitTypeLabel.tr(), visitTypeLabel!),
+          if (areaName != null && areaName!.isNotEmpty) _row(LocaleKeys.homeVisit_area.tr(), areaName!),
           if (clinicName != null && clinicName!.isNotEmpty) _row(LocaleKeys.booking_branchLabel.tr(), clinicName!),
           _priceRow(),
         ],
@@ -62,10 +69,9 @@ class BookingSummaryCard extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(k, style: TextStyle(fontSize: 11.sp, color: AppColors.mutedColor.themeColor)),
-          Text(v,
-              style: TextStyle(
-                  fontSize: 12.sp, fontWeight: FontWeight.w600, color: AppColors.textPrimaryColor.themeColor)),
+          AppText(k, fontSize: 11, color: AppColors.mutedColor.themeColor),
+          AppText(v,
+              fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textPrimaryColor.themeColor),
         ],
       ),
     );
@@ -80,8 +86,8 @@ class BookingSummaryCard extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(LocaleKeys.booking_priceLabel.tr(),
-              style: TextStyle(fontSize: 11.sp, color: AppColors.mutedColor.themeColor)),
+          AppText(LocaleKeys.booking_priceLabel.tr(),
+              fontSize: 11, color: AppColors.mutedColor.themeColor),
           Text.rich(
             TextSpan(
               children: [

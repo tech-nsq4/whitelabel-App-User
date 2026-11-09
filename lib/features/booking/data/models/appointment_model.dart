@@ -1,6 +1,9 @@
 import 'package:equatable/equatable.dart';
 
 import '../../../family/data/models/family_member_model.dart';
+import '../../../home_visit/data/models/home_visit_area_model.dart';
+import '../../../video_call/data/models/appointment_call_model.dart';
+import 'consultation_type.dart';
 import 'doctor_profile_model.dart';
 import 'doctor_time_table_model.dart';
 
@@ -114,6 +117,8 @@ class AppointmentModel extends Equatable {
   final String times; // raw API string, e.g. "09:00 AM"
   final DateTime? date;
   final String status; // "pending" | ...
+  final String type;
+  final AppointmentCallModel? call;
   final int? familyMemberId;
   final DoctorProfileModel? doctor;
   final DoctorTimeTableModel? timeTable;
@@ -142,8 +147,25 @@ class AppointmentModel extends Equatable {
   final double? originalPrice;
   final double? discountAmount;
   final double? finalPrice;
+  final int? areaId;
+  final HomeVisitAreaModel? area;
 
   bool get isRated => rate != null;
+
+  bool get isOnline => type == ConsultationType.online.appointmentValue;
+
+  bool get isHomeVisit => type == ConsultationType.homeVisit.appointmentValue;
+
+  ConsultationType get consultationType => ConsultationType.fromAppointmentValue(type);
+
+  String? get areaName {
+    final name = area?.name;
+    return name == null || name.isEmpty ? null : name;
+  }
+
+  bool get hasOngoingCall => call?.isOngoing ?? false;
+
+  bool get canResumeCall => hasOngoingCall && !call!.isWaitingForJoin;
 
   bool get isPromoDiscount => discountSource == 'promo_code';
   bool get isOfferDiscount => discountSource == 'offer';
@@ -164,6 +186,8 @@ class AppointmentModel extends Equatable {
     required this.times,
     this.date,
     this.status = 'pending',
+    this.type = 'offline',
+    this.call,
     this.familyMemberId,
     this.doctor,
     this.timeTable,
@@ -184,7 +208,11 @@ class AppointmentModel extends Equatable {
     this.originalPrice,
     this.discountAmount,
     this.finalPrice,
+    this.areaId,
+    this.area,
   });
+
+  static double? _parseDouble(dynamic value) => value == null ? null : double.tryParse('$value');
 
   /// [date] + [times] combined into one [DateTime] — used to sort/filter
   /// appointments (e.g. the home screen's soonest-upcoming card).
@@ -214,6 +242,8 @@ class AppointmentModel extends Equatable {
         times: json['times'] as String? ?? '',
         date: DateTime.tryParse(json['date'] as String? ?? ''),
         status: json['status'] as String? ?? 'pending',
+        type: json['type'] as String? ?? 'offline',
+        call: AppointmentCallModel.maybeFromJson(json['call']),
         familyMemberId: json['family_member_id'] as int?,
         doctor: json['doctor'] == null ? null : DoctorProfileModel.fromJson(json['doctor'] as Map<String, dynamic>),
         timeTable: json['time_table'] == null
@@ -241,9 +271,11 @@ class AppointmentModel extends Equatable {
         discountSource: json['discount_source'] as String?,
         offerId: json['offer_id'] as int?,
         promoCode: json['promo_code'] as String?,
-        originalPrice: (json['original_price'] as num?)?.toDouble(),
-        discountAmount: (json['discount_amount'] as num?)?.toDouble(),
-        finalPrice: (json['final_price'] as num?)?.toDouble(),
+        originalPrice: _parseDouble(json['original_price']),
+        discountAmount: _parseDouble(json['discount_amount']),
+        finalPrice: _parseDouble(json['final_price']),
+        areaId: int.tryParse('${json['area_id'] ?? (json['area'] is Map ? json['area']['id'] : '')}'),
+        area: HomeVisitAreaModel.maybeFromJson(json['area']),
       );
 
   @override
@@ -256,6 +288,8 @@ class AppointmentModel extends Equatable {
         times,
         date,
         status,
+        type,
+        call,
         familyMemberId,
         doctor,
         timeTable,
@@ -276,5 +310,7 @@ class AppointmentModel extends Equatable {
         originalPrice,
         discountAmount,
         finalPrice,
+        areaId,
+        area,
       ];
 }

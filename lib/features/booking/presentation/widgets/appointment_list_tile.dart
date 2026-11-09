@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/extensions/extensions.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_constants.dart';
+import '../../../../core/utils/locale_keys.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/app_text.dart';
 import '../../../../core/widgets/star_rating.dart';
@@ -43,7 +43,12 @@ class AppointmentListTile extends StatelessWidget {
     final doctor = appointment.doctor;
     final subtitle = [
       if (doctor?.specialtyLabel.isNotEmpty ?? false) doctor!.specialtyLabel,
-      if (doctor?.clinic?.name != null) doctor!.clinic!.name,
+      if (appointment.isOnline)
+        LocaleKeys.videoCall_onlineVisit.tr()
+      else if (appointment.isHomeVisit)
+        [LocaleKeys.homeVisit_title.tr(), if (appointment.areaName != null) appointment.areaName!].join(' · ')
+      else if (doctor?.clinic?.name != null)
+        doctor!.clinic!.name,
     ].join(' · ');
 
     return AppCard(
@@ -63,15 +68,13 @@ class AppointmentListTile extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    Text(
+                    AppText(
                       dateTime == null ? '—' : DateFormat('d', locale).format(dateTime),
-                      style: TextStyle(
-                        fontFamily: AppFonts.headingFont,
-                        fontSize: 22.sp,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.primaryColor.themeColor,
-                        height: 1,
-                      ),
+                      isHeading: true,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.primaryColor.themeColor,
+                      height: 1,
                     ),
                     if (dateTime != null)
                       AppText(

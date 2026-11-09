@@ -16,6 +16,15 @@ subprojects {
     project.layout.buildDirectory.value(newSubprojectBuildDir)
 }
 subprojects {
+    afterEvaluate {
+        if (name == "zego_express_engine") {
+            extensions.configure<com.android.build.gradle.LibraryExtension> {
+                compileSdk = 36
+            }
+        }
+    }
+}
+subprojects {
     project.evaluationDependsOn(":app")
 }
 

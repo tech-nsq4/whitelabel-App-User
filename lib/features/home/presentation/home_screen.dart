@@ -90,7 +90,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   final doctor = appointment.doctor;
                   final clinicBranch = [
                     if (doctor?.specialtyLabel.isNotEmpty ?? false) doctor!.specialtyLabel,
-                    if (doctor?.clinic?.name != null) doctor!.clinic!.name,
+                    if (appointment.isOnline)
+                      LocaleKeys.videoCall_onlineVisit.tr()
+                    else if (doctor?.clinic?.name != null)
+                      doctor!.clinic!.name,
                   ].join(' · ');
 
                   return UpcomingAppointmentTile(
@@ -117,6 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onBookTap: () => Navigator.pushNamed(context, Routes.book),
                 onTelemedTap: () => Navigator.pushNamed(context, Routes.telemed),
                 onOffersTap: () => Navigator.pushNamed(context, Routes.offers),
+                onHomeVisitTap: () => Navigator.pushNamed(context, Routes.homeCare),
               ),
               24.height,
               SectionHeader(

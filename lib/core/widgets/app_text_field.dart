@@ -34,6 +34,8 @@ class CustomTextField extends StatefulWidget {
     this.inputFormatters,
     this.maxLength,
     this.autofocus = false,
+    this.textInputAction,
+    this.onSubmitted,
   });
 
   final String hint;
@@ -69,6 +71,8 @@ class CustomTextField extends StatefulWidget {
   /// Caps the input length and hides the built-in character counter.
   final int? maxLength;
   final bool autofocus;
+  final TextInputAction? textInputAction;
+  final ValueChanged<String>? onSubmitted;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -106,6 +110,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
       inputFormatters: widget.inputFormatters,
       maxLength: widget.maxLength,
       autofocus: widget.autofocus,
+      textInputAction: widget.textInputAction,
+      onFieldSubmitted: widget.onSubmitted,
       style: widget.textStyle ??
           TextStyle(
             fontFamily: AppFonts.bodyFont,

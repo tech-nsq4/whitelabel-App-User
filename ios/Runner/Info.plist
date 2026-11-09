@@ -27,7 +27,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>نحتاج الوصول للكاميرا عشان ترسل صورة في المحادثة مع الطبيب.</string>
+	<string>نحتاج الوصول للكاميرا لمكالمات الفيديو مع الطبيب ولإرسال الصور في المحادثة.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>نحتاج الوصول للميكروفون عشان الطبيب يسمعك في مكالمة الفيديو.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>نحتاج موقعك عشان نعرض لك أقرب الأطباء ليك.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -57,6 +59,7 @@
 	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>audio</string>
 		<string>remote-notification</string>
 		<string>fetch</string>
 	</array>

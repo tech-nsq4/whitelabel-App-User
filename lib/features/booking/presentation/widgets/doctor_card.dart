@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/extensions/extensions.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_constants.dart';
 import '../../../../core/utils/locale_keys.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_card.dart';
@@ -13,20 +12,49 @@ import '../../../../core/widgets/image/custom_image.dart';
 import '../../../../core/widgets/price_text.dart';
 import '../../../../core/widgets/star_rating.dart';
 import '../../../offers/data/models/applied_offer.dart';
+import '../../data/models/consultation_type.dart';
 import '../../data/models/doctor_profile_model.dart';
+import '../../../home_visit/data/models/home_visit_area_model.dart';
+import '../../../home_visit/presentation/widgets/home_visit_areas_wrap.dart';
+import '../../../home_visit/presentation/widgets/home_visit_badge.dart';
 import '../booking_flow.dart';
 import 'booking_slots_sheet.dart' show formatNearestAvailableDayLabel;
+import 'doctor_card_cell_divider.dart';
+import 'doctor_card_stat_cell.dart';
 
 /// A doctor result card on [SpecsScreen] / `DoctorSearchScreen` — avatar and
 /// summary on top, then a stat strip (experience / fee / next open slot) and
 /// book / profile actions. Rating shows as stars beside the name, not in the
 /// strip.
 class DoctorCard extends StatelessWidget {
-  const DoctorCard({super.key, required this.doctor, required this.onTap, this.offer});
+  const DoctorCard({
+    super.key,
+    required this.doctor,
+    required this.onTap,
+    this.offer,
+    this.consultationType = ConsultationType.clinic,
+    this.homeVisitArea,
+  });
 
   final DoctorProfileModel doctor;
   final VoidCallback onTap;
   final AppliedOffer? offer;
+  final ConsultationType consultationType;
+  final HomeVisitAreaModel? homeVisitArea;
+
+  HomeVisitAreaModel? get _matchedArea {
+    final area = homeVisitArea;
+    if (area == null) return null;
+    return doctor.homeVisitAreaById(area.id) ?? area;
+  }
+
+  double get _basePrice {
+    if (!consultationType.isHomeVisit) return doctor.price;
+    final matched = _matchedArea;
+    if (matched != null && matched.hasCost) return matched.costValue;
+    final costs = doctor.homeVisitAreas.where((a) => a.hasCost).map((a) => a.costValue);
+    return costs.isEmpty ? doctor.price : costs.reduce((a, b) => a < b ? a : b);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +70,9 @@ class DoctorCard extends StatelessWidget {
               formatNearestAvailableDayLabel(nearest.date!, context.locale.languageCode),
             nearest.displayTime,
           ].where((s) => s.isNotEmpty).join(' · ');
-    final finalPrice = offer?.finalPriceFor(doctor.price) ?? doctor.price;
+    final basePrice = _basePrice;
+    final finalPrice = offer?.finalPriceFor(basePrice) ?? basePrice;
+    final isHomeVisit = consultationType.isHomeVisit;
 
     return AppCard(
       onTap: onTap,
@@ -68,12 +98,11 @@ class DoctorCard extends StatelessWidget {
                         ),
                         padding: 10.paddingBottom,
                         alignment: Alignment.center,
-                        child: Text(doctor.avatarLetter,
-                            style: TextStyle(
-                                fontFamily: AppFonts.headingFont,
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white)),
+                        child: AppText(doctor.avatarLetter,
+                            isHeading: true,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white),
                       ),
                 12.width,
                 Expanded(
@@ -95,11 +124,10 @@ class DoctorCard extends StatelessWidget {
                               children: [
                                 StarRating(value: avgRate, size: 12, spacing: 1.5),
                                 5.width,
-                                Text(avgRate.toStringAsFixed(1),
-                                    style: TextStyle(
-                                        fontSize: 11.sp,
-                                        fontWeight: FontWeight.w700,
-                                        color: AppColors.textPrimaryColor.themeColor)),
+                                AppText(avgRate.toStringAsFixed(1),
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.textPrimaryColor.themeColor),
                               ],
                             ),
                           ],
@@ -121,6 +149,10 @@ class DoctorCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ],
+                      if (doctor.homeVisit && !isHomeVisit) ...[
+                        5.height,
+                        const HomeVisitBadge(),
+                      ],
                       if (description != null && description.isNotEmpty) ...[
                         5.height,
                         AppText(description,
@@ -136,6 +168,14 @@ class DoctorCard extends StatelessWidget {
               ],
             ),
           ),
+          if (isHomeVisit && doctor.homeVisitAreas.isNotEmpty)
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(14.w, 0, 14.w, 10.h),
+              child: HomeVisitAreasWrap(
+                areas: doctor.homeVisitAreas,
+                highlightedAreaId: _matchedArea?.id,
+              ),
+            ),
           Container(
             margin: 14.paddingHorizontal,
             decoration: BoxDecoration(
@@ -149,19 +189,19 @@ class DoctorCard extends StatelessWidget {
                 Expanded(
                   flex: 2,
 
-                  child: _StatCell(
+                  child: DoctorCardStatCell(
                     value: LocaleKeys.booking_yearsValue
                         .tr(namedArgs: {'years': '${doctor.experienceYears}'}),
                     label: LocaleKeys.booking_experienceLabel.tr(),
                   ),
                 ),
-                _CellDivider(),
+                const DoctorCardCellDivider(),
                 Expanded(
                   flex: 2,
-                  child: _StatCell(
+                  child: DoctorCardStatCell(
                     valueWidget: PriceText(
                       amount: finalPrice,
-                      strikeAmount: doctor.price,
+                      strikeAmount: basePrice,
                       isHeading: true,
                       fontSize: 10,
                       maxLines: 2,
@@ -169,13 +209,15 @@ class DoctorCard extends StatelessWidget {
                       color: primary,
                       textAlign: TextAlign.center,
                     ),
-                    label: LocaleKeys.booking_feeLabel.tr(),
+                    label: isHomeVisit
+                        ? LocaleKeys.homeVisit_visitCost.tr()
+                        : LocaleKeys.booking_feeLabel.tr(),
                   ),
                 ),
-                _CellDivider(),
+                const DoctorCardCellDivider(),
                 Expanded(
                   flex: 3,
-                  child: _StatCell(
+                  child: DoctorCardStatCell(
                     value: nearestLabel == null || nearestLabel.isEmpty ? '—' : nearestLabel,
                     label: LocaleKeys.booking_nextSlot.tr(),
                     valueColor: nearestLabel == null || nearestLabel.isEmpty
@@ -195,7 +237,13 @@ class DoctorCard extends StatelessWidget {
                     title: LocaleKeys.booking_bookAction.tr(),
                     height: 38,
                     fontSize: 14,
-                    onTap: () => bookDoctorById(context, doctorId: doctor.id, offer: offer),
+                    onTap: () => bookDoctorById(
+                      context,
+                      doctorId: doctor.id,
+                      offer: offer,
+                      consultationType: consultationType,
+                      homeVisitArea: _matchedArea,
+                    ),
                   ),
                 ),
                 8.width,
@@ -215,56 +263,6 @@ class DoctorCard extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _StatCell extends StatelessWidget {
-  const _StatCell({this.value, this.valueWidget, required this.label, this.valueColor});
-
-  final String? value;
-  final Widget? valueWidget;
-  final String label;
-  final Color? valueColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        valueWidget ??
-            Text(
-              value ?? '',
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontFamily: AppFonts.headingFont,
-                fontSize: 9.sp,
-                fontWeight: FontWeight.w700,
-                color: valueColor ?? AppColors.textPrimaryColor.themeColor,
-              ),
-            ),
-        3.height,
-        AppText(
-          label,
-          fontSize: 9.5,
-          color: AppColors.mutedColor.themeColor,
-          textAlign: TextAlign.center,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-      ],
-    );
-  }
-}
-
-class _CellDivider extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 2,
-      height: 50.h,
-      color: AppColors.dividerColor.themeColor,
     );
   }
 }

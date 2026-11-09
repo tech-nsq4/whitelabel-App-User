@@ -12,9 +12,13 @@ import '../../../core/utils/locale_keys.dart';
 import '../../../core/widgets/custom_loading_widget.dart';
 import '../../../core/widgets/guest_login_dialog.dart';
 import '../../../core/widgets/price_text.dart';
+import '../../home_visit/data/models/home_visit_address.dart';
+import '../../home_visit/data/models/home_visit_area_model.dart';
+import '../../home_visit/presentation/widgets/home_visit_address_sheet.dart';
 import '../../offers/data/models/applied_offer.dart';
 import '../../payments/presentation/widgets/payment_sheet.dart';
 import '../data/booking_repo.dart';
+import '../data/models/consultation_type.dart';
 import '../data/models/doctor_profile_model.dart';
 import '../logic/appointments_cubit.dart';
 import 'widgets/booking_confirmed_dialog.dart';
@@ -30,14 +34,31 @@ Future<void> startDoctorBooking(
   required DoctorProfileModel doctor,
   int? clinicId,
   AppliedOffer? offer,
+  ConsultationType consultationType = ConsultationType.clinic,
+  HomeVisitAreaModel? homeVisitArea,
 }) async {
   final appointmentsCubit = getIt<AppointmentsCubit>();
-  final price = doctor.price;
+
+  final slot = await showBookingSlotsSheet(
+    context,
+    doctor,
+    clinicId: clinicId,
+    offer: offer,
+    consultationType: consultationType,
+    homeVisitArea: homeVisitArea,
+  );
+  if (slot == null || !context.mounted) return;
+
+  final bookedArea = slot.homeVisitArea;
+
+  HomeVisitAddress? homeVisitAddress;
+  if (consultationType.isHomeVisit) {
+    homeVisitAddress = await showHomeVisitAddressSheet(context, area: bookedArea);
+    if (homeVisitAddress == null || !context.mounted) return;
+  }
+  final price = consultationType.isHomeVisit ? (bookedArea?.costValue ?? 0) : doctor.price;
   final finalPrice = offer?.finalPriceFor(price) ?? price;
   final discounted = finalPrice < price;
-
-  final slot = await showBookingSlotsSheet(context, doctor, clinicId: clinicId, offer: offer);
-  if (slot == null || !context.mounted) return;
 
   // Gate right at the "confirm" step, not earlier — browsing a doctor and
   // their schedule stays open to a guest, but actually booking needs an
@@ -61,6 +82,13 @@ Future<void> startDoctorBooking(
     doctorId: doctor.id,
     clinicId: slot.clinicId,
     date: slot.date,
+    consultationType: consultationType.isHomeVisit ? consultationType : null,
+    areaId: bookedArea?.id,
+    homeVisitAddress: homeVisitAddress,
+    onEditHomeVisitAddress: consultationType.isHomeVisit
+        ? (sheetContext, current) =>
+            showHomeVisitAddressSheet(sheetContext, area: bookedArea, initialAddress: current)
+        : null,
   );
   if (result == null || !context.mounted) return;
 
@@ -75,6 +103,9 @@ Future<void> startDoctorBooking(
     familyMemberId: slot.familyMember?.id,
     offerId: offer?.id,
     promoCode: result.promoCode,
+    type: consultationType,
+    areaId: consultationType.isHomeVisit ? bookedArea?.id : null,
+    homeVisitAddress: result.homeVisitAddress ?? homeVisitAddress,
   );
   if (appointment == null || !context.mounted) return;
 
@@ -87,7 +118,12 @@ Future<void> startDoctorBooking(
     context,
     doctor: doctor.name,
     when: when,
-    branch: doctor.clinicById(slot.clinicId)?.name ?? '',
+    branch: switch (consultationType) {
+      ConsultationType.online => LocaleKeys.videoCall_onlineVisit.tr(),
+      ConsultationType.homeVisit =>
+        [LocaleKeys.homeVisit_title.tr(), if (bookedArea != null) bookedArea.name].join(' · '),
+      ConsultationType.clinic => doctor.clinicById(slot.clinicId)?.name ?? '',
+    },
   );
 }
 
@@ -98,6 +134,8 @@ Future<void> bookDoctorById(
   BuildContext context, {
   required int doctorId,
   AppliedOffer? offer,
+  ConsultationType consultationType = ConsultationType.clinic,
+  HomeVisitAreaModel? homeVisitArea,
 }) async {
   final loaderNavigator = Navigator.of(context, rootNavigator: true);
   showDialog<void>(
@@ -121,5 +159,11 @@ Future<void> bookDoctorById(
 
   loaderNavigator.pop();
   if (!context.mounted) return;
-  await startDoctorBooking(context, doctor: doctor, offer: offer);
+  await startDoctorBooking(
+    context,
+    doctor: doctor,
+    offer: offer,
+    consultationType: consultationType,
+    homeVisitArea: homeVisitArea,
+  );
 }

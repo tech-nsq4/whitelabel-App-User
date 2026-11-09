@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/network/network_exceptions.dart';
 import '../data/booking_repo.dart';
 import '../data/models/appointment_quote_model.dart';
+import '../data/models/consultation_type.dart';
 
 part 'quote_state.dart';
 
@@ -17,6 +18,8 @@ class QuoteCubit extends Cubit<QuoteState> {
     required DateTime date,
     int? clinicId,
     required String promoCode,
+    ConsultationType? type,
+    int? areaId,
   }) async {
     emit(const QuoteLoading());
     try {
@@ -25,6 +28,8 @@ class QuoteCubit extends Cubit<QuoteState> {
         date: date,
         clinicId: clinicId,
         promoCode: promoCode,
+        type: type,
+        areaId: areaId,
       );
       emit(QuoteSuccess(quote));
     } catch (e) {

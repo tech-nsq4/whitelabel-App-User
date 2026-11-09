@@ -20,6 +20,10 @@ class DoctorsCubit extends Cubit<DoctorsState> {
     String? sort,
     double? lat,
     double? lng,
+    bool onlineOnly = false,
+    bool homeVisitOnly = false,
+    int? homeVisitCityId,
+    int? homeVisitAreaId,
   }) async {
     emit(const DoctorsLoading());
     try {
@@ -31,6 +35,10 @@ class DoctorsCubit extends Cubit<DoctorsState> {
         sort: sort,
         lat: lat,
         lng: lng,
+        onlineOnly: onlineOnly,
+        homeVisitOnly: homeVisitOnly,
+        homeVisitCityId: homeVisitCityId,
+        homeVisitAreaId: homeVisitAreaId,
       );
       emit(DoctorsSuccess(doctors));
     } catch (e) {

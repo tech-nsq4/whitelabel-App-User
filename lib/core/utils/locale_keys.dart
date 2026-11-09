@@ -62,6 +62,10 @@ abstract class LocaleKeys {
   static const String booking_noReviews = 'booking.no_reviews';
   static const String booking_noClinics = 'booking.no_clinics';
   static const String booking_availableAppointments = 'booking.available_appointments';
+  static const String booking_onlineConsultationTitle = 'booking.online_consultation_title';
+  static const String booking_onlineConsultationSubtitle = 'booking.online_consultation_subtitle';
+  static const String booking_bookOnlineAction = 'booking.book_online_action';
+  static const String booking_visitTypeLabel = 'booking.visit_type_label';
   static const String booking_about = 'booking.about';
   static const String booking_clinicInfo = 'booking.clinic_info';
   static const String booking_clinics = 'booking.clinics';
@@ -459,4 +463,58 @@ abstract class LocaleKeys {
   static const String vitals_temperatureUnit = 'vitals.temperature_unit';
   static const String vitals_oxygen = 'vitals.oxygen';
   static const String vitals_oxygenUnit = 'vitals.oxygen_unit';
+
+  // ─── Video call ─────────────────────────────────────────────────────────
+  static const String videoCall_connecting = 'video_call.connecting';
+  static const String videoCall_waitingOther = 'video_call.waiting_other';
+  static const String videoCall_notConfigured = 'video_call.not_configured';
+  static const String videoCall_permissionsDenied = 'video_call.permissions_denied';
+  static const String videoCall_failed = 'video_call.failed';
+  static const String videoCall_close = 'video_call.close';
+  static const String videoCall_join = 'video_call.join';
+  static const String videoCall_resume = 'video_call.resume';
+  static const String videoCall_resumeNotice = 'video_call.resume_notice';
+  static const String videoCall_onlineVisit = 'video_call.online_visit';
+  static const String videoCall_liveNotice = 'video_call.live_notice';
+  static const String videoCall_notStarted = 'video_call.not_started';
+  static const String videoCall_endedByDoctor = 'video_call.ended_by_doctor';
+  static const String videoCall_leave = 'video_call.leave';
+  static const String videoCall_leaveConfirmTitle = 'video_call.leave_confirm_title';
+  static const String videoCall_leaveConfirmMessage = 'video_call.leave_confirm_message';
+
+  // ─── Home visit ───────────────────────────────────────────────────────────
+  static const String homeVisit_title = 'home_visit.title';
+  static const String homeVisit_subtitle = 'home_visit.subtitle';
+  static const String homeVisit_screenSubtitle = 'home_visit.screen_subtitle';
+  static const String homeVisit_city = 'home_visit.city';
+  static const String homeVisit_area = 'home_visit.area';
+  static const String homeVisit_areas = 'home_visit.areas';
+  static const String homeVisit_visitCost = 'home_visit.visit_cost';
+  static const String homeVisit_selectCity = 'home_visit.select_city';
+  static const String homeVisit_selectArea = 'home_visit.select_area';
+  static const String homeVisit_noAreas = 'home_visit.no_areas';
+  static const String homeVisit_noDoctors = 'home_visit.no_doctors';
+  static const String homeVisit_availableDoctors = 'home_visit.available_doctors';
+  static const String homeVisit_bookHomeVisit = 'home_visit.book_home_visit';
+  static const String homeVisit_addressTitle = 'home_visit.address_title';
+  static const String homeVisit_addressSubtitle = 'home_visit.address_subtitle';
+  static const String homeVisit_locationUnavailable = 'home_visit.location_unavailable';
+  static const String homeVisit_confirmAddress = 'home_visit.confirm_address';
+  static const String homeVisit_changeAddress = 'home_visit.change_address';
+  static const String homeVisit_pickLocation = 'home_visit.pick_location';
+  static const String homeVisit_pickLocationHint = 'home_visit.pick_location_hint';
+  static const String homeVisit_changeLocation = 'home_visit.change_location';
+  static const String homeVisit_locationRequired = 'home_visit.location_required';
+  static const String homeVisit_addressDetails = 'home_visit.address_details';
+  static const String homeVisit_addressDetailsHint = 'home_visit.address_details_hint';
+  static const String homeVisit_addressDetailsRequired = 'home_visit.address_details_required';
+
+  // ─── Location picker ──────────────────────────────────────────────────────
+  static const String locationPicker_searchHint = 'location_picker.search_hint';
+  static const String locationPicker_selectedLocation = 'location_picker.selected_location';
+  static const String locationPicker_resolving = 'location_picker.resolving';
+  static const String locationPicker_locating = 'location_picker.locating';
+  static const String locationPicker_addressUnavailable = 'location_picker.address_unavailable';
+  static const String locationPicker_noResults = 'location_picker.no_results';
+  static const String locationPicker_confirmLocation = 'location_picker.confirm_location';
 }
